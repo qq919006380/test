@@ -1,13 +1,12 @@
 <template>
-    <div>test</div>
+  <div>
+    <Button>asd</Button>
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>
