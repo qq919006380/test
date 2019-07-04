@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.0",
+    "less": "^3.9.0",
     "vue-template-compiler": "^2.6.10"
   }
 }
