@@ -1,5 +1,6 @@
 <template>
   <div class="cotent" @click="change">
+    asdasd
     <DatePicker
       @on-open-change="change"
       id="pick_week"
