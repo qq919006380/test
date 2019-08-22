@@ -1,14 +1,5 @@
-import Week from '../view/list.vue';
-
 export default [
-    {
-        path: '/week',
-        name: 'week',
-        // meta: {
-        //     title: 'Login - 登录',
-        //     hideInMenu: true
-        // },
-        component: Week,
-        // component: () => import('../view/week.vue')
-        
-    }]
+    {path: '/', redirect: 'list'},
+    { path: '/list', name: 'list',  component: () => import('~/view/list.vue')},
+    { path: '/week', name: 'week',  component: () => import('~/view/week.vue')}
+]

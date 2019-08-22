@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './app.vue';
-import routers from './router/routers.js';
+import routes from './router/routers.js';
 import VueRouter from 'vue-router'
 
 import iView from 'iview';
@@ -10,7 +10,7 @@ Vue.use(iView);
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    routers // (缩写) 相当于 routes: routes
+    routes // (缩写) 相当于 routes: routes
 })
 new Vue({
     el: "#app",

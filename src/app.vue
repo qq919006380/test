@@ -1,12 +1,23 @@
 <template>
   <div>
+    <ul>
+      <li>
+        <router-link to="/">index</router-link>
+      </li>
+      <li>
+        <router-link to="/week">week</router-link>
+      </li>
+      <li>
+        <router-link to="/pop">pop</router-link>
+      </li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
     <div>
-      key:{{key}}
-      <router-link to="/week">Go to Foo</router-link>
-      <router-link to="/pop">Go to Pop</router-link>
-    </div>
-    <div>
-      <router-view :key="key"></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -15,8 +26,7 @@
 export default {
   data() {
     return {
-      message: {},
-      key:$route.path
+      message: {}
     };
   }
 };
