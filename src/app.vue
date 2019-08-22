@@ -10,11 +10,6 @@
       <li>
         <router-link to="/pop">pop</router-link>
       </li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
     </ul>
     <div>
       <router-view></router-view>
