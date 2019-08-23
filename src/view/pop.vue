@@ -1,20 +1,24 @@
 <template>
-  <div>{{message}}</div>
+  <div>{{obj}}</div>
 </template>
 
 <script>
 export default {
-  watch: {
-    message: {
-      handler(val) {
-        console.log(val);
-      },
-      deep: true
+  data(){
+    return {
+      obj:{
+        a:"aa",
+        b:"bb"
+      }
     }
   },
-  props: {
-    message: Object
+  mounted(){
+    setTimeout(()=>{
+      // this.obj.c='xxx'
+      this.$set(this.obj,'c','xxx')
+    },800)
   }
+ 
 };
 </script>
 

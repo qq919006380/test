@@ -1,16 +1,11 @@
 <template>
   <div>
-    <ul>
-      <li>
-        <router-link to="/">index</router-link>
-      </li>
-      <li>
-        <router-link to="/week">week</router-link>
-      </li>
-      <li>
-        <router-link to="/pop">pop</router-link>
-      </li>
-    </ul>
+    <div class="nav">
+      <router-link to="/">index</router-link>
+      <router-link to="/week">选择周</router-link>
+      <router-link to="/pop">pop</router-link>
+      <router-link to="/initData">初始化data</router-link>
+    </div>
     <div>
       <router-view></router-view>
     </div>
@@ -27,5 +22,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang='less'>
+.nav {
+  font-size: 16px;
+  &>a{
+    margin:  0 10px;
+  }
+}
 </style>
