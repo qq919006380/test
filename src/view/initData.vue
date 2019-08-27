@@ -15,6 +15,7 @@ export default {
   methods: {
     reset() {
       // this.$data 这个是当前实例中的data
+      // this.$options.data() 这个是当前实例的初始化data
       Object.assign(this.$data.item, this.$options.data().item)
 
     }

@@ -5,6 +5,7 @@
       <router-link to="/week">选择周</router-link>
       <router-link to="/pop">pop</router-link>
       <router-link to="/initData">初始化data</router-link>
+      <router-link to="/orderTable">订单table</router-link>
     </div>
     <div>
       <router-view></router-view>
@@ -25,8 +26,8 @@ export default {
 <style scoped lang='less'>
 .nav {
   font-size: 16px;
-  &>a{
-    margin:  0 10px;
+  & > a {
+    margin: 0 10px;
   }
 }
 </style>
