@@ -5,4 +5,6 @@ export default [
     { path: '/pop', name: 'pop', component: () => import('~/view/pop.vue') },
     { path: '/initData', name: 'initData', component: () => import('~/view/initData.vue') },
     { path: '/orderTable', name: 'orderTable', component: () => import('~/view/orderTable/index.vue') },
+    { path: '/selectTable', name: 'selectTable', component: () => import('~/view/selectTable.vue') },
+    
 ]

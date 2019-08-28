@@ -6,6 +6,7 @@
       <router-link to="/pop">pop</router-link>
       <router-link to="/initData">初始化data</router-link>
       <router-link to="/orderTable">订单table</router-link>
+      <router-link to="/selectTable">多选&单选table</router-link>
     </div>
     <div>
       <router-view></router-view>
