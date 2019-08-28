@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="nav">
-      <router-link to="/">index</router-link>
-      <router-link to="/week">选择周</router-link>
-      <router-link to="/pop">pop</router-link>
-      <router-link to="/initData">初始化data</router-link>
-      <router-link to="/orderTable">订单table</router-link>
-      <router-link to="/selectTable">多选&单选table</router-link>
+      <router-link v-for="item in Routers" :to="item.path">{{item.name}}</router-link>
     </div>
     <div>
       <router-view></router-view>
@@ -15,10 +10,11 @@
 </template>
 
 <script>
+import Routers from "../src/router/routers.js";
 export default {
   data() {
     return {
-      message: {}
+      Routers
     };
   }
 };
