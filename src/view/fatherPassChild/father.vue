@@ -42,8 +42,9 @@
       <h2>方法四:sync</h2>
       <div class="father">
         <div>
-          <syncChild :title="syncChildData" @update:title="syncChildData = $event"></syncChild>
-          <syncChild :title.sync="syncChildData"></syncChild>
+          <Input v-model="syncChildData" style="width:200px;"></Input>
+          <syncChild :title="syncChildData" @update_title="syncChildData = $event"></syncChild>
+          <!-- <syncChild :title.sync="syncChildData"></syncChild> -->
         </div>
         <ol class="ol">
           <li></li>

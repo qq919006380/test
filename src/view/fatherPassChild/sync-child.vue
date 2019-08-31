@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div>data:{{title}}</div>
     <div>
-      <input v-model="text" />
+      <Input v-model="text" style="width:200px;"></Input>
     </div>
   </div>
 </template>
@@ -11,7 +10,7 @@
 export default {
   watch: {
     text(newValue) {
-      this.$emit("update:title", newValue);
+      this.$emit("update_title", newValue);
     }
   },
   props: {
