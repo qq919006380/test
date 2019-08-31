@@ -5,7 +5,7 @@
       <Radio label="多选"></Radio>
     </RadioGroup>
     <Table border ref="selection" :data="data" :columns="columns"></Table>
-    <Button @click="test">test</Button>
+    <Button type="primary" @click="test">log</Button>
   </div>
 </template>
 <script>

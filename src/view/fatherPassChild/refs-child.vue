@@ -1,19 +1,15 @@
 <template>
   <div>
-    <div>props:{{value}}</div>
-    <div>watch:{{xxx}}</div>
+    <div>data:{{xxx}}</div>
   </div>
 </template>
 
 <script>
 export default {
-  watch: {
-    value(val) {
-      this.xxx = val;
+  methods: {
+    handleParentClick(e) {
+      this.xxx = e;
     }
-  },
-  props: {
-    value: null
   },
   data() {
     return {
