@@ -8,3 +8,10 @@ export default [
     { path: '/selectTable', name: '多选&单选table', component: () => import('~/view/selectTable.vue') },
     { path: '/fatherPassChild', name: '父组件传数据给子组件', component: () => import('~/view/fatherPassChild/father.vue') },
 ]
+// 高级通讯
+// $attrs 和 $listeners
+// 中央事件总线 EventBus
+// provide 和 inject
+// $parent 和 $children
+// $boradcast 和 $dispatch
+// Vuex 状态管理
