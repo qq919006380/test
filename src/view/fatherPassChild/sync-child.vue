@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div class="child">
     <div>
-      <Input v-model="text" style="width:200px;"></Input>
+      <div>
+        text:
+        <Input v-model="text" style="width:200px;"></Input>
+      </div>
+      <div>title:{{title}}</div>
     </div>
   </div>
 </template>
@@ -12,6 +16,9 @@ export default {
     text(newValue) {
       this.$emit("update_title", newValue);
     }
+    // title(val) {
+    //   this.text = val;
+    // }
   },
   props: {
     title: String
@@ -24,5 +31,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang='less'>
+.child {
+  border: solid 1px;
+  margin: 10px;
+}
 </style>

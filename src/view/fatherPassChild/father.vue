@@ -42,12 +42,13 @@
       <h2>方法四:sync</h2>
       <div class="father">
         <div>
+          data:
           <Input v-model="syncChildData" style="width:200px;"></Input>
           <syncChild :title="syncChildData" @update_title="syncChildData = $event"></syncChild>
           <!-- <syncChild :title.sync="syncChildData"></syncChild> -->
         </div>
         <ol class="ol">
-          <li></li>
+          <li>props+$emit实现的伪双向绑定</li>
         </ol>
       </div>
     </div>
@@ -86,6 +87,7 @@ export default {
 <style scoped lang='less'>
 .container {
   display: flex;
+  flex-wrap: wrap;
   .father {
     border: solid 1px;
     position: relative;
