@@ -7,7 +7,7 @@ export default [
     { path: '/orderTable', name: '订单table', component: () => import('~/view/orderTable/index.vue') },
     { path: '/selectTable', name: '多选&单选table', component: () => import('~/view/selectTable.vue') },
     { path: '/fatherPassChild', name: '父组件传数据给子组件', component: () => import('~/view/fatherPassChild/father.vue') },
-    { path: '/slot', name: 'slot', component: () => import('~/view/slot/index.vue') },
+    { path: '/slot', name: 'slot', component: () => import('~/view/slot/demo.vue') },
 ]
 // 高级通讯
 // $attrs 和 $listeners
