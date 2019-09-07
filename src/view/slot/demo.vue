@@ -1,19 +1,57 @@
 <template>
-  <div>
-    <cup>
-      <p slot="top">top</p>
-      <p slot="top">第二个top</p>
-      <Button slot='top'>xxx</Button>
-      <!-- <p>啊啊啊啊</p>
-      <p slot="bottom">底部</p> -->
-    </cup>
+  <div class="container">
+    <div class="btn-wrap">
+      <cup :btnStatus="arrStatus"></cup>
+    </div>
+    <div>
+      <Button @click="showAll">showAll</Button>
+      <Button @click="edit">edit Status</Button>
+    </div>
   </div>
 </template>
 <script>
 import cup from "./slot.vue";
 export default {
+  data() {
+    return {
+      arrStatus: ["confirmReceiptAndShipment", "lastPaymentNotBeenReceived"]
+    };
+  },
+  methods: {
+    edit() {
+      this.arrStatus = ["refundAndCloseTheOrder", "confirmReceipt"];
+    },
+    showAll() {
+      this.arrStatus = [
+        "closeOrder",
+        "changeOrder",
+        "confirmReceipt",
+        "stocking",
+        "returnedToTheOrder",
+        "refundAndCloseTheOrder",
+        "modifyOrderPrice",
+        "examinationPassed",
+        "auditNotPassed",
+        "stockingCompletedDelivery",
+        "pickUpPendingPayment",
+        "shipment",
+        "confirmReceiptAndShipment",
+        "lastPaymentNotBeenReceived",
+        "servedInstallation"
+      ];
+    }
+  },
   components: {
     cup
   }
 };
 </script>
+<style lang="less" scoped>
+.container {
+  margin: 10px;
+}
+.btn-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+</style>

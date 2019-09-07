@@ -1,62 +1,72 @@
 <style lang="less" scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
-ul,
-li {
-  list-style: none;
-}
-.wrap {
-  color: #eee;
-  .top {
-    background: hsl(60, 50%, 50%);
-  }
-  .main {
-    display: flex;
-    .left {
-      flex: 0 0 200px;
-      background: hsl(120, 50%, 50%);
-    }
-    .middle {
-      flex: 1 1 auto;
-      background: hsl(180, 50%, 50%);
-    }
-    .right {
-      flex: 0 0 200px;
-      background: hsl(240, 50%, 50%);
-    }
-  }
-  .bottom {
-    background: hsl(300, 50%, 50%);
-  }
+.btn {
+  margin: 5px;
 }
 </style>
 <template>
-  <div class="wrap cup">
-    <div @click="on" class="top">
-      <slot name="top">默认top数据</slot>
-    </div>
-    <div class="main">
-      <div class="left">
-        <slot name="left">默认left数据</slot>
-      </div>
-      <div class="middle">
-        <slot>默认middle数据</slot>
-      </div>
-      <div class="right">
-        <slot name="right">默认right数据</slot>
-      </div>
-    </div>
-    <div class="bottom">
-      <slot name="bottom">默认bottom数据</slot>
+  <div>
+    <div>
+      <Button
+        class="btn"
+        type="primary"
+        v-for="dev in btnItemTable"
+        v-if="btnStatus.includes(dev.status)"
+        @click="dev.onEvent"
+      >
+        <slot :name="dev.status">{{dev.name}}</slot>
+      </Button>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    btnStatus: Array
+  },
   data() {
-    return {};
+    return {
+      btnItemTable: [
+        { status: "closeOrder", name: "关闭订单", onEvent: this.on },
+        { status: "changeOrder", name: "修改订单", onEvent: this.on },
+        { status: "confirmReceipt", name: "确认到账", onEvent: this.on },
+        { status: "stocking", name: "备货中", onEvent: this.on },
+        {
+          status: "returnedToTheOrder",
+          name: "未到账，返回订单",
+          onEvent: this.on
+        },
+        {
+          status: "refundAndCloseTheOrder",
+          name: "退款并关闭订单",
+          onEvent: this.on
+        },
+        { status: "modifyOrderPrice", name: "修改订单价格", onEvent: this.on },
+        { status: "examinationPassed", name: "审核通过", onEvent: this.on },
+        { status: "auditNotPassed", name: "审核不通过", onEvent: this.on },
+        {
+          status: "stockingCompletedDelivery",
+          name: "备货完成，发货",
+          onEvent: this.on
+        },
+        {
+          status: "pickUpPendingPayment",
+          name: "提货，待收尾款",
+          onEvent: this.on
+        },
+        { status: "shipment", name: "出货", onEvent: this.on },
+        {
+          status: "confirmReceiptAndShipment",
+          name: "确认到账并出货",
+          onEvent: this.on
+        },
+        {
+          status: "lastPaymentNotBeenReceived",
+          name: "尾款未到账",
+          onEvent: this.on
+        },
+        { status: "servedInstallation", name: "已送达安装", onEvent: this.on }
+      ]
+    };
   },
   methods: {
     on() {
