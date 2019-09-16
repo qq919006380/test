@@ -5,7 +5,8 @@
       <Radio label="多选"></Radio>
     </RadioGroup>
     <Table border ref="selection" :data="data" :columns="columns"></Table>
-    <Button type="primary" @click="test">log</Button>
+    <!-- <Button type="primary" @click="test">log</Button> -->
+    <h2>{{log}}</h2>
   </div>
 </template>
 <script>
@@ -14,8 +15,17 @@ export default {
     setTimeout(() => {
       this.data.map((val, idx, arr) => {
         this.$set(this.data[idx], "select", false);
-      }, 300);
-    });
+      });
+    }, 300);
+  },
+  computed: {
+    log() {
+      var arr = this.data.map(val => {
+        return val.select || false;
+      });
+      return arr;
+      console.log(arr);
+    }
   },
   data() {
     return {
@@ -75,12 +85,6 @@ export default {
     };
   },
   methods: {
-    test() {
-      var arr = this.data.map(val => {
-        return val.select;
-      });
-      console.log(arr);
-    },
     onChange(val) {
       this.data.map((x, idx, arr) => {
         this.$set(this.data[idx], "select", false);
