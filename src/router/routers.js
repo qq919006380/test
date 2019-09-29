@@ -9,6 +9,7 @@ export default [
     { path: '/fatherPassChild', name: '父组件传数据给子组件', component: () => import('~/view/fatherPassChild/father.vue') },
     { path: '/slot', name: '按钮状态管理', component: () => import('~/view/slot/demo.vue') },
     { path: '/multipleSelect ', name: '全选下拉框', component: () => import('~/view/multipleSelect.vue') },
+    { path: '/area ', name: 'area', component: () => import('~/view/area.vue') },
 ]
 // 高级通讯
 // $attrs 和 $listeners
