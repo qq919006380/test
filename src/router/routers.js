@@ -10,6 +10,8 @@ export default [
     { path: '/slot', name: '按钮状态管理', component: () => import('~/view/slot/demo.vue') },
     { path: '/multipleSelect ', name: '全选下拉框', component: () => import('~/view/multipleSelect.vue') },
     { path: '/area ', name: 'area', component: () => import('~/view/area.vue') },
+    { path: '/attrs ', name: 'attrs组件穿透', component: () => import('~/view/attrs/index.vue') },
+    { path: '/flex',name:'flex布局最后一行左对齐',component:()=>import('~/view/flex.vue') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
