@@ -12,8 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
+    "element-ui": "^2.14.0",
     "iview": "^3.4.2",
     "iview-area": "^1.6.0",
+    "koa": "^2.13.0",
     "resize-observer-polyfill": "^1.5.1",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3",
