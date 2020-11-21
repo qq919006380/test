@@ -20,14 +20,22 @@ export default {
   mounted() {},
   methods: {
     loadNode(node, resolve) {
-      this.axios
-        .get("http://localhost:3000")
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (error) {
-          console.log(error);
+      console.log(node.level);
+      if (node.level == 0) {
+        this.axios.get("http://localhost:3000").then(function (res) {
+          console.log(res.data);
+          return resolve(res.data);
         });
+      }
+      if (node.level == 1) {
+        this.axios.get("http://localhost:3000").then(function (res) {
+          console.log(res.data);
+          return resolve(res.data);
+        });
+      }
+      if (node.level == 2) {
+        return resolve([]);
+      }
     },
 
     getTree(callback) {

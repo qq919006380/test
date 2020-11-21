@@ -8,10 +8,10 @@ app.use(async ctx => {
     ctx.body = [
         {
             name: "leaf",
-            leaf: true,
+            
         },
         {
-            name: "zone",
+            name: "zone", 
         },
     ]
 })

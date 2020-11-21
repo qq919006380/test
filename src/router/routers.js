@@ -12,7 +12,9 @@ export default [
     { path: '/area ', name: 'area', component: () => import('~/view/area.vue') },
     { path: '/attrs ', name: 'attrs组件穿透', component: () => import('~/view/attrs/index.vue') },
     { path: '/flex',name:'flex布局最后一行左对齐',component:()=>import('~/view/flex.vue') },
-    { path: '/tree',name:'tree',component:()=>import('~/view/tree/index.vue') }
+    { path: '/tree',name:'tree',component:()=>import('~/view/tree/index.vue') },
+    { path: '/click',name:'子组件点击事件',component:()=>import('~/view/clickEvent/index.vue') },
+    { path: '/uploadPic',name:'han',component:()=>import('~/view/uploadPic/index.vue') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
