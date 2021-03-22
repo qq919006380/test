@@ -15,7 +15,8 @@ export default [
     { path: '/tree',name:'tree',component:()=>import('~/view/tree/index.vue') },
     { path: '/click',name:'子组件点击事件',component:()=>import('~/view/clickEvent/index.vue') },
     { path: '/uploadPic',name:'图片上传组件（未完善）',component:()=>import('~/view/uploadPic/index.vue') },
-    { path: '/modalProps',name:'弹窗组件之间的数据传输',component:()=>import('~/view/modalProps/index.vue') }
+    { path: '/modalProps',name:'弹窗组件之间的数据传输',component:()=>import('~/view/modalProps/index.vue') },
+    { path: '/pencil',name:'手绘',component:()=>import('~/view/pencil.vue') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
