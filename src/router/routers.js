@@ -11,12 +11,14 @@ export default [
     { path: '/multipleSelect ', name: '全选下拉框', component: () => import('~/view/multipleSelect.vue') },
     { path: '/area ', name: 'area', component: () => import('~/view/area.vue') },
     { path: '/attrs ', name: 'attrs组件穿透', component: () => import('~/view/attrs/index.vue') },
-    { path: '/flex',name:'flex布局最后一行左对齐',component:()=>import('~/view/flex.vue') },
-    { path: '/tree',name:'tree',component:()=>import('~/view/tree/index.vue') },
-    { path: '/click',name:'子组件点击事件',component:()=>import('~/view/clickEvent/index.vue') },
-    { path: '/uploadPic',name:'图片上传组件（未完善）',component:()=>import('~/view/uploadPic/index.vue') },
-    { path: '/modalProps',name:'弹窗组件之间的数据传输',component:()=>import('~/view/modalProps/index.vue') },
-    { path: '/pencil',name:'手绘',component:()=>import('~/view/pencil.vue') }
+    { path: '/flex', name: 'flex布局最后一行左对齐', component: () => import('~/view/flex.vue') },
+    { path: '/tree', name: 'tree', component: () => import('~/view/tree/index.vue') },
+    { path: '/click', name: '子组件点击事件', component: () => import('~/view/clickEvent/index.vue') },
+    { path: '/uploadPic', name: '图片上传组件（未完善）', component: () => import('~/view/uploadPic/index.vue') },
+    { path: '/modalProps', name: '弹窗组件之间的数据传输', component: () => import('~/view/modalProps/index.vue') },
+    { path: '/pencil', name: '手绘', component: () => import('~/view/pencil.vue') },
+    { path: '/pencil2', name: '手绘2', component: () => import('~/view/pencil2.vue') },
+    { path: '/promise', name: 'promise', component: () => import('~/view/promise.vue') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
