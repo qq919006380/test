@@ -4,6 +4,8 @@ import routes from './router/routers.js';
 import VueRouter from 'vue-router'
 import iviewArea from 'iview-area';
 import ElementUI from 'element-ui';
+import 'babel-polyfill'
+
 // import axios from 'axios';
 
 import Api from './api/index.js'

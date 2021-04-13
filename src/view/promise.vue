@@ -2,6 +2,7 @@
   <div>
     <div>{{ content }}</div>
     <Button @click="on">抽奖</Button>
+    <Button @click="aaa">ajax.creat</Button>
   </div>
 </template>
 
@@ -14,25 +15,20 @@ export default {
   },
   methods: {
     on() {
-      //   new Promise((resolve, reject) => {
-      //     setTimeout(() => {
-      //       console.log(1);
-      //       resolve("ok");
-      //     }, 1000);
-      //   })
-      //     .then((value) => {
-      //       return new Promise((resolve, reject) => {
-      //         setTimeout(() => {
-      //           console.log(2);
-      //           resolve(value);
-      //         }, 1000);
-      //       });
-      //     })
-      //     .then((value) => {
-      //       console.log(value);
-      //     });
-      this.$api.getList.getAllUser()
-    //   this.$api.getAllUser();
+      var a = this.$form.getList.getAllUser();
+      console.log(a + "asd");
+    },
+    ajaxa() {
+      var form = this.axios.create({
+        baseURL: "http://localhost:8000/",
+      });
+      return form({
+        url: "api/blog/list?id=22",
+      });
+    },
+    async aaa() {
+      var {data} = await this.ajaxa();
+      console.log(data);
     },
   },
 };

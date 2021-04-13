@@ -1,13 +1,8 @@
 import * as URL from './urlType.js'
 import axios from 'axios';
 
-var Api = {
-  install: function (Vue) {
-    Vue.prototype.$api = this
-    Vue.prototype.axios=axios
-  },
-}
 
+var Api = {}
 for (const key in URL) {
   URL[key].forEach(obj => {
     if (Api[key]) {
@@ -19,9 +14,26 @@ for (const key in URL) {
   });
 }
 
+var plugin = {
+  install: function (Vue) {
+    Vue.prototype.$api = Api
+    Vue.prototype.$form = Api
+
+
+    Vue.prototype.axios = axios
+  },
+}
+
+
+
 function p(obj) {
   axios.get("http://localhost:8000/api/blog/list?id=22").then(function (res) {
     console.log(res)
   });
 }
-export default Api
+
+
+
+
+
+export default plugin
