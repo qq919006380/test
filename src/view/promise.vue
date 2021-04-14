@@ -14,9 +14,13 @@ export default {
   },
   methods: {
     async on() {
-      var {data} = await this.$form.blog.detail('22');
-      console.log(data)
-      
+      // var { data } = await this.$form.blog.detail("22");
+      // console.log(data);
+      var { data } = await this.$form.blog.new({
+        title: "标题",
+        content: "内容1020",
+      });
+      // console.log(data);
     },
   },
 };

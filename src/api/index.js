@@ -9,7 +9,7 @@ function axiosFun(obj) {
       }).catch(err => console.log(err))
     },
     form: function (data) {
-      form({
+      return form({
         url: obj.url,
         method: "post",
         data
