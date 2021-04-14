@@ -1,15 +1,39 @@
 import * as URL from './urlType.js'
-import axios from 'axios';
+import { axios, json, form, micro } from './axios';
 
+function axiosFun(obj) {
+  let axiosObject = {
+    json: function ajax(data) {
+      return json({
+        url: obj.url + "?id=" + data,
+      }).catch(err => console.log(err))
+    },
+    form: function (data) {
+      form({
+        url: obj.url,
+        method: "post",
+        data
+      }).catch(err => this.errHandler(err))
+    },
+    micro: function (data) {
+      return micro({
+        url: obj.url,
+        method: "post",
+        data
+      }).catch(err => this.errHandler(err));
+    },
+  }
 
+  return axiosObject[obj.type]
+}
 var Api = {}
 for (const key in URL) {
   URL[key].forEach(obj => {
     if (Api[key]) {
-      Api[key][obj.name] = p
+      Api[key][obj.name] = axiosFun(obj)
     } else {
       Api[key] = {}
-      Api[key][obj.name] = p
+      Api[key][obj.name] = axiosFun(obj)
     }
   });
 }
@@ -24,16 +48,4 @@ var plugin = {
   },
 }
 
-
-
-function p(obj) {
-  axios.get("http://localhost:8000/api/blog/list?id=22").then(function (res) {
-    console.log(res)
-  });
-}
-
-
-
-
-
-export default plugin
+export { plugin, axios }

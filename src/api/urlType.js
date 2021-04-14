@@ -1,25 +1,29 @@
-export const getList = [
+export const blog = [
   {
-    name: 'getAllUser',
-    url: 'user/all'
+    name: 'detail',
+    url: '/api/blog/detail',
+    type: "json"
   },
   {
     name: 'aaa',
-    url: 'user/List'
+    url: 'user/List',
+    type: "form"
   },
 ]
 
 export const postList = [
   {
     name: 'addUser',
-    url: 'user/save'
+    url: 'user/save',
+    type: "form"
   },
 ]
 
 export const deleteList = [
   {
     name: 'deleteUser',
-    url: 'user/delete'
+    url: 'user/delete',
+    type: "form"
   }
 ]
 
