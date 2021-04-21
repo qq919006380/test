@@ -18,7 +18,8 @@ export default [
     { path: '/modalProps', name: '弹窗组件之间的数据传输', component: () => import('~/view/modalProps/index.vue') },
     { path: '/pencil', name: '手绘', component: () => import('~/view/pencil.vue') },
     { path: '/pencil2', name: '手绘2', component: () => import('~/view/pencil2.vue') },
-    { path: '/promise', name: 'promise', component: () => import('~/view/promise.vue') }
+    { path: '/promise', name: 'promise', component: () => import('~/view/promise.vue') },
+    { path: '/watch', name: 'watch', component: () => import('~/view/watch/index.vue') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
