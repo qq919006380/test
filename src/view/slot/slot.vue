@@ -9,7 +9,8 @@
       <Button
         class="btn"
         type="primary"
-        v-for="dev in btnItemTable"
+        v-for="(dev,index) in btnItemTable"
+        :key="index"
         v-if="btnStatus.includes(dev.status)"
         @click="dev.onEvent"
       >

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="nav">
-      <router-link v-for="item in Routers" :to="item.path">{{item.name}}</router-link>
+      <router-link v-for="item in Routers" :key="item.path"  :to="item.path">{{item.name}}</router-link>
     </div>
     <div>
       <router-view></router-view>
