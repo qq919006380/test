@@ -1,29 +1,5 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
-const webpack = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const apiMocker = require('webpack-api-mocker')
-
-
-
-function resolve(dir) {
-    return path.join(__dirname, dir);
-}
-
-module.exports = {
-    mode: 'development',
-    entry: path.resolve(__dirname, './src/main.js'),
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'js/[name].js'
-    },
-    devServer: {
-        contentBase: path.resolve(__dirname, './dist'),
-        compress: true,
-        port: 8080,
-        before:require('./src/build/api.js')
-    },
+module.exports = {  
     module: {
         rules: [
             {
@@ -82,22 +58,11 @@ module.exports = {
             },
         ]
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './src/index.html'),
-            filename: 'index.html',
-            title: '手搭 Vue 开发环境'
-        }),
-        new VueLoaderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin()
-    ],
-
     resolve: {
         extensions: ['.js', '.vue'],
         alias: {
             'vue': 'vue/dist/vue.esm.js',
-            '@': resolve('/src'),
+            '@': path.join(__dirname, '../src') ,
         }
     },
 
