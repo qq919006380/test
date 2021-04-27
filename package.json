@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve --progress --config ./webpack.config.js",
+    "dev": "webpack serve  --progress --config ./webpack.config.js",
     "build": "webpack --config webpack.config.prod.js"
   },
   "keywords": [],
@@ -22,7 +22,6 @@
     "css-loader": "^5.2.4",
     "element-ui": "^2.14.0",
     "file-loader": "^6.2.0",
-    "handlebars-loader": "^1.7.1",
     "iview": "^3.4.2",
     "iview-area": "^1.6.0",
     "koa": "^2.13.0",
@@ -51,6 +50,7 @@
     "sass": "^1.22.12",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^5.35.0",
+    "webpack-api-mocker": "^1.7.6",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
   }

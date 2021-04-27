@@ -19,7 +19,10 @@ export default [
     { path: '/pencil', name: '手绘', component: () => import('@/view/pencil.vue') },
     { path: '/pencil2', name: '手绘2', component: () => import('@/view/pencil2.vue') },
     { path: '/promise', name: 'promise', component: () => import('@/view/promise.vue') },
-    { path: '/watch', name: 'watch', component: () => import('@/view/watch/index.vue') }
+    { path: '/父子组件异步请求watch不触发问题', name: 'watch', component: () => import('@/view/watch/index.vue') },
+    { path: '/api', name: 'api', component: () => import('@/view/api.vue') },
+    { path: '/vue的render函数', name: 'render', component: () => import('@/view/render.vue') },
+    
 ]
 // 高级通讯
 // $attrs 和 $listeners

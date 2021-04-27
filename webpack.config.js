@@ -3,9 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const apiMocker = require('webpack-api-mocker')
 
 
 
@@ -20,16 +18,13 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].js'
     },
-
+    devServer: {
+        contentBase: path.resolve(__dirname, './dist'),
+        compress: true,
+        port: 8080,
+        before:require('./src/build/api.js')
+    },
     module: {
-        // loaders: [
-        //     {
-        //         // this should be /\.handlebars$/
-        //         test: /\.hbs$/,
-        //         exclude: /(node_modules)/,
-        //         loader: 'handlebars-loader'
-        //     }
-        // ],
         rules: [
             {
                 test: /\.js$/,
@@ -42,34 +37,18 @@ module.exports = {
                 }
             },
             {
-                test: /iview\/.*?js$/,
-                loader: 'babel-loader'
-            },
-            {
                 test: /\.vue$/,
                 loader: 'vue-loader',
             },
             {
                 test: /\.less$/,
                 use: [
-                    // MiniCssExtractPlugin.loader,
                     'vue-style-loader',
                     'css-loader',
                     "less-loader"
                 ],
 
             },
-            // {
-            //     test: /\.scss$/,
-            //     use: [
-            //         // MiniCssExtractPlugin.loader,
-            //         'vue-style-loader',
-            //         'css-loader',
-            //         "scss-loader"
-            //     ],
-
-            // },
-
             {
                 test: /\.scss$/,
                 use: [
@@ -85,7 +64,6 @@ module.exports = {
                     'css-loader'
                 ]
             },
-
             {
                 test: /\.(gif|jpg|png)\??.*$/,
                 loader: 'url-loader',
@@ -102,15 +80,9 @@ module.exports = {
                     name: 'resourse/[name].[hash:7].[ext]'
                 }
             },
-
-
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-            // allChunks: true
-        }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
@@ -120,11 +92,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin()
     ],
-    devServer: {
-        contentBase: path.resolve(__dirname, './dist'),
-        compress: true,
-        port: 8080
-    },
+
     resolve: {
         extensions: ['.js', '.vue'],
         alias: {
