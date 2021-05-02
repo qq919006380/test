@@ -6,6 +6,9 @@
 
 <script>
 export default {
+    mounted(){
+        console.log(process.env.NODE_ENV)
+    },
 methods:{
     api(){
         this.axios.get('http://localhost:8080/' + 'user/info').then(

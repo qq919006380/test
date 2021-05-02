@@ -3,9 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const {merge} = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const webpackBaseConfig = require('./webpack.base.config.js');
-
+const serverEnv = require("../src/config/server.env.dev.js")
+const mock = require('./mockApi.js')
+console.log(serverEnv.env)
 
 module.exports = merge(webpackBaseConfig, {
     mode: 'development',
@@ -18,7 +20,11 @@ module.exports = merge(webpackBaseConfig, {
         contentBase: path.resolve(__dirname, './dist'),
         compress: true,
         port: 8080,
-        before: require('./mockApi.js')
+        before: (app) => {
+            if (serverEnv.env=="local-mock") {
+                mock(app)
+            }
+        }
     },
 
     plugins: [
