@@ -13,14 +13,14 @@ function axiosFun(obj) {
         url: obj.url,
         method: "post",
         data
-      }).catch(err => this.errHandler(err))
+      }).catch(err => console.log(err))
     },
     micro: function (data) {
       return micro({
         url: obj.url,
         method: "post",
         data
-      }).catch(err => this.errHandler(err));
+      }).catch(err => console.log(err));
     },
   }
 

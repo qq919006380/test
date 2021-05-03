@@ -7,21 +7,21 @@ export const blog = [
   // 博客详情
   {
     name: 'detail',
-    url: '/api/blog/detail',
-    type: "json"
+    url: '/blog/detail',
+    type: "form"
   },
   // 新增博客
   {
     name: 'new',
-    url: '/api/blog/new',
-    type: "json"
+    url: '/blog/new',
+    type: "form"
   },
 ]
 
 export const postList = [
   {
     name: 'addUser',
-    url: 'user/save',
+    url: '/user/save',
     type: "form"
   },
 ]

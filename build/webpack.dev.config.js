@@ -20,8 +20,14 @@ module.exports = merge(webpackBaseConfig, {
         contentBase: path.resolve(__dirname, './dist'),
         compress: true,
         port: 8080,
+        proxy: {
+            '/apiss': {
+                target: 'http://localhost:3000',
+                pathRewrite: {'^/api' : ''}
+            }
+        },
         before: (app) => {
-            if (serverEnv.env=="local-mock") {
+            if (serverEnv.env == "local-mock") {
                 mock(app)
             }
         }
