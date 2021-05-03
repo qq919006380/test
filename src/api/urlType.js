@@ -8,13 +8,13 @@ export const blog = [
   {
     name: 'detail',
     url: '/api/blog/detail',
-    type: "form"
+    type: "post"
   },
    // 博客详情
    {
     name: 'del',
     url: '/api/blog/del',
-    type: "form"
+    type: "get"
   },
   // 新增博客
   {

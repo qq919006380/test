@@ -1,26 +1,32 @@
 import * as URL from './urlType.js'
-import { axios, json, form, micro } from './axios';
+import { axios, get, post } from './axios';
+/**
+ * 将对象转为url参数
+ * @param {Object} urlobj 对象
+ * @returns ?name=jack&age=18
+ */
+function objToUrlparamse(urlobj) {
+  var paramse = "?"
+  Object.keys(urlobj).forEach(val => {
+    paramse += val + "=" + urlobj[val] + "&"
+  })
+  return paramse
+}
 
 function axiosFun(obj) {
   let axiosObject = {
-    json: function ajax(data) {
-      return json({
-        url: obj.url + "?id=" + data,
+    get: function (data) {
+      return get({
+        url: obj.url + objToUrlparamse(data),
+        method: "get",
       }).catch(err => console.log(err))
     },
-    form: function (data) {
-      return form({
+    post: function (data) {
+      return post({
         url: obj.url,
         method: "post",
         data
       }).catch(err => console.log(err))
-    },
-    micro: function (data) {
-      return micro({
-        url: obj.url,
-        method: "post",
-        data
-      }).catch(err => console.log(err));
     },
   }
 
@@ -41,9 +47,6 @@ for (const key in URL) {
 var plugin = {
   install: function (Vue) {
     Vue.prototype.$api = Api
-    Vue.prototype.$form = Api
-
-
     Vue.prototype.axios = axios
   },
 }

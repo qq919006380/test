@@ -3,12 +3,12 @@ const baseurl = location.origin//"http://localhost:8080"
 const querystring = require('querystring')
 
 // json 请求
-let json = axios.create({
+let get = axios.create({
     baseURL: baseurl + "/"
 });
 
 // formData 请求 处理data部分，params可以照传（get请求）
-let form = axios.create({
+let post = axios.create({
     baseURL: baseurl  ,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -24,16 +24,7 @@ let form = axios.create({
         return str;
     }]
 });
-setAccessToken(form);
-
-// 微服务请求
-let micro = axios.create({
-    baseURL: baseurl + "/",
-    headers: {
-        'Cache-control': 'no-cache'
-    },
-});
-setAccessToken(micro);
+setAccessToken(post);
 
 
 function setAccessToken(axios_instance) {
@@ -68,7 +59,6 @@ function setAccessToken(axios_instance) {
 
 export {
     axios,
-    json,
-    form,
-    micro
+    post,
+    get,
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Button @click="api">自己写的触发接口</Button>
-    <Button @click="fetch">fetch</Button>
+    <Button @click="post">post自己写的触发接口</Button>
+    <Button @click="get">get自己写的触发接口</Button>
   </div>
 </template>
 
@@ -11,19 +11,19 @@ export default {
     console.log(process.env.NODE_ENV);
   },
   methods: {
-    async api() {
-      var { data } = await this.$form.blog.new({
-        // title: "标题",
-        // content: "内容1020",
+    async post() {
+      var { data } = await this.$api.blog.detail({
+        title: "xxx",
+        content: "内容1020",
       });
       console.log(data);
     },
-    fetch() {
-      fetch("/api/blog/detail")
-        .then((res) => res.json)
-        .then((data) => {
-          console.log(data);
-        });
+    async get() {
+      var { data } = await this.$api.blog.del({
+        title: "标题",
+        content: "内容1020",
+      });
+      console.log(data);
     },
   },
 };
