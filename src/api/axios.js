@@ -9,7 +9,7 @@ let json = axios.create({
 
 // formData 请求 处理data部分，params可以照传（get请求）
 let form = axios.create({
-    baseURL: baseurl + "/" + "api",
+    baseURL: baseurl  ,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded',

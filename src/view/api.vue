@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Button @click="api">触发接口</Button>
+    <Button @click="api">自己写的触发接口</Button>
+    <Button @click="fetch">fetch</Button>
   </div>
 </template>
 
@@ -11,11 +12,18 @@ export default {
   },
   methods: {
     async api() {
-      var { data } = await this.$form.blog.detail({
-        title: "标题",
-        content: "内容1020",
+      var { data } = await this.$form.blog.new({
+        // title: "标题",
+        // content: "内容1020",
       });
       console.log(data);
+    },
+    fetch() {
+      fetch("/api/blog/detail")
+        .then((res) => res.json)
+        .then((data) => {
+          console.log(data);
+        });
     },
   },
 };

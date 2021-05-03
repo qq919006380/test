@@ -7,13 +7,19 @@ export const blog = [
   // 博客详情
   {
     name: 'detail',
-    url: '/blog/detail',
+    url: '/api/blog/detail',
+    type: "form"
+  },
+   // 博客详情
+   {
+    name: 'del',
+    url: '/api/blog/del',
     type: "form"
   },
   // 新增博客
   {
     name: 'new',
-    url: '/blog/new',
+    url: '/api/blog/new',
     type: "form"
   },
 ]
@@ -21,7 +27,7 @@ export const blog = [
 export const postList = [
   {
     name: 'addUser',
-    url: '/user/save',
+    url: '/api/user/save',
     type: "form"
   },
 ]
@@ -29,7 +35,7 @@ export const postList = [
 export const deleteList = [
   {
     name: 'deleteUser',
-    url: 'user/delete',
+    url: '/api/user/delete',
     type: "form"
   }
 ]

@@ -21,10 +21,11 @@ module.exports = merge(webpackBaseConfig, {
         compress: true,
         port: 8080,
         proxy: {
-            '/apiss': {
-                target: 'http://localhost:3000',
-                pathRewrite: {'^/api' : ''}
-            }
+            '/api': {
+                target: 'http://localhost:8000',
+                pathRewrite: { "^/api": "api" },
+            },
+
         },
         before: (app) => {
             if (serverEnv.env == "local-mock") {
