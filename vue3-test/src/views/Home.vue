@@ -1,5 +1,4 @@
 <template>
-  <div id="app">
     <ul>
       <li>问题：</li>
       <li>
@@ -13,21 +12,23 @@
       </li>
       <li>方案2：可以通过computed让解构变得安全————{{ count3 }}</li>
       <li>方案3：还可以通过toRefs让解构变得安全————{{ count4.count.value }}</li>
+      {{data.count}}
     </ul>
 
-    <ul>
+    <ul class="asdasd">
       <li>原则：</li>
       <li>时刻记住setup只会执行一次</li>
       <li>永远不要直接使用简单类型</li>
       <li>解构可能有风险，优先使用引用本身，而不是解构它</li>
       <li>可以通过一些手段让解构变得安全</li>
     </ul>
-  </div>
+    <hr>
+<modal></modal>
 </template>
 
 <script>
 import { reactive, ref, computed, toRefs } from "vue";
-
+import modal from '@/components/modal.vue';
 export default {
   setup() {
     const data = reactive({
@@ -45,16 +46,13 @@ export default {
       count2,
       count3,
       count4,
+      data
     };
   },
+  components:{
+    modal
+  }
 };
 </script>
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-}
 </style>

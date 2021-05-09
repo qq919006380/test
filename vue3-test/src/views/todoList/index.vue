@@ -1,5 +1,5 @@
 <template>
-  hellow
+  <div>s</div>
 </template>
 
 <script>
