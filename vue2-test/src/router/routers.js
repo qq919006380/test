@@ -22,6 +22,7 @@ export default [
     { path: '/父子组件异步请求watch不触发问题', name: 'watch', component: () => import('@/view/watch/index.vue') },
     { path: '/api', name: 'api', component: () => import('@/view/api.vue') },
     { path: '/vue的render函数', name: 'render', component: () => import('@/view/render.vue') },
+    { path: '/input', name: 'input', component: () => import('@/view/input/index.vue') },
     
 ]
 // 高级通讯
