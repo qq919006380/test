@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <x-button type="primary">button</x-button>
+    <Button type="primary">button</Button>
   </div>
 </template>
 
