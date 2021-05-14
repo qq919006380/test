@@ -139,7 +139,7 @@ module.exports = {
     },
     disableHostCheck: true,
     hot: true,
-    open: true,
+    // open: true,
   },
   devtool: 'inline-cheap-module-source-map',
   plugins: [
