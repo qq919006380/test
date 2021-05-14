@@ -1,5 +1,9 @@
 <template>
-  <div id="btn" class="host" :class="{disabled:disabled}" @click="$emit('click',$event.target)">
+  <div
+    class="host"
+    :class="{ disabled: disabled }"
+    @click="$emit('click', $event.target)"
+  >
     <slot></slot>s
     <div class="overlay">
       <svg id="svg"></svg>
@@ -8,7 +12,7 @@
 </template>
 
 <script>
-import {render ,watchDom,} from "../../_util/util.js";
+import { render } from "../../_util/util.js";
 export default {
   name: "Button",
   props: {
@@ -18,44 +22,35 @@ export default {
       type: Object,
       default() {
         return {
-          stroke: "",
+          stroke: '',
           fill: "",
-          fillStyle: ""
+          fillStyle: "",
         };
       },
-      validator: function(value) {
-        var user_value = []; //用户输入的属性
-        var a = [
+      validator: function (value) {
+        let result = true;
+        let user_value = Object.keys(value);
+        let  validator = [
           "stroke",
           "fill",
           "fillStyle",
           "hachureAngle",
           "hachureGap",
-          "fillWeight"
-        ]; //需要验证的属性
-        var result = true; //返回的值
-        for (var x in value) {
-          user_value.push(x);
-        }
+          "fillWeight",
+        ];
         // 检查属性
-        user_value.forEach(e => {
-          if (a.indexOf(e) === -1) {
-            result = false;
-          }
+        user_value.forEach((e) => {
+          result = validator.includes(e);
         });
         // 检查属性类型
         return result;
-      }
-    }
+      },
+    },
   },
   mounted() {
-    watchDom(this.$el, () => {
-      render(this.$el);
-    });
+    new render(this.$el);
   },
-  methods: {
-   
-  }
+  methods: {},
 };
 </script>
 
