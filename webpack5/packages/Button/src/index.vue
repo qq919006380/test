@@ -8,8 +8,7 @@
 </template>
 
 <script>
-import rough from "roughjs/bundled/rough.esm.js";
-import {clearNode ,watchDom} from "../../_util/util.js";
+import {render ,watchDom,} from "../../_util/util.js";
 export default {
   name: "Button",
   props: {
@@ -51,50 +50,11 @@ export default {
   },
   mounted() {
     watchDom(this.$el, () => {
-      this.r();
+      render(this.$el);
     });
   },
   methods: {
-    r() {
-      const host = this.$el;
-      const svg = this.$el.querySelector("#svg");
-      clearNode(svg)
-      const s = host.getBoundingClientRect();
-      const elev = Math.min(Math.max(0, this.elevation), 5);
-      svg.setAttribute("width", s.width + elev * 2);
-      svg.setAttribute("height", s.height + elev * 2);
-      console.log(rough)
-      const rc = rough.svg(svg);
-      let node = rc.rectangle(0.5, 0.5, s.width - 1, s.height - 1, {
-        stroke: this.decoration.stroke,
-        fill: this.decoration.fill,
-        fillStyle: this.decoration.fillStyle,
-        hachureAngle: this.decoration.hachureAngle,
-        hachureGap: this.decoration.hachureGap,
-        fillWeight: this.decoration.fillWeight,
-        bowing: 2
-      });
-      node.style.opacity = 0.8;
-      svg.appendChild(node);
-      // elevation
-      for (var i = 0; i <= elev; i++) {
-        if (elev === 0) return;
-        var elevation = rc.linearPath(
-          [
-            [s.width + i * 2, 0 + i * 2],
-            [s.width + i * 2, s.height + i * 2],
-            [s.width + i * 2, s.height + i * 2],
-            [0 + i * 2, s.height + i * 2]
-          ],
-          {
-            bowing: 2, //弯曲
-            stroke: this.decoration.stroke
-          }
-        );
-        elevation.style.opacity = 1 - i * 0.12;
-        svg.appendChild(elevation);
-      }
-    }
+   
   }
 };
 </script>
