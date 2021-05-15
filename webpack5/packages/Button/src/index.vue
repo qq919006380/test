@@ -1,6 +1,7 @@
 <template>
   <div
     class="host"
+    ref="root"
     :class="{ disabled: disabled }"
     @click="$emit('click', $event.target)"
   >
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import { ref, onMounted } from "vue";
 import { render } from "../../_util/util.js";
 export default {
   name: "Button",
@@ -33,11 +35,32 @@ export default {
       },
     },
   },
-  mounted() {
-    var r = new render(this.$el);
-    r.type(this.type);
+  setup(props) {
+    const root = ref(null);
+    onMounted(() => {
+      let r = new render(root.value);
+      var assignObj = {
+        default: {},
+        primary: {
+          fill: "#2d8cf0",
+        },
+        info: {
+          fill: "#2db7f5",
+        },
+        success: {
+          fill: "#19be6b",
+        },
+        warning: {
+          fill: "#ff9900",
+        },
+        error: {
+          fill: "#ed4014",
+        },
+      };
+      r.setDecoration(assignObj[props.type]);
+    });
+    return { root };
   },
-  methods: {},
 };
 </script>
 
@@ -56,7 +79,6 @@ export default {
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  display: inline-flex;
   outline: none;
   .overlay {
     z-index: -3;

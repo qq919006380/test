@@ -1,6 +1,17 @@
 <template>
-  <div  >This is an about page</div>
+  <Demo></Demo>
 </template>
-<style scoped>
 
-</style>
+<script>
+import { ref } from "vue";
+
+export default {
+  setup() {
+    const root = ref(null);
+
+    return {
+      root,
+    };
+  },
+};
+</script>

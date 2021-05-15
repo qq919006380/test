@@ -1,5 +1,5 @@
 <template>
-  <div class="host">
+  <div  >
     <Button>button</Button>
 
     <Button type="default">default</Button>
