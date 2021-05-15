@@ -4,7 +4,7 @@
     :class="{ disabled: disabled }"
     @click="$emit('click', $event.target)"
   >
-    <slot></slot>s
+    <slot></slot>
     <div class="overlay">
       <svg id="svg"></svg>
     </div>
@@ -18,43 +18,30 @@ export default {
   props: {
     elevation: { type: [Number, String], default: 0 },
     disabled: { type: Boolean, default: false },
-    decoration: {
-      type: Object,
-      default() {
-        return {
-          stroke: '',
-          fill: "",
-          fillStyle: "",
-        };
-      },
-      validator: function (value) {
-        let result = true;
-        let user_value = Object.keys(value);
-        let  validator = [
-          "stroke",
-          "fill",
-          "fillStyle",
-          "hachureAngle",
-          "hachureGap",
-          "fillWeight",
-        ];
-        // 检查属性
-        user_value.forEach((e) => {
-          result = validator.includes(e);
-        });
-        // 检查属性类型
-        return result;
+    type: {
+      type: String,
+      default: "default",
+      validator: (val) => {
+        return [
+          "default",
+          "primary",
+          "info",
+          "success",
+          "warning",
+          "error",
+        ].includes(val);
       },
     },
   },
   mounted() {
-    new render(this.$el);
+    var r = new render(this.$el);
+    r.type(this.type);
   },
   methods: {},
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .host {
   display: inline-block;
   font-family: inherit;
@@ -71,38 +58,39 @@ export default {
   text-align: center;
   display: inline-flex;
   outline: none;
+  .overlay {
+    z-index: -3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+  & /deep/ svg {
+    overflow: visible;
+    display: block;
+  }
+  & /deep/ svg /deep/ path {
+    stroke: currentColor;
+    stroke-width: 0.7;
+    fill: transparent;
+    transition: transform 0.05s ease;
+  }
 }
-.host:active >>> path {
+.host:active /deep/ path {
   transform: scale(0.97) translate(0.5%, 0.5%);
 }
+
+.host:focus /deep/ path {
+  stroke-width: 1.5;
+}
+
 .host.disabled {
   opacity: 0.6 !important;
   background: rgba(0, 0, 0, 0.07);
   cursor: default;
   pointer-events: none;
-}
-
-.host:focus >>> path {
-  stroke-width: 1.5;
-}
-.overlay {
-  z-index: -3;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-svg {
-  /* overflow: visible; */
-  display: block;
-}
-svg >>> path {
-  stroke: currentColor;
-  stroke-width: 0.7;
-  fill: transparent;
-  transition: transform 0.05s ease;
 }
 </style>
 

@@ -1,5 +1,6 @@
 <template>
-  <div  >
-    <h1>This is an about page</h1>
-  </div>
+  <div  >This is an about page</div>
 </template>
+<style scoped>
+
+</style>
