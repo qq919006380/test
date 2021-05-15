@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { render } from "../../_util/util.js";
 export default {
   name: "Button",
@@ -35,37 +35,52 @@ export default {
       },
     },
   },
+
   setup(props) {
     const root = ref(null);
+    let r = null;
+
     onMounted(() => {
-      let r = new render(root.value);
-      var assignObj = {
-        default: {},
-        primary: {
-          fill: "#2d8cf0",
-        },
-        info: {
-          fill: "#2db7f5",
-        },
-        success: {
-          fill: "#19be6b",
-        },
-        warning: {
-          fill: "#ff9900",
-        },
-        error: {
-          fill: "#ed4014",
-        },
-      };
-      r.setDecoration(assignObj[props.type]);
+      r = new render(root.value);
+      r.appendSvg((rough) => {
+        elevation(rough);
+      });
+
+      r.setDecoration(props.type);
     });
+
+    function elevation(rough) {
+      var elev = props.elevation;
+      const rc = rough.svg(r.svg);
+      for (var i = 0; i <= elev; i++) {
+        if (elev === 0) return;
+        var elevation = rc.linearPath(
+          [
+            [r.s.width + i * 2, 0 + i * 2],
+            [r.s.width + i * 2, r.s.height + i * 2],
+            [r.s.width + i * 2, r.s.height + i * 2],
+            [0 + i * 2, r.s.height + i * 2],
+          ],
+          {
+            bowing: 2, //弯曲
+            stroke: r.decoration.stroke,
+          }
+        );
+        elevation.style.opacity = 1 - i * 0.12;
+        r.svg.appendChild(elevation);
+      }
+    }
+
     return { root };
   },
 };
 </script>
 
+
+
 <style lang="less" scoped>
 .host {
+  min-width: 1px;
   display: inline-block;
   font-family: inherit;
   cursor: pointer;
