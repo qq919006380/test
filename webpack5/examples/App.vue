@@ -1,11 +1,19 @@
 <template>
   <div id="nav">
-    <router-link to="/">Button</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link v-for="item in routes" :to="item.path">{{item.name}}</router-link>
   </div>
   <router-view/>
 </template>
-
+<script>
+import {routes} from './router';
+export default {
+  data(){
+    return{
+      routes 
+    }
+  }
+}
+</script>
 <style scoped>
 
 #nav {
@@ -15,6 +23,7 @@
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+  margin-right: 10px;
 }
 
 #nav a.router-link-exact-active {

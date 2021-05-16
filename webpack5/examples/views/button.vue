@@ -15,6 +15,9 @@
     <Button elevation="4">elevation4</Button>
     <Button elevation="5">elevation5</Button>
   </div>
+  <div>
+    <Button disabled>disabled</Button>
+  </div>
 </template>
 
 <script>

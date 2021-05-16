@@ -4,12 +4,17 @@ const routes = [
   {
     path: '/',
     name: 'button',
-    component: () => import( '../views/button.vue')
+    component: () => import('../views/button.vue')
   },
   {
-    path: '/about',
+    path: '/Card',
+    name: 'Card',
+    component: () => import('../views/Card.vue')
+  },
+  {
+    path: '/About',
     name: 'About',
-    component: () => import( '../views/About.vue')
+    component: () => import('../views/About.vue')
   }
 ]
 
@@ -18,4 +23,4 @@ const router = createRouter({
   routes
 })
 
-export default router
+export  { router, routes }
