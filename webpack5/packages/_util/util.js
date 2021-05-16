@@ -2,9 +2,10 @@ import rough from "roughjs/bundled/rough.esm.js";
 
 export class render {
   constructor(el) {
+
     this.host = el
-    this.svg = el.querySelector("#svg")
-    this.s
+    this.svg = el.querySelector( '#svg')
+    this.s = null
     this.decoration = {}
     var elevation = 5
     this.elev = Math.min(Math.max(0, elevation), 5);
@@ -14,7 +15,9 @@ export class render {
       this.r()
       callback(rough)
     })
-
+  }
+  $(dom) {
+    return this.host.querySelector(dom)
   }
   r() {
     this.s = this.host.getBoundingClientRect();
@@ -39,7 +42,6 @@ export class render {
     );
     node.style.opacity = 0.8;
     this.svg.appendChild(node);
-
   }
   setDecoration(type = "default") {
     var assignObj = {

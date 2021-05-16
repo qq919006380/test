@@ -1,23 +1,26 @@
 <template>
-  <Card>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias laudantium consequatur facilis enim ipsa eius, reiciendis modi voluptatibus expedita possimus earum laborum voluptas doloribus fuga dicta non culpa labore totam!
-  </Card>
+  <div ref="host">
+    <div id="aaa" class="aaa">
+      <div id="aaa" class="bbb"></div>
+    </div>
+  </div>
+  {{ num }}
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref, toRefs } from "vue";
 
 export default {
   setup() {
-    let num = ref(123);
-    let data = reactive({
-      age: 13,
+    let doms = reactive({
       name: "jack",
+      host: null,
     });
-    return {
-      num,
-      data,
-    };
+    let num = ref(123);
+    onMounted(() => {
+      console.log(doms.host.querySelector(".aaaa"))
+    });
+    return { ...toRefs(doms), num };
   },
 };
 </script>

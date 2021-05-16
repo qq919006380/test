@@ -1,13 +1,14 @@
 <template>
   <div
     class="host"
-    ref="root"
+    ref="host"
+    
     :class="{ disabled: disabled }"
     @click="$emit('click', $event.target)"
   >
     <slot></slot>
     <div class="overlay">
-      <svg id="svg"></svg>
+      <svg id="svg"  ></svg>
     </div>
   </div>
 </template>
@@ -37,11 +38,11 @@ export default {
   },
 
   setup(props) {
-    const root = ref(null);
+    const host = ref(null);
     let r = null;
 
     onMounted(() => {
-      r = new render(root.value);
+      r = new render(host.value);
       r.appendSvg((rough) => {
         elevation(rough);
       });
@@ -71,7 +72,7 @@ export default {
       }
     }
 
-    return { root };
+    return { host };
   },
 };
 </script>

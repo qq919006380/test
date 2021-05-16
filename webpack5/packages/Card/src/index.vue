@@ -1,10 +1,12 @@
 <template>
-  <div class="host" ref="root">
+  <div class="host" ref="host" >
     <div v-if="$slots.header || header" class="card__header">
       <slot name="header">{{ header }}</slot>
     </div>
 
-    <slot></slot>
+    <div class="card_content">
+      <slot></slot>
+    </div>
     <div class="overlay">
       <svg id="svg"></svg>
     </div>
@@ -12,51 +14,64 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { onMounted, reactive, toRefs } from "vue";
 import { render } from "../../_util/util.js";
 export default {
   name: "Card",
   props: {
     elevation: { type: [Number, String], default: 0 },
-    header:String
+    header: String,
   },
 
   setup(props) {
-    const root = ref(null);
-    let r = null;
-
-    onMounted(() => {
-      r = new render(root.value);
-      r.appendSvg((rough) => {
-        elevation(rough);
-      });
-
-      r.setDecoration(props.type);
+    let hostMap = null;
+    let data = reactive({
+      host: "",
     });
 
+    onMounted(() => {
+      hostMap = reactive(new render(data.host));
+      hostMap.appendSvg((rough) => {
+        elevation(rough);
+        line(rough);
+      });
+
+      hostMap.setDecoration(props.type);
+    });
+    function line(rough) {
+      const rc = rough.svg(hostMap.svg);
+      let headerDom = hostMap.$(".card__header").getBoundingClientRect();
+      var line = rc.line(
+        0,
+        headerDom.height,
+        headerDom.width,
+        headerDom.height
+      );
+      hostMap.svg.appendChild(line);
+    }
     function elevation(rough) {
       var elev = props.elevation;
-      const rc = rough.svg(r.svg);
+      const rc = rough.svg(hostMap.svg);
       for (var i = 0; i <= elev; i++) {
         if (elev === 0) return;
         var elevation = rc.linearPath(
           [
-            [r.s.width + i * 2, 0 + i * 2],
-            [r.s.width + i * 2, r.s.height + i * 2],
-            [r.s.width + i * 2, r.s.height + i * 2],
-            [0 + i * 2, r.s.height + i * 2],
+            [hostMap.s.width + i * 2, 0 + i * 2],
+            [hostMap.s.width + i * 2, hostMap.s.height + i * 2],
+            [hostMap.s.width + i * 2, hostMap.s.height + i * 2],
+            [0 + i * 2, hostMap.s.height + i * 2],
           ],
           {
             bowing: 2, //弯曲
-            stroke: r.decoration.stroke,
+            stroke: hostMap.decoration.stroke,
           }
         );
         elevation.style.opacity = 1 - i * 0.12;
-        r.svg.appendChild(elevation);
+        hostMap.svg.appendChild(elevation);
       }
     }
 
-    return { root };
+    return { ...toRefs(data) };
   },
 };
 </script>
@@ -67,8 +82,13 @@ export default {
 .host {
   width: 480px;
   font-family: inherit;
-  padding: 20px;
   position: relative;
+  .card__header {
+    padding: 20px;
+  }
+  .card_content {
+    padding: 20px;
+  }
   .overlay {
     z-index: -3;
     position: absolute;
@@ -85,7 +105,6 @@ export default {
       stroke: currentColor;
       stroke-width: 0.7;
       fill: transparent;
-      transition: transform 0.05s ease;
     }
   }
 }
