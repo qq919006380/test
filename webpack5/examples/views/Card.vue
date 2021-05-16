@@ -1,22 +1,23 @@
 <template>
   <Card>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias laudantium consequatur facilis enim ipsa eius, reiciendis modi voluptatibus expedita possimus earum laborum voluptas doloribus fuga dicta non culpa labore totam!
+    <template #header> 标题 </template>
+    <div v-for="item in list">{{ item }}</div>
+  </Card>
+  <Card header="标题" style="width:100px">
+    <div v-for="item in list">{{ item }}</div>
   </Card>
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { reactive, toRefs } from "vue";
 
 export default {
   setup() {
-    let num = ref(123);
     let data = reactive({
-      age: 13,
-      name: "jack",
+      list: ["列表一", "列表二", "列表三"],
     });
     return {
-      num,
-      data,
+      ...toRefs(data),
     };
   },
 };

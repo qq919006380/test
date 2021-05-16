@@ -1,10 +1,9 @@
 <template>
-  <div
-    class="host"
-    ref="root"
-    :class="{ disabled: disabled }"
-    @click="$emit('click', $event.target)"
-  >
+  <div class="host" ref="root">
+    <div v-if="$slots.header || header" class="card__header">
+      <slot name="header">{{ header }}</slot>
+    </div>
+
     <slot></slot>
     <div class="overlay">
       <svg id="svg"></svg>
@@ -19,20 +18,7 @@ export default {
   name: "Card",
   props: {
     elevation: { type: [Number, String], default: 0 },
-    type: {
-      type: String,
-      default: "default",
-      validator: (val) => {
-        return [
-          "default",
-          "primary",
-          "info",
-          "success",
-          "warning",
-          "error",
-        ].includes(val);
-      },
-    },
+    header:String
   },
 
   setup(props) {
@@ -79,21 +65,10 @@ export default {
 
 <style lang="less" scoped>
 .host {
-  min-width: 1px;
-  display: inline-block;
+  width: 480px;
   font-family: inherit;
-  cursor: pointer;
-  padding: 8px 13px;
+  padding: 20px;
   position: relative;
-  text-align: center;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  outline: none;
   .overlay {
     z-index: -3;
     position: absolute;
@@ -102,31 +77,17 @@ export default {
     right: 0;
     bottom: 0;
     pointer-events: none;
+    & /deep/ svg {
+      overflow: visible;
+      display: block;
+    }
+    & /deep/ svg /deep/ path {
+      stroke: currentColor;
+      stroke-width: 0.7;
+      fill: transparent;
+      transition: transform 0.05s ease;
+    }
   }
-  & /deep/ svg {
-    overflow: visible;
-    display: block;
-  }
-  & /deep/ svg /deep/ path {
-    stroke: currentColor;
-    stroke-width: 0.7;
-    fill: transparent;
-    transition: transform 0.05s ease;
-  }
-}
-.host:active /deep/ path {
-  transform: scale(0.97) translate(0.5%, 0.5%);
-}
-
-.host:focus /deep/ path {
-  stroke-width: 1.5;
-}
-
-.host.disabled {
-  opacity: 0.6 !important;
-  background: rgba(0, 0, 0, 0.07);
-  cursor: default;
-  pointer-events: none;
 }
 </style>
 

@@ -93,7 +93,6 @@ export default {
   user-select: none;
   justify-content: center;
   flex-direction: column;
-  text-align: center;
   outline: none;
   .overlay {
     z-index: -3;
@@ -103,16 +102,16 @@ export default {
     right: 0;
     bottom: 0;
     pointer-events: none;
-  }
-  & /deep/ svg {
-    overflow: visible;
-    display: block;
-  }
-  & /deep/ svg /deep/ path {
-    stroke: currentColor;
-    stroke-width: 0.7;
-    fill: transparent;
-    transition: transform 0.05s ease;
+    & /deep/ svg {
+      overflow: visible;
+      display: block;
+    }
+    & /deep/ svg /deep/ path {
+      stroke: currentColor;
+      stroke-width: 0.7;
+      fill: transparent;
+      transition: transform 0.05s ease;
+    }
   }
 }
 .host:active /deep/ path {
