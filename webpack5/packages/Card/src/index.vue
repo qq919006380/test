@@ -3,7 +3,6 @@
     <div v-if="$slots.header || header" class="card__header">
       <slot name="header">{{ header }}</slot>
     </div>
-
     <div class="card_content">
       <slot></slot>
     </div>
@@ -20,7 +19,7 @@ export default {
     header: String,
   },
 
-  setup(props) {
+  setup(props, c) {
     let hostMap = null;
     let data = reactive({
       host: "",
@@ -30,7 +29,7 @@ export default {
       hostMap = reactive(new render(data.host));
       hostMap.appendSvg((rough) => {
         elevation(rough);
-        line(rough);
+        (c.slots.header || props.header) && line(rough);
       });
 
       hostMap.setDecoration(props.type);

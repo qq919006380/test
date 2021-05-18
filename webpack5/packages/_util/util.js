@@ -6,13 +6,28 @@ export class render {
     this.svg = ""
 
     this.s = null
-    this.decoration = {}
+    // 默认decoration
+    this.decoration = {
+      fillWeight: 1.3,//填充的粗细
+      hachureAngle: -60, // 填充的角度,
+      hachureGap: 8,
+      fillStyle: "hachure",//填充样式
+      stroke: "#333",//线的颜色
+      strokeWidth: 1,//线的粗细
+      bowing: 4,//线条扭曲程度
+      roughness: 1,//线条凌乱程度
+    }
     var elevation = 5
     this.elev = Math.min(Math.max(0, elevation), 5);
 
     this.initSvg()
   }
+
   initSvg() {
+    // 拦截背景颜色换成svg填充
+    this.decoration.fill = getComputedStyle(this.host, null).backgroundColor
+    this.host.style.background="transparent"
+
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     var overlay = document.createElement("div")
     overlay.classList.add('overlay');
@@ -32,7 +47,6 @@ export class render {
   r() {
     this.s = this.host.getBoundingClientRect();
     this.clearNode()
-    console.log(this.svg)
     this.svg.setAttributeNS(null, "width", this.s.width + this.elev * 2);
     this.svg.setAttributeNS(null, "height", this.s.height + this.elev * 2);
 
@@ -52,7 +66,6 @@ export class render {
       this.decoration
     );
     node.style.opacity = 0.8;
-    console.log(this.svg)
     this.svg.appendChild(node);
   }
   setDecoration(type = "default") {
@@ -84,16 +97,7 @@ export class render {
     //dashed 虚线 与hachure类似，但个别线条是虚线。虚线可以用dashOffset和dashGap属性来配置。
     //zigzag-line  与 hachure 类似，但个别线条是以 zig-zag 的方式绘制。之字形的大小可以使用 zigzagOffset 属性来配置 
 
-    this.decoration = Object.assign({
-      fillWeight: 1.3,//填充的粗细
-      hachureAngle: -60, // 填充的角度,
-      hachureGap: 8,
-      fillStyle: "hachure",//填充样式
-      stroke: "#333",//线的颜色
-      strokeWidth: 1,//线的粗细
-      bowing: 4,//线条扭曲程度
-      roughness: 1,//线条凌乱程度
-    }, assignObj[type])
+    Object.assign(this.decoration, assignObj[type])
 
   }
   /**

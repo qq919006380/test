@@ -1,8 +1,7 @@
 <template>
   <Card>
     <template #header>
-      <div>标题</div>
-      
+      <div>标题一</div>
       <div>
         asd
         <Button>按钮</Button>
@@ -10,14 +9,23 @@
     </template>
     <div v-for="item in list">{{ item }}</div>
   </Card>
-  
-  <!-- <Card header="标题">
+  <br />
+  <Card>
+    <template #header>
+      <div>标题一</div>
+    </template>
     <div v-for="item in list">{{ item }}</div>
   </Card>
 
-  <Card header="标题" elevation="5">
+  <br />
+  <Card>
     <div v-for="item in list">{{ item }}</div>
-  </Card> -->
+  </Card>
+
+  <br />
+  <Card header="标题二" elevation="5" class="color" style="background:pink">
+    <div v-for="item in list">{{ item }}</div>
+  </Card>
 </template>
 
 <script>
@@ -37,3 +45,9 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.color{
+  color: #00ffff;
+}
+  
+</style>
