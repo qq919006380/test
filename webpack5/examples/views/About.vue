@@ -1,10 +1,9 @@
 <template>
-  <div ref="host">
-    <div id="aaa" class="aaa">
-      <div id="aaa" class="bbb"></div>
-    </div>
+  <div ref="host"></div>
+
+  <div class="overlay">
+    <svg id="svg"></svg>
   </div>
-  {{ num }}
 </template>
 
 <script>
@@ -13,14 +12,13 @@ import { onMounted, reactive, ref, toRefs } from "vue";
 export default {
   setup() {
     let doms = reactive({
-      name: "jack",
       host: null,
     });
-    let num = ref(123);
+
     onMounted(() => {
-      console.log(doms.host.querySelector(".aaaa"))
+     
     });
-    return { ...toRefs(doms), num };
+    return { ...toRefs(doms) };
   },
 };
 </script>

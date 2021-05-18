@@ -2,10 +2,15 @@
   <Card>
     <template #header>
       <div>标题</div>
+      
+      <div>
+        asd
+        <Button>按钮</Button>
+      </div>
     </template>
     <div v-for="item in list">{{ item }}</div>
   </Card>
-  <Button>按钮</Button>
+  
   <!-- <Card header="标题">
     <div v-for="item in list">{{ item }}</div>
   </Card>

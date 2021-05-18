@@ -2,14 +2,10 @@
   <div
     class="host"
     ref="host"
-    
     :class="{ disabled: disabled }"
     @click="$emit('click', $event.target)"
   >
     <slot></slot>
-    <div class="overlay">
-      <svg id="svg"  ></svg>
-    </div>
   </div>
 </template>
 
@@ -95,7 +91,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   outline: none;
-  .overlay {
+  & /deep/ .overlay {
     z-index: -3;
     position: absolute;
     top: 0;

@@ -2,13 +2,23 @@ import rough from "roughjs/bundled/rough.esm.js";
 
 export class render {
   constructor(el) {
-
     this.host = el
-    this.svg = el.querySelector( '#svg')
+    this.svg = ""
+
     this.s = null
     this.decoration = {}
     var elevation = 5
     this.elev = Math.min(Math.max(0, elevation), 5);
+
+    this.initSvg()
+  }
+  initSvg() {
+    this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var overlay = document.createElement("div")
+    overlay.classList.add('overlay');
+
+    overlay.appendChild(this.svg);
+    this.host.appendChild(overlay);
   }
   appendSvg(callback) {
     this.watchDom(this.host, () => {
@@ -22,8 +32,9 @@ export class render {
   r() {
     this.s = this.host.getBoundingClientRect();
     this.clearNode()
-    this.svg.setAttribute("width", this.s.width + this.elev * 2);
-    this.svg.setAttribute("height", this.s.height + this.elev * 2);
+    console.log(this.svg)
+    this.svg.setAttributeNS(null, "width", this.s.width + this.elev * 2);
+    this.svg.setAttributeNS(null, "height", this.s.height + this.elev * 2);
 
     this.rectangle()
   }
@@ -41,6 +52,7 @@ export class render {
       this.decoration
     );
     node.style.opacity = 0.8;
+    console.log(this.svg)
     this.svg.appendChild(node);
   }
   setDecoration(type = "default") {

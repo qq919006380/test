@@ -1,23 +1,23 @@
 <template>
   <div>
     <Button>button</Button>
-    <Button type="default">default</Button>
+    <!-- <Button type="default">default</Button>
     <Button type="primary">primary</Button>
     <Button type="info">info</Button>
     <Button type="success">success</Button>
     <Button type="warning">warning</Button>
-    <Button type="error">error</Button>
+    <Button type="error">error</Button> -->
   </div>
-  <div>
+  <!-- <div>
     <Button elevation="1">elevation1</Button>
     <Button elevation="2">elevation2</Button>
     <Button :elevation="3">elevation3</Button>
     <Button elevation="4">elevation4</Button>
     <Button elevation="5">elevation5</Button>
-  </div>
-  <div>
+  </div> -->
+  <!-- <div>
     <Button disabled>disabled</Button>
-  </div>
+  </div> -->
 </template>
 
 <script>

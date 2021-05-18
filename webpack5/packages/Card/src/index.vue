@@ -1,14 +1,11 @@
 <template>
-  <div class="host" ref="host" >
+  <div class="host" ref="host">
     <div v-if="$slots.header || header" class="card__header">
       <slot name="header">{{ header }}</slot>
     </div>
 
     <div class="card_content">
       <slot></slot>
-    </div>
-    <div class="overlay">
-      <svg id="svg"></svg>
     </div>
   </div>
 </template>
@@ -85,11 +82,14 @@ export default {
   position: relative;
   .card__header {
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .card_content {
     padding: 20px;
   }
-  .overlay {
+  & /deep/.overlay {
     z-index: -3;
     position: absolute;
     top: 0;
