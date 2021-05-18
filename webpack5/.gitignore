@@ -2,6 +2,7 @@
 node_modules
 /dist
 /lib
+Incomplete.md
 
 
 # local env files
