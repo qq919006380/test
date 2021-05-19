@@ -36,7 +36,7 @@ cat > $DIRNAME/src/index.vue <<EOF
 <script>
 import { render } from "../../_util/util.js";
 export default {
-    name:"${NAME}"
+    name:"${NAME}",
     setup(props) {
 
     }

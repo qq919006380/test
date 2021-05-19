@@ -35,36 +35,37 @@ export default {
 
   setup(props) {
     const host = ref(null);
-    let r = null;
+    let hostMap = null;
 
     onMounted(() => {
-      r = new render(host.value);
-      r.appendSvg((rough) => {
+      hostMap = new render(host.value);
+      hostMap.setTypeStyle(props.type);
+      hostMap.on("watchDom", (rough) => {
         elevation(rough);
       });
-
-      r.setDecoration(props.type);
     });
-
     function elevation(rough) {
       var elev = props.elevation;
-      const rc = rough.svg(r.svg);
+      hostMap.svg.setAttributeNS(null, "width", hostMap.s.width + elev * 2);
+      hostMap.svg.setAttributeNS(null, "height", hostMap.s.height + elev * 2);
+
+      const rc = rough.svg(hostMap.svg);
       for (var i = 0; i <= elev; i++) {
         if (elev === 0) return;
         var elevation = rc.linearPath(
           [
-            [r.s.width + i * 2, 0 + i * 2],
-            [r.s.width + i * 2, r.s.height + i * 2],
-            [r.s.width + i * 2, r.s.height + i * 2],
-            [0 + i * 2, r.s.height + i * 2],
+            [hostMap.s.width + i * 2, 0 + i * 2],
+            [hostMap.s.width + i * 2, hostMap.s.height + i * 2],
+            [hostMap.s.width + i * 2, hostMap.s.height + i * 2],
+            [0 + i * 2, hostMap.s.height + i * 2],
           ],
           {
             bowing: 2, //弯曲
-            stroke: r.decoration.stroke,
+            stroke: hostMap.decoration.stroke,
           }
         );
         elevation.style.opacity = 1 - i * 0.12;
-        r.svg.appendChild(elevation);
+        hostMap.svg.appendChild(elevation);
       }
     }
 

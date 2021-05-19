@@ -27,12 +27,10 @@ export default {
 
     onMounted(() => {
       hostMap = reactive(new render(data.host));
-      hostMap.appendSvg((rough) => {
+      hostMap.on("watchDom", (rough) => {
         elevation(rough);
         (c.slots.header || props.header) && line(rough);
       });
-
-      hostMap.setDecoration(props.type);
     });
     function line(rough) {
       const rc = rough.svg(hostMap.svg);
@@ -48,6 +46,8 @@ export default {
     function elevation(rough) {
       var elev = props.elevation;
       const rc = rough.svg(hostMap.svg);
+      hostMap.svg.setAttributeNS(null, "width", hostMap.s.width + elev * 2);
+      hostMap.svg.setAttributeNS(null, "height", hostMap.s.height + elev * 2);
       for (var i = 0; i <= elev; i++) {
         if (elev === 0) return;
         var elevation = rc.linearPath(
