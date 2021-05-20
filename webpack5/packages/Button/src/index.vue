@@ -36,10 +36,28 @@ export default {
   setup(props) {
     const host = ref(null);
     let hostMap = null;
-
+    var assignObj = {
+      default: {},
+      primary: {
+        fill: "#2d8cf0",
+      },
+      info: {
+        fill: "#2db7f5",
+      },
+      success: {
+        fill: "#19be6b",
+      },
+      warning: {
+        fill: "#ff9900",
+      },
+      error: {
+        fill: "#ed4014",
+      },
+    };
     onMounted(() => {
+      let type = props.type || "default";
       hostMap = new render(host.value);
-      hostMap.setTypeStyle(props.type);
+      hostMap.setSvgStyle(assignObj[type]);
       hostMap.on("watchDom", (rough) => {
         elevation(rough);
       });

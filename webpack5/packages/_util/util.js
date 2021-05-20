@@ -9,14 +9,17 @@ import rough from "roughjs/bundled/rough.esm.js";
 //dashed 虚线 与hachure类似，但个别线条是虚线。虚线可以用dashOffset和dashGap属性来配置。
 //zigzag-line  与 hachure 类似，但个别线条是以 zig-zag 的方式绘制。之字形的大小可以使用 zigzagOffset 属性来配置 
 let d = {
+  //填充
   fillWeight: 1.3,//填充的粗细
   hachureAngle: -60, // 填充的角度,
-  hachureGap: 8,
+  hachureGap: 2,//填充率
   fillStyle: "hachure",//填充样式
+  seed:0,//填充超出边框线
+  // 外边框线
   stroke: "#333",//线的颜色
   strokeWidth: 1,//线的粗细
   bowing: 4,//线条扭曲程度
-  roughness: 1,//线条凌乱程度
+  roughness: 1,//线条凌乱程度  
 }
 export class render {
   constructor(el) {
@@ -27,10 +30,12 @@ export class render {
     this.decoration = {}
     Object.assign(this.decoration, d);
 
+
     // 订阅
     this.on("watchDom", () => {
-      this.r()
+      this.render_box()
     });
+
 
     this.initSvg()
   }
@@ -39,7 +44,7 @@ export class render {
     // 拦截背景颜色换成svg填充
     this.decoration.fill = getComputedStyle(this.host, null).backgroundColor
     this.host.style.background = "transparent"
-    // 插入dom
+    // 插入svg-dom
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     var overlay = document.createElement("div")
     overlay.classList.add('overlay');
@@ -53,14 +58,19 @@ export class render {
   $(dom) {
     return this.host.querySelector(dom)
   }
-  r() {
+  render_box() {
     this.s = this.host.getBoundingClientRect();
     this.elev = Math.min(Math.max(0, this.elevation), 5);
     this.clearNode()
     this.svg.setAttributeNS(null, "width", this.s.width);
     this.svg.setAttributeNS(null, "height", this.s.height);
 
-    this.rectangle()
+    const rc = rough.svg(this.svg);
+    let node = rc.rectangle(0.5, 0.5, this.s.width - 1, this.s.height - 1,
+      this.decoration
+    );
+    node.style.opacity = 0.8;
+    this.svg.appendChild(node);
   }
 
 
@@ -70,14 +80,7 @@ export class render {
     }
   }
 
-  rectangle() {
-    const rc = rough.svg(this.svg);
-    let node = rc.rectangle(0.5, 0.5, this.s.width - 1, this.s.height - 1,
-      this.decoration
-    );
-    node.style.opacity = 0.8;
-    this.svg.appendChild(node);
-  }
+
 
   //订阅事件
   on(eventType, handle) {
@@ -102,28 +105,10 @@ export class render {
     }
     return this;
   }
-  setTypeStyle(type = "default") {
-    var assignObj = {
-      default: {},
-      primary: {
-        fill: "#2d8cf0",
-      },
-      info: {
-        fill: "#2db7f5",
-      },
-      success: {
-        fill: "#19be6b",
-      },
-      warning: {
-        fill: "#ff9900",
-      },
-      error: {
-        fill: "#ed4014",
-      },
-    };
-    Object.assign(this.decoration, assignObj[type]);
+  setSvgStyle(obj) {
+    Object.assign(this.decoration, obj);
   }
- 
+
   /**
    * 监听元素的变化并执行回调函数
    * @param {Function} callback 回调函数

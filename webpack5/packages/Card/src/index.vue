@@ -27,6 +27,9 @@ export default {
 
     onMounted(() => {
       hostMap = reactive(new render(data.host));
+      hostMap.setSvgStyle({
+        hachureGap:1,
+      })
       hostMap.on("watchDom", (rough) => {
         elevation(rough);
         (c.slots.header || props.header) && line(rough);
