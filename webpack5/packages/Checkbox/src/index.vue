@@ -1,27 +1,35 @@
 <template>
   <div class="host" ref="host" :class="{ disabled: disabled }">
-    <input @change="change" type="checkbox" v-model="currentValue" />
+    <input
+      @change="change"
+      type="checkbox"
+      v-model="currentValue"
+    />
   </div>
   <slot></slot>
   {{ currentValue }}
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Checkbox",
+  emits: ["update:modelValue"],
   props: {
+    modelValue: {
+      type: Boolean,
+    },
     disabled: { type: Boolean, default: false },
   },
-  setup(props) {
-    let currentValue = ref(false);
+  setup(props,ctx) {
+    let currentValue = ref(props.modelValue);
     const host = ref(null);
     let hostMap = null;
     onMounted(() => {
       hostMap = new render(host.value);
       hostMap.on("watchDom", (rough) => {
-        if(currentValue.value) addTick(rough);
+        if (currentValue.value) addTick(rough);
       });
       hostMap.on("clickDom", (rough) => {
         if (currentValue.value) {
@@ -31,7 +39,9 @@ export default {
         }
       });
     });
-    function change(){}
+    function change() {
+      ctx.emit('update:modelValue', currentValue)
+    }
 
     function addTick(rough) {
       const rc = rough.svg(hostMap.svg);
