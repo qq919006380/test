@@ -25,12 +25,11 @@ export default {
   },
   setup(props, ctx) {
     const host = ref(null);
-    let r = null;
-    onMounted(() => {
-      r = new render(host.value);
-     
-    });
+    let hostMap = null;
     var text = ref(props.modelValue);
+    onMounted(() => {
+      hostMap = new render(host.value);
+    });
     function handleInpt() {
       ctx.emit("update:modelValue", text.value);
     }

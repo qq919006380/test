@@ -31,14 +31,20 @@ mkdir -p "$FILE_PATH/$NAME/src"
 
 cat > $DIRNAME/src/index.vue <<EOF
 <template>
-    demo
+    <div class="host" ref="host"></div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
+import { ref, onMounted } from "vue";
 export default {
     name:"${NAME}",
     setup(props) {
-
+      const host = ref(null);
+      let hostMap = null;
+      onMounted(() => {
+        hostMap = new render(host.value);
+      });
+      return {host}
     }
 }
 </script>
