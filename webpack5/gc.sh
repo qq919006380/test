@@ -36,7 +36,9 @@ cat > $DIRNAME/src/index.vue <<EOF
 <script>
 import { render } from "../../_util/util.js";
 import { ref, onMounted } from "vue";
+import '../../_style/index.less'
 export default {
+    props:{},
     name:"${NAME}",
     setup(props) {
       const host = ref(null);

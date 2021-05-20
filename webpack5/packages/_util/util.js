@@ -31,13 +31,14 @@ export class render {
     Object.assign(this.decoration, d);
 
 
-    // 订阅
-    this.on("watchDom", () => {
-      this.render_box()
-    });
-
-
     this.initSvg()
+
+    // 订阅
+    this.on("watchDom",()=>{
+      this.render_box()
+    })
+
+    
   }
 
   initSvg() {
@@ -50,10 +51,14 @@ export class render {
     overlay.classList.add('overlay');
     overlay.appendChild(this.svg);
     this.host.appendChild(overlay);
-    // 监控domSize
+    // 发布-监控domSize
     this.watchDom(this.host, () => {
       this.emit("watchDom", rough);
     })
+    // 发布-点击dom
+    this.host.addEventListener('click',()=>{
+			this.emit("clickDom", rough);
+		},false)
   }
   $(dom) {
     return this.host.querySelector(dom)

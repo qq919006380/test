@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Checkbox></Checkbox>
+        <Checkbox>x</Checkbox>
     </div>
 </template>
 <script>

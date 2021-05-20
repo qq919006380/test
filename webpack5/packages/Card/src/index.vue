@@ -12,6 +12,7 @@
 <script>
 import { onMounted, reactive, toRefs } from "vue";
 import { render } from "../../_util/util.js";
+import "../../_style/index.less";
 export default {
   name: "Card",
   props: {
@@ -28,8 +29,8 @@ export default {
     onMounted(() => {
       hostMap = reactive(new render(data.host));
       hostMap.setSvgStyle({
-        hachureGap:1,
-      })
+        hachureGap: 1,
+      });
       hostMap.on("watchDom", (rough) => {
         elevation(rough);
         (c.slots.header || props.header) && line(rough);
@@ -80,8 +81,6 @@ export default {
 <style lang="less" scoped>
 .host {
   width: 480px;
-  font-family: inherit;
-  position: relative;
   .card__header {
     padding: 20px;
     display: flex;
@@ -90,24 +89,6 @@ export default {
   }
   .card_content {
     padding: 20px;
-  }
-  & /deep/.overlay {
-    z-index: -3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    & /deep/ svg {
-      overflow: visible;
-      display: block;
-    }
-    & /deep/ svg /deep/ path {
-      stroke: currentColor;
-      stroke-width: 0.7;
-      fill: transparent;
-    }
   }
 }
 </style>

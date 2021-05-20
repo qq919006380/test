@@ -13,6 +13,7 @@
 </template>
 <script>
 import { render } from "../../_util/util.js";
+import "../../_style/index.less";
 import { ref, onMounted } from "vue";
 export default {
   name: "Input",
@@ -25,10 +26,9 @@ export default {
   },
   setup(props, ctx) {
     const host = ref(null);
-    let hostMap = null;
     var text = ref(props.modelValue);
     onMounted(() => {
-      hostMap = new render(host.value);
+      new render(host.value);
     });
     function handleInpt() {
       ctx.emit("update:modelValue", text.value);
@@ -62,28 +62,8 @@ export default {
 <style lang="less" scoped>
 .host {
   display: inline-block;
-  position: relative;
   padding: 5px;
-  font-family: sans-serif;
   width: 150px;
-  outline: none;
-  & /deep/ .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    & /deep/ svg {
-      overflow: visible;
-      display: block;
-    }
-    & /deep/ svg /deep/ path {
-      stroke: currentColor;
-      stroke-width: 0.7;
-      fill: transparent;
-    }
-  }
 }
 input {
   display: block;

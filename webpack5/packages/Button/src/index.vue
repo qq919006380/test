@@ -12,6 +12,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import { render } from "../../_util/util.js";
+import "../../_style/index.less";
 export default {
   name: "Button",
   props: {
@@ -98,10 +99,8 @@ export default {
 .host {
   min-width: 1px;
   display: inline-block;
-  font-family: inherit;
   cursor: pointer;
   padding: 8px 13px;
-  position: relative;
   text-align: center;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -110,24 +109,8 @@ export default {
   justify-content: center;
   flex-direction: column;
   outline: none;
-  & /deep/ .overlay {
-    z-index: -3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    & /deep/ svg {
-      overflow: visible;
-      display: block;
-    }
-    & /deep/ svg /deep/ path {
-      stroke: currentColor;
-      stroke-width: 0.7;
-      fill: transparent;
-      transition: transform 0.05s ease;
-    }
+  & /deep/ .overlay /deep/ svg /deep/ path {
+    transition: transform 0.05s ease;
   }
 }
 .host:active /deep/ path {
@@ -138,11 +121,6 @@ export default {
   stroke-width: 1.5;
 }
 
-.host.disabled {
-  opacity: 0.6 !important;
-  background: rgba(0, 0, 0, 0.07);
-  cursor: default;
-  pointer-events: none;
-}
+
 </style>
 
