@@ -6,11 +6,13 @@
       v-model="modelValue"
     />
   </div>
-  <slot></slot>——{{modelValue}}
+  <div class="content">
+    <slot></slot>
+  </div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Checkbox",
@@ -27,25 +29,23 @@ export default {
 
     onMounted(() => {
       hostMap = new render(host.value);
-      // 发布-点击dom
-      host.value.addEventListener(
-        "click",
-        () => {
-          hostMap.emit("clickDom", hostMap.rough);
-        },
-        false
-      );
+
       hostMap.on("watchDom", (rough) => {
         if (props.modelValue) addTick(rough);
       });
-      hostMap.on("clickDom", (rough) => {
-        if (props.modelValue) {
-          hostMap.svg.removeChild(hostMap.svg.lastChild);
-        } else {
-          addTick(rough);
-        }
-      });
     });
+
+    watch(
+      () => props.modelValue,
+      (count) => {
+        if (count) {
+          addTick(hostMap.rough);
+        } else {
+          hostMap.svg.removeChild(hostMap.svg.lastChild);
+        }
+      }
+    );
+
     function change(e) {
       ctx.emit("update:modelValue", e.target.checked);
     }
@@ -54,13 +54,12 @@ export default {
       const rc = rough.svg(hostMap.svg);
       var v = rc.linearPath(
         [
-          [-3, 8],
+          [-3, 12],
           [10, 21],
-          [32, -2],
+          [27, 0],
         ],
         {
           strokeWidth: 2,
-          bowing: 8,
         }
       );
 
@@ -73,9 +72,14 @@ export default {
 <style lang="less" scoped>
 .host {
   display: inline-block;
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   vertical-align: middle;
+  margin-right: 5px;
+}
+.content{
+  display: inline-block;
+  margin-right: 10px;
 }
 input[type="checkbox"] {
   outline: none;

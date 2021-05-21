@@ -67,6 +67,7 @@ export class render {
     this.clearNode()
     this.svg.setAttributeNS(null, "width", this.s.width);
     this.svg.setAttributeNS(null, "height", this.s.height);
+    this.svg.setAttributeNS(null, "overflow", "overlay");
 
     const rc = rough.svg(this.svg);
     let node = rc.rectangle(0.5, 0.5, this.s.width - 1, this.s.height - 1,
