@@ -26,9 +26,13 @@ export default {
   },
   setup(props, ctx) {
     const host = ref(null);
+    let hostMap = null;
     var text = ref(props.modelValue);
     onMounted(() => {
-      new render(host.value);
+      hostMap = new render(host.value);
+      hostMap.setSvgStyle({
+        bowing: 2,
+      });
     });
     function handleInpt() {
       ctx.emit("update:modelValue", text.value);
