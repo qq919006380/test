@@ -2,8 +2,7 @@
   <div
     class="host"
     ref="host"
-    :class="{ disabled: disabled }"
-    @click="$emit('click', $event.target)"
+    :class="{ disabled: disabled }"    
   >
     <slot></slot>
   </div>

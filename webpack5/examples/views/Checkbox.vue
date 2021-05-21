@@ -1,16 +1,24 @@
 <template>
+  <div>
     <div>
-        flag：{{flag}}
-        <Checkbox v-model="flag">x</Checkbox>
-        <Checkbox v-model="flag">x</Checkbox>
+      外面的flag：{{ flag }}
+      <Button @click="on">切换</Button>
     </div>
+    <Checkbox v-model="flag">x</Checkbox>
+    <Checkbox v-model="flag">x</Checkbox>
+  </div>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            flag:true
-        }
+  data() {
+    return {
+      flag: true,
+    };
+  },
+  methods: {
+    on() {
+      this.flag = !this.flag;
     },
-}
+  },
+};
 </script>

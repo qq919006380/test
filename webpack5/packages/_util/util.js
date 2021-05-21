@@ -14,7 +14,7 @@ let d = {
   hachureAngle: -60, // 填充的角度,
   hachureGap: 2,//填充率
   fillStyle: "hachure",//填充样式
-  seed:0,//填充超出边框线
+  seed: 0,//填充超出边框线
   // 外边框线
   stroke: "#333",//线的颜色
   strokeWidth: 1,//线的粗细
@@ -23,6 +23,7 @@ let d = {
 }
 export class render {
   constructor(el) {
+    this.rough = rough
     this.host = el
     this.svg = ""
     this.handles = {}; // 事件处理函数集合
@@ -34,11 +35,11 @@ export class render {
     this.initSvg()
 
     // 订阅
-    this.on("watchDom",()=>{
+    this.on("watchDom", () => {
       this.render_box()
     })
 
-    
+
   }
 
   initSvg() {
@@ -55,10 +56,7 @@ export class render {
     this.watchDom(this.host, () => {
       this.emit("watchDom", rough);
     })
-    // 发布-点击dom
-    this.host.addEventListener('click',()=>{
-			this.emit("clickDom", rough);
-		},false)
+
   }
   $(dom) {
     return this.host.querySelector(dom)

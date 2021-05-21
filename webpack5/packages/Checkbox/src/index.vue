@@ -1,13 +1,12 @@
 <template>
   <div class="host" ref="host" :class="{ disabled: disabled }">
     <input
-      @change="change"
+      @change="$emit('update:modelValue', $event.target.checked)"
       type="checkbox"
-      v-model="currentValue"
+      v-model="modelValue"
     />
   </div>
-  <slot></slot>
-  {{ currentValue }}
+  <slot></slot>——{{modelValue}}
 </template>
 <script>
 import { render } from "../../_util/util.js";
@@ -22,25 +21,33 @@ export default {
     },
     disabled: { type: Boolean, default: false },
   },
-  setup(props,ctx) {
-    let currentValue = ref(props.modelValue);
+  setup(props, ctx) {
     const host = ref(null);
     let hostMap = null;
+
     onMounted(() => {
       hostMap = new render(host.value);
+      // 发布-点击dom
+      host.value.addEventListener(
+        "click",
+        () => {
+          hostMap.emit("clickDom", hostMap.rough);
+        },
+        false
+      );
       hostMap.on("watchDom", (rough) => {
-        if (currentValue.value) addTick(rough);
+        if (props.modelValue) addTick(rough);
       });
       hostMap.on("clickDom", (rough) => {
-        if (currentValue.value) {
+        if (props.modelValue) {
           hostMap.svg.removeChild(hostMap.svg.lastChild);
         } else {
           addTick(rough);
         }
       });
     });
-    function change() {
-      ctx.emit('update:modelValue', currentValue)
+    function change(e) {
+      ctx.emit("update:modelValue", e.target.checked);
     }
 
     function addTick(rough) {
@@ -59,7 +66,7 @@ export default {
 
       hostMap.svg.appendChild(v);
     }
-    return { change, host, currentValue };
+    return { change, host };
   },
 };
 </script>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input v-model="text" type="text" />
     <Input v-model="text" @focus="focus"></Input>
     <Input v-model="text"></Input>
   </div>
