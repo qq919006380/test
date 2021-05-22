@@ -1,20 +1,13 @@
 <template>
-  <div>
-    <Child v-model="foo" val="1">Foo</Child>
-    {{ foo }}
-  </div>
+  <Child v-model="title"></Child>
 </template>
-
 <script>
 import Child from "./child";
-
 export default {
-  components: {
-    Child,
-  },
+  components: { Child },
   data() {
     return {
-      foo: [],
+      title: "react",
     };
   },
 };
