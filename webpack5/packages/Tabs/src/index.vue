@@ -1,15 +1,17 @@
 <template>
+  {{ modelValue }}
   <div class="host" ref="host">
     <div
-      class="tab-title"
-      :class="modelValue == title ? 'active' : ''"
-      @click="active(title)"
-      v-for="title in titles"
+      v-for="(title, index) in titles"
       :ref="
         (el) => {
-          if (modelValue === title) activeLineDom = el;
+          if (modelValue === title) selectedItem = el;
         }
       "
+      @click="active(title)"
+      class="tab-title"
+      :class="modelValue == title ? 'active' : ''"
+      :key="index"
     >
       {{ title }}
     </div>
@@ -20,21 +22,20 @@
 <script>
 import Tab from "../../Tab";
 import { render } from "../../_util/util.js";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import "../../_style/index.less";
 export default {
+  name: "Tabs",
   props: {
     modelValue: {
       type: String,
     },
   },
-  name: "Tabs",
   setup(props, ctx) {
     const host = ref(null);
     const defaults = ctx.slots.default();
     let hostMap = null;
-    let activeLineDom = ref(null);
-
+    let selectedItem = ref(null);
     defaults.forEach((val) => {
       if (val.type != Tab) {
         throw new Error("tabs 子标签必须是Tab");
@@ -50,13 +51,33 @@ export default {
         line(rough);
         activeLine(rough);
       });
+
+      watchEffect(
+        () => {
+          //1.删除最后一个activeLine
+          hostMap.svg.lastChild &&
+            hostMap.svg.removeChild(hostMap.svg.lastChild);
+          // 2添加activeLine
+          activeLine(hostMap.rough);
+
+          // 移动
+          let { left, width } = selectedItem.value.getBoundingClientRect();
+          var line = hostMap.$(".activeLine");
+          line.setAttribute("transform", `translate(${left},0)`);
+          
+          
+        },
+        {
+          flush: "post",
+        }
+      );
     });
     // 选中下划线
     function activeLine(rough) {
-      var itemLine = activeLineDom.value.getBoundingClientRect();
+      var itemLine = selectedItem.value.getBoundingClientRect();
       const rc = rough.svg(hostMap.svg);
       var line = rc.line(
-        22,
+        0,
         itemLine.height + 18,
         itemLine.width,
         itemLine.height + 18,
@@ -84,24 +105,10 @@ export default {
       hostMap.svg.appendChild(line);
     }
     function active(title) {
-      //1.删除最后一个activeLine
-      hostMap.svg.removeChild(hostMap.svg.lastChild);
-      // 2添加activeLine
-      activeLine(hostMap.rough);
-
-      
-      // 移动
-      let tgLeft = activeLineDom.value.getBoundingClientRect().left;
-      var line = hostMap.$(".activeLine");
-      line.setAttribute("transform", `translate(${tgLeft},0)`);
-      line.setAttribute("width", `1002px`);
-
-      
-
-
       ctx.emit("update:modelValue", title);
     }
-    return { host, defaults, titles, active, activeLineDom };
+
+    return { host, defaults, titles, active, selectedItem };
   },
 };
 </script>
@@ -116,12 +123,14 @@ export default {
   padding: 8px;
   cursor: pointer;
 }
-& /deep/ .activeLine {
+
+& /deep/ g.activeLine {
   transition: all 250ms;
 }
 .tab-title.active {
   // background: pink;
 }
 </style>
+
 
 
