@@ -1,14 +1,16 @@
 <template>
-  <Child v-model:selected="title"></Child>
+  <div ref="host">说 </div>
 </template>
 <script>
-import Child from "./child";
+import { onMounted, ref } from "vue";
 export default {
-  components: { Child },
-  data() {
-    return {
-      title: "react",
-    };
+  setup(props) {
+    var host = ref(null);
+    onMounted(() => {
+      host = host;
+      console.log(host.value.getBoundingClientRect())
+    });
+    return { host };
   },
 };
 </script>

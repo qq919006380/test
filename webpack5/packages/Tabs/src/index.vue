@@ -24,7 +24,7 @@
 <script>
 import Tab from "../../Tab";
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watchEffect ,computed} from "vue";
+import { ref, onMounted, watchEffect, computed, onUnmounted } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Tabs",
@@ -49,6 +49,10 @@ export default {
     });
     const current = computed(() => {
       return defaults.find((tag) => tag.props.title === props.modelValue);
+    });
+
+    onUnmounted(() => {
+      activeLine = () => {};
     });
     onMounted(() => {
       hostMap = new render(host.value);
@@ -78,17 +82,16 @@ export default {
       );
     });
     // 选中下划线
-    function activeLine(rough) {
-      console.log(indicator.value);
+    let activeLine = (rough) => {
       var hostWidth = host.value.getBoundingClientRect().width;
-      var { height } = selectedItem.value.getBoundingClientRect();
+      var height = selectedItem.value.getBoundingClientRect().height;
       const rc = rough.svg(indicator.value);
       var line = rc.line(0, height - 3, hostWidth, height - 3, {
         stroke: "#0087D2",
         strokeWidth: 2,
       });
       indicator.value.appendChild(line);
-    }
+    };
     // 默认线
     function line(rough) {
       const rc = rough.svg(hostMap.svg);
@@ -108,7 +111,7 @@ export default {
       ctx.emit("update:modelValue", title);
     }
 
-    return { host, defaults, titles, active, selectedItem, indicator,current };
+    return { host, defaults, titles, active, selectedItem, indicator, current };
   },
 };
 </script>
