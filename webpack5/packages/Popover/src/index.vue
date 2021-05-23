@@ -1,21 +1,42 @@
 <template>
-  <div class="pencil_host pencil_Popover" ref="host"></div>
-  <Button><slot></slot></Button>
+  <teleport to="body">
+    <div class="pencil_host pencil_Popover" ref="host" v-if="modalOpen">
+      <slot name="content">
+        I'm a teleported modal! (My parent is "body")
+        <button @click="modalOpen = false">Close</button>
+      </slot>
+    </div>
+  </teleport>
+
+  <div @click="modalOpen = true">
+    <slot></slot>
+  </div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect, nextTick } from "vue";
 import "../../_style/index.less";
 export default {
   props: {},
   name: "Popover",
-  setup(props) {
+  setup(props, ctx) {
     const host = ref(null);
     let hostMap = null;
-    onMounted(() => {
-      hostMap = new render(host.value);
+    let modalOpen = ref(true);
+    watchEffect(() => {
+      if (modalOpen.value) {
+        nextTick(() => {
+          hostMap = new render(host.value, [
+            [690, 130],
+            [790, 140],
+            [750, 240],
+            [690, 220],
+          ]);
+        });
+      }
     });
-    return { host };
+    onMounted(() => {});
+    return { host, modalOpen };
   },
 };
 </script>

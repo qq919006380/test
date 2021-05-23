@@ -22,7 +22,7 @@ let d = {
   roughness: 1,//线条凌乱程度  
 }
 export class render {
-  constructor(el) {
+  constructor(el, csys) {
     this.rough = rough
     this.host = el
     this.svg = ""
@@ -36,7 +36,12 @@ export class render {
 
     // 订阅
     this.on("watchHost", () => {
-      this.render_box()
+      if (csys) {
+        this.render_csys(csys)
+      } else {
+        this.render_box()
+      }
+
     })
 
 
@@ -54,7 +59,7 @@ export class render {
     overlay.appendChild(this.svg);
     this.host.appendChild(overlay);
     // 发布-监控domSize
-    this.watchDom(this.host, () => {
+    this.watchDom(this.host, (csys) => {
       this.emit("watchHost", rough);
     })
 
@@ -62,6 +67,7 @@ export class render {
   $(dom) {
     return this.host.querySelector(dom)
   }
+  // 渲染盒子
   render_box() {
     this.s = this.host.getBoundingClientRect();
     this.elev = Math.min(Math.max(0, this.elevation), 5);
@@ -69,7 +75,6 @@ export class render {
     this.svg.setAttributeNS(null, "width", this.s.width);
     this.svg.setAttributeNS(null, "height", this.s.height);
     this.svg.setAttributeNS(null, "overflow", "overlay");
-
     const rc = rough.svg(this.svg);
     let node = rc.rectangle(0.5, 0.5, this.s.width - 1, this.s.height - 1,
       this.decoration
@@ -77,8 +82,18 @@ export class render {
     node.style.opacity = 0.8;
     this.svg.appendChild(node);
   }
-
-
+  // 渲染不规则图案
+  render_csys(csys) {
+    this.s = this.host.getBoundingClientRect();
+    this.clearNode()
+    this.svg.setAttributeNS(null, "width", this.s.width);
+    this.svg.setAttributeNS(null, "height", this.s.height);
+    this.svg.setAttributeNS(null, "overflow", "overlay");
+    const rc = rough.svg(this.svg);
+    let node = rc.polygon(csys, this.decoration);
+    node.style.opacity = 0.8;
+    this.svg.appendChild(node);
+  }
   clearNode() {
     while (this.svg.hasChildNodes()) {
       this.svg.removeChild(this.svg.lastChild);
