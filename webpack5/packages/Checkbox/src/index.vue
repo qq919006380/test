@@ -1,12 +1,12 @@
 <template>
-  <div class="host" ref="host" :class="{ disabled: disabled }">
+  <div class="pencil_host pencil_checkbox" ref="host" :class="{ disabled: disabled }">
     <input
       @change="$emit('update:modelValue', $event.target.checked)"
       type="checkbox"
       v-model="modelValue"
     />
   </div>
-  <div class="content">
+  <div class="pencil_content">
     <slot></slot>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
     onMounted(() => {
       hostMap = new render(host.value);
 
-      hostMap.on("watchDom", (rough) => {
+      hostMap.on("watchHost", (rough) => {
         if (props.modelValue) addTick(rough);
       });
     });
@@ -69,25 +69,25 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-.host {
+<style lang="less">
+.pencil_checkbox {
   display: inline-block;
   width: 22px;
   height: 22px;
   vertical-align: middle;
   margin-right: 5px;
+  input[type="checkbox"] {
+    outline: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+  }
 }
-.content{
+.pencil_content {
   display: inline-block;
   margin-right: 10px;
-}
-input[type="checkbox"] {
-  outline: none;
-  border: none;
-  width: 24px;
-  height: 24px;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
 }
 </style>

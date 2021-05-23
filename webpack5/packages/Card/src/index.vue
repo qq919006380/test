@@ -1,9 +1,9 @@
 <template>
-  <div class="host" ref="host">
-    <div v-if="$slots.header || header" class="card__header">
+  <div class="pencil_host pencil_card" ref="host">
+    <div v-if="$slots.header || header" class="pencil_card_header">
       <slot name="header">{{ header }}</slot>
     </div>
-    <div class="card_content">
+    <div class="pencil_card_content">
       <slot></slot>
     </div>
   </div>
@@ -31,14 +31,14 @@ export default {
       hostMap.setSvgStyle({
         hachureGap: 1,
       });
-      hostMap.on("watchDom", (rough) => {
+      hostMap.on("watchHost", (rough) => {
         elevation(rough);
         (c.slots.header || props.header) && line(rough);
       });
     });
     function line(rough) {
       const rc = rough.svg(hostMap.svg);
-      let headerDom = hostMap.$(".card__header").getBoundingClientRect();
+      let headerDom = hostMap.$(".pencil_card_header").getBoundingClientRect();
       var line = rc.line(
         0,
         headerDom.height,
@@ -79,15 +79,15 @@ export default {
 
 
 <style lang="less" scoped>
-.host {
+.pencil_card {
   width: 480px;
-  .card__header {
+  .pencil_card_header {
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .card_content {
+  .pencil_card_content {
     padding: 20px;
   }
 }

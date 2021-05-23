@@ -6,7 +6,7 @@
     </div>
     <Checkbox v-model="flag">x</Checkbox>
     <Checkbox v-model="flag">x</Checkbox>
-    <Checkbox v-model="flase">x</Checkbox>
+    <Checkbox v-model="flag1">x</Checkbox>
   </div>
 </template>
 <script>
@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       flag: true,
+      flag1:false
     };
   },
   methods: {

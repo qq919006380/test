@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="host"
-    ref="host"
-    :class="{ disabled: disabled }"    
-  >
+  <div class="pencil_host pencil_button" ref="host" :class="{ disabled: disabled }">
     <slot></slot>
   </div>
 </template>
@@ -58,7 +54,7 @@ export default {
       let type = props.type || "default";
       hostMap = new render(host.value);
       hostMap.setSvgStyle(assignObj[type]);
-      hostMap.on("watchDom", (rough) => {
+      hostMap.on("watchHost", (rough) => {
         elevation(rough);
       });
     });
@@ -94,8 +90,8 @@ export default {
 
 
 
-<style lang="less" scoped>
-.host {
+<style lang="less">
+.pencil_button {
   min-width: 1px;
   display: inline-block;
   cursor: pointer;
@@ -108,18 +104,17 @@ export default {
   justify-content: center;
   flex-direction: column;
   outline: none;
-  & /deep/ .overlay /deep/ svg /deep/ path {
+  & .pencil_overlay /deep/ svg /deep/ path {
     transition: transform 0.05s ease;
   }
 }
-.host:active /deep/ path {
+.pencil_host:active /deep/ path {
   transform: scale(0.97) translate(0.5%, 0.5%);
 }
 
-.host:focus /deep/ path {
+.pencil_host:focus /deep/ path {
   stroke-width: 1.5;
 }
-
-
 </style>
+
 

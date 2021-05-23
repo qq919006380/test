@@ -31,7 +31,7 @@ mkdir -p "$FILE_PATH/$NAME/src"
 
 cat > $DIRNAME/src/index.vue <<EOF
 <template>
-    <div class="host" ref="host"></div>
+    <div class="pencil_host pencil_${NAME}" ref="host"></div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
@@ -50,7 +50,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 
 </style>
 EOF

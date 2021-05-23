@@ -35,11 +35,11 @@ export class render {
     this.initSvg()
 
     // 订阅
-    this.on("watchDom", () => {
+    this.on("watchHost", () => {
       this.render_box()
     })
 
-    
+
 
   }
 
@@ -50,12 +50,12 @@ export class render {
     // 插入svg-dom
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     var overlay = document.createElement("div")
-    overlay.classList.add('overlay');
+    overlay.classList.add('pencil_overlay');
     overlay.appendChild(this.svg);
     this.host.appendChild(overlay);
     // 发布-监控domSize
     this.watchDom(this.host, () => {
-      this.emit("watchDom", rough);
+      this.emit("watchHost", rough);
     })
 
   }

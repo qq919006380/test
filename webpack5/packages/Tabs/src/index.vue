@@ -1,6 +1,6 @@
 <template>
-  <div class="host" ref="host">
-    <div class="tab-nav">
+  <div class="pencil_host pencil_tab" ref="host">
+    <div class="pencil_tab_nav">
       <div
         v-for="(title, index) in titles"
         :ref="
@@ -9,13 +9,12 @@
           }
         "
         @click="active(title)"
-        class="tab-title"
-        :class="modelValue == title ? 'active' : ''"
+        class="pencil_tab_title"
         :key="index"
       >
         {{ title }}
       </div>
-      <svg id="nav-indicator" ref="indicator"></svg>
+      <svg id="pencil_nav_indicator" ref="indicator"></svg>
     </div>
 
     <component :is="current" :key="current.props.title"></component>
@@ -56,7 +55,7 @@ export default {
     });
     onMounted(() => {
       hostMap = new render(host.value);
-      hostMap.on("watchDom", (rough) => {
+      hostMap.on("watchHost", (rough) => {
         line(rough);
         activeLine(rough);
       });
@@ -95,7 +94,7 @@ export default {
     // 默认线
     function line(rough) {
       const rc = rough.svg(hostMap.svg);
-      let headerDom = hostMap.$(".tab-nav").getBoundingClientRect();
+      let headerDom = hostMap.$(".pencil_tab_nav").getBoundingClientRect();
       var line = rc.line(
         20,
         headerDom.height + 18,
@@ -116,22 +115,22 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.host {
+.pencil_tab {
   padding: 20px;
   max-width: 800px;
-}
-.tab-title {
-  display: inline-block;
-  margin-right: 10px;
-  padding: 8px;
-  cursor: pointer;
-  position: relative;
-}
+  .pencil_tab_title {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+  }
 
-svg#nav-indicator {
-  transition: all 250ms;
-  position: absolute;
-  z-index: -1;
+  svg#pencil_nav_indicator {
+    transition: all 250ms;
+    position: absolute;
+    z-index: -1;
+  }
 }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="host" ref="host">
+  <div class="pencil_host pencil_input" ref="host">
     <input
       type="text"
       @input="$emit('update:modelValue', $event.target.value)"
@@ -58,20 +58,20 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.host {
+.pencil_input {
   display: inline-block;
   padding: 5px;
   width: 150px;
-}
-input {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-  border: none;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
+  & > input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+  }
 }
 </style>

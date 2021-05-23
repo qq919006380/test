@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="pencil_tab_content">
     <slot></slot>
   </div>
 </template>
@@ -9,7 +9,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.content {
+.pencil_tab_content {
   padding: 20px;
 }
 </style>
