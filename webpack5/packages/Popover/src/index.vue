@@ -2,7 +2,7 @@
   <teleport to="body">
     <div
       :class="'popover_position_' + position"
-      class="pencil_host pencil_Popover"
+      class="pencil_host pencil_popover"
       ref="host"
       v-if="modalOpen"
     >
@@ -16,7 +16,9 @@
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watchEffect, nextTick, onUnmounted } from "vue";
+import { onEvent } from "./onClick";
+import { xy } from "./xy";
+import { ref, onMounted, watchEffect, nextTick, onBeforeUnmount } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Popover",
@@ -41,167 +43,37 @@ export default {
     const contentWrapper = ref(null);
     let hostMap = null;
     let modalOpen = ref(false);
-
+    let { addPopoverListeners, removePopoverListeners } = onEvent(
+      contentWrapper,
+      host,
+      modalOpen,
+      props
+    );
+    let { csys, positionContent } = xy(contentWrapper, host, props);
     watchEffect(() => {
       if (modalOpen.value) {
         nextTick(() => {
           hostMap = new render(host.value, csys());
+
           hostMap.setSvgStyle({
             bowing: 2,
           });
           positionContent();
-          // 渲染svg坐标
-          function csys() {
-            const { width: w, height: h } = host.value.getBoundingClientRect();
-            const { width } = contentWrapper.value.getBoundingClientRect();
-            var offset = 0;
-            let val = "";
-            switch (props.position) {
-              case "top":
-                val = [
-                  [2, 2],
-                  [w - 2, 2],
-                  [w - 2, h - offset],
-                  [width / 2 + 8, h - offset],
-                  [width / 2, h - offset + 8],
-                  [width / 2 - 8, h - offset],
-                  [0, h - offset],
-                ];
-                break;
-              case "left":
-                val = [
-                  [2, 2],
-                  [w - offset, 2],
-                  [w - offset, h / 2 - 8],
-                  [w - offset + 8, h / 2],
-                  [w - offset, h / 2 + 8],
-                  [w - offset, h],
-                  [2, h - 2],
-                ];
-                break;
-              case "right":
-                val = [
-                  [offset, 2],
-                  [w - 2, 2],
-                  [w - 2, h - 2],
-                  [offset, h - 2],
-                  [offset, h / 2 + 8],
-                  [offset - 8, h / 2],
-                  [offset, h / 2 - 8],
-                ];
-
-                break;
-              default:
-                val = [
-                  [2, offset],
-                  [0, h - 2],
-                  [w - 2, h - 2],
-                  [w - 2, offset],
-                  [width / 2 + 8, offset],
-                  [width / 2, offset - 8],
-                  [width / 2 - 8, offset],
-                ];
-            }
-            return val;
-          }
-          // 弹窗的位置
-          function positionContent() {
-            const {
-              width,
-              height,
-              top,
-              left,
-            } = contentWrapper.value.getBoundingClientRect();
-
-            const { height: height2 } = host.value.getBoundingClientRect();
-            let positions = {
-              top: {
-                top: top + window.scrollY,
-                left: left + window.scrollX,
-              },
-              bottom: {
-                top: top + height + window.scrollY,
-                left: left + window.scrollX,
-              },
-              left: {
-                top: top + window.scrollY + (height - height2) / 2,
-                left: left + window.scrollX,
-              },
-              right: {
-                top: top + window.scrollY + (height - height2) / 2,
-                left: left + window.scrollX + width,
-              },
-            };
-            host.value.style.left = positions[props.position].left + "px";
-            host.value.style.top = positions[props.position].top + "px";
-          }
         });
       }
     });
     onMounted(() => {
       addPopoverListeners();
     });
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       removePopoverListeners();
     });
-
-    var onClickDocument = (e) => {
-      if (
-        contentWrapper.value &&
-        (contentWrapper.value === e.target ||
-          contentWrapper.value.contains(e.target))
-      ) {
-        return;
-      }
-      if (
-        host.value &&
-        (host.value === e.target || host.value.contains(e.target))
-      ) {
-        return;
-      }
-      close();
-    };
-    var onClick = (event) => {
-      if (contentWrapper.value.contains(event.target)) {
-        if (modalOpen.value === true) {
-          close();
-        } else {
-          open();
-        }
-      }
-    };
-    var open = () => {
-      modalOpen.value = true;
-      document.addEventListener("click", onClickDocument);
-    };
-    var close = () => {
-      modalOpen.value = false;
-      document.removeEventListener("click", onClickDocument);
-    };
-
-    function addPopoverListeners() {
-      if (props.trigger === "click") {
-        contentWrapper.value.addEventListener("click", onClick);
-      } else {
-        contentWrapper.value.addEventListener("mouseenter", open);
-        contentWrapper.value.addEventListener("mouseleave", close);
-      }
-    }
-    function removePopoverListeners() {
-      if (props.trigger === "click") {
-        contentWrapper.value.removeEventListener("click", onClick);
-      } else {
-        contentWrapper.value.removeEventListener("mouseenter", open);
-        contentWrapper.value.removeEventListener("mouseleave", close);
-      }
-    }
-
     return { host, modalOpen, contentWrapper };
   },
 };
 </script>
 <style lang="less">
-.pencil_Popover {
+.pencil_popover {
   min-width: 1px;
   padding: 8px 13px;
   position: absolute;

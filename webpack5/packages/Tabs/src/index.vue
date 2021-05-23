@@ -23,7 +23,7 @@
 <script>
 import Tab from "../../Tab";
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watchEffect, computed, onUnmounted } from "vue";
+import { ref, onMounted, watchEffect, computed, onBeforeUnmount } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Tabs",
@@ -50,7 +50,7 @@ export default {
       return defaults.find((tag) => tag.props.title === props.modelValue);
     });
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       activeLine = () => {};
     });
     onMounted(() => {

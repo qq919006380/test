@@ -3,7 +3,7 @@
     <div class="xxx">
       <Popover position="top">
         <template #content>弹出的内容</template>
-        <Button>top</Button>
+        <button>top</button>
       </Popover>
     </div>
 
