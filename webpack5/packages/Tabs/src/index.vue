@@ -1,28 +1,30 @@
 <template>
-  {{ modelValue }}
   <div class="host" ref="host">
-    <div
-      v-for="(title, index) in titles"
-      :ref="
-        (el) => {
-          if (modelValue === title) selectedItem = el;
-        }
-      "
-      @click="active(title)"
-      class="tab-title"
-      :class="modelValue == title ? 'active' : ''"
-      :key="index"
-    >
-      {{ title }}
+    <div class="tab-nav">
+      <div
+        v-for="(title, index) in titles"
+        :ref="
+          (el) => {
+            if (modelValue === title) selectedItem = el;
+          }
+        "
+        @click="active(title)"
+        class="tab-title"
+        :class="modelValue == title ? 'active' : ''"
+        :key="index"
+      >
+        {{ title }}
+      </div>
+      <svg id="nav-indicator" ref="indicator"></svg>
     </div>
-    <div>阿萨德</div>
-    <!-- <component :is="c" v-for="c in defaults"></component> -->
+
+    <component :is="current" :key="current.props.title"></component>
   </div>
 </template>
 <script>
 import Tab from "../../Tab";
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect ,computed} from "vue";
 import "../../_style/index.less";
 export default {
   name: "Tabs",
@@ -33,18 +35,21 @@ export default {
   },
   setup(props, ctx) {
     const host = ref(null);
+    const indicator = ref(null);
     const defaults = ctx.slots.default();
     let hostMap = null;
     let selectedItem = ref(null);
     defaults.forEach((val) => {
       if (val.type != Tab) {
-        throw new Error("tabs 子标签必须是Tab");
+        throw new Error("Tabs 子标签必须是Tab");
       }
     });
     let titles = defaults.map((val) => {
       return val.props.title;
     });
-
+    const current = computed(() => {
+      return defaults.find((tag) => tag.props.title === props.modelValue);
+    });
     onMounted(() => {
       hostMap = new render(host.value);
       hostMap.on("watchDom", (rough) => {
@@ -54,18 +59,18 @@ export default {
 
       watchEffect(
         () => {
-          //1.删除最后一个activeLine
-          hostMap.svg.lastChild &&
-            hostMap.svg.removeChild(hostMap.svg.lastChild);
-          // 2添加activeLine
-          activeLine(hostMap.rough);
-
           // 移动
-          let { left, width } = selectedItem.value.getBoundingClientRect();
-          var line = hostMap.$(".activeLine");
-          line.setAttribute("transform", `translate(${left},0)`);
-          
-          
+          let {
+            left,
+            width,
+            height,
+          } = selectedItem.value.getBoundingClientRect();
+
+          indicator.value.setAttributeNS(null, "width", width);
+          indicator.value.setAttributeNS(null, "height", height);
+          // indicator.value.setAttributeNS(null, "overflow", "overlay");
+          indicator.value.style.top = top + "px";
+          indicator.value.style.left = left - 8 + "px";
         },
         {
           flush: "post",
@@ -74,30 +79,25 @@ export default {
     });
     // 选中下划线
     function activeLine(rough) {
-      var itemLine = selectedItem.value.getBoundingClientRect();
-      const rc = rough.svg(hostMap.svg);
-      var line = rc.line(
-        0,
-        itemLine.height + 18,
-        itemLine.width,
-        itemLine.height + 18,
-        {
-          stroke: "#0087D2",
-          strokeWidth: 2,
-        }
-      );
-      line.setAttributeNS(null, "class", "activeLine");
-      hostMap.svg.appendChild(line);
+      console.log(indicator.value);
+      var hostWidth = host.value.getBoundingClientRect().width;
+      var { height } = selectedItem.value.getBoundingClientRect();
+      const rc = rough.svg(indicator.value);
+      var line = rc.line(0, height - 3, hostWidth, height - 3, {
+        stroke: "#0087D2",
+        strokeWidth: 2,
+      });
+      indicator.value.appendChild(line);
     }
     // 默认线
     function line(rough) {
       const rc = rough.svg(hostMap.svg);
-      let headerDom = hostMap.host.getBoundingClientRect();
+      let headerDom = hostMap.$(".tab-nav").getBoundingClientRect();
       var line = rc.line(
         20,
-        headerDom.height - 40,
+        headerDom.height + 18,
         headerDom.width - 20,
-        headerDom.height - 40,
+        headerDom.height + 18,
         {
           stroke: "#999",
         }
@@ -108,7 +108,7 @@ export default {
       ctx.emit("update:modelValue", title);
     }
 
-    return { host, defaults, titles, active, selectedItem };
+    return { host, defaults, titles, active, selectedItem, indicator,current };
   },
 };
 </script>
@@ -122,13 +122,13 @@ export default {
   margin-right: 10px;
   padding: 8px;
   cursor: pointer;
+  position: relative;
 }
 
-& /deep/ g.activeLine {
+svg#nav-indicator {
   transition: all 250ms;
-}
-.tab-title.active {
-  // background: pink;
+  position: absolute;
+  z-index: -1;
 }
 </style>
 

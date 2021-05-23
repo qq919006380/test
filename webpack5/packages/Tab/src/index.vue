@@ -1,23 +1,15 @@
 <template>
-    <div class="host" ref="host">s</div>
+  <div class="content">
+    <slot></slot>
+  </div>
 </template>
 <script>
-import { render } from "../../_util/util.js";
-import { ref, onMounted } from "vue";
-import '../../_style/index.less'
 export default {
-    props:{},
-    name:"Tab",
-    setup(props) {
-      const host = ref(null);
-      let hostMap = null;
-      onMounted(() => {
-        hostMap = new render(host.value);
-      });
-      return {host}
-    }
-}
+  name: "Tab",
+};
 </script>
 <style lang="less" scoped>
-
+.content {
+  padding: 20px;
+}
 </style>
