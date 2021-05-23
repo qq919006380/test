@@ -1,5 +1,9 @@
 <template>
-  <div class="pencil_host pencil_button" ref="host" :class="{ disabled: disabled }">
+  <div
+    class="pencil_host pencil_button"
+    ref="host"
+    :class="{ disabled: disabled }"
+  >
     <slot></slot>
   </div>
 </template>
@@ -104,16 +108,12 @@ export default {
   justify-content: center;
   flex-direction: column;
   outline: none;
-  & .pencil_overlay /deep/ svg /deep/ path {
-    transition: transform 0.05s ease;
+  &:active path {
+    transform: scale(0.97) translate(0.5%, 0.5%);
   }
-}
-.pencil_host:active /deep/ path {
-  transform: scale(0.97) translate(0.5%, 0.5%);
-}
-
-.pencil_host:focus /deep/ path {
-  stroke-width: 1.5;
+  &:focus path {
+    stroke-width: 1.5;
+  }
 }
 </style>
 

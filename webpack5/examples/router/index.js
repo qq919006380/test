@@ -30,6 +30,11 @@ const routes = [
     path: '/tab',
     name: 'tab',
     component: () => import('../views/tab.vue')
+  },
+  {
+    path: '/Popover',
+    name: 'Popover',
+    component: () => import('../views/Popover.vue')
   }
 ]
 
