@@ -1,6 +1,11 @@
 <template>
   <teleport to="body">
-    <div :class="'popover_position_'+position" class="pencil_host pencil_Popover " ref="host" v-if="modalOpen">
+    <div
+      :class="'popover_position_' + position"
+      class="pencil_host pencil_Popover"
+      ref="host"
+      v-if="modalOpen"
+    >
       <slot name="content">
         I'm a teleported modal! (My parent is "body")
         <button @click="modalOpen = false">Close</button>
@@ -47,18 +52,20 @@ export default {
           positionContent();
           // 渲染svg坐标
           function csys() {
-            var { width: w, height: h } = host.value.getBoundingClientRect();
+            const { width: w, height: h } = host.value.getBoundingClientRect();
+            const { width } = contentWrapper.value.getBoundingClientRect();
             var offset = 0;
             let val = "";
+            console.log(contentWrapper.value.getBoundingClientRect());
             switch (props.position) {
               case "top":
                 val = [
                   [2, 2],
                   [w - 2, 2],
                   [w - 2, h - offset],
-                  [w / 2 + 8, h - offset],
-                  [w / 2, h - offset + 8],
-                  [w / 2 - 8, h - offset],
+                  [width / 2 + 8, h - offset],
+                  [width / 2, h - offset + 8],
+                  [width / 2 - 8, h - offset],
                   [0, h - offset],
                 ];
                 break;
@@ -91,9 +98,9 @@ export default {
                   [0, h - 2],
                   [w - 2, h - 2],
                   [w - 2, offset],
-                  [w / 2 + 8, offset],
-                  [w / 2, offset - 8],
-                  [w / 2 - 8, offset],
+                  [width / 2 + 8, offset],
+                  [width / 2, offset - 8],
+                  [width / 2 - 8, offset],
                 ];
             }
             return val;
@@ -108,7 +115,6 @@ export default {
             } = contentWrapper.value.getBoundingClientRect();
 
             const { height: height2 } = host.value.getBoundingClientRect();
-
             let positions = {
               top: {
                 top: top + window.scrollY,
