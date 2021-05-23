@@ -15,6 +15,7 @@ let d = {
   hachureGap: 2,//填充率
   fillStyle: "hachure",//填充样式
   seed: 0,//填充超出边框线
+  fill:"pink",
   // 外边框线
   stroke: "#333",//线的颜色
   strokeWidth: 1,//线的粗细

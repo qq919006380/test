@@ -16,14 +16,7 @@
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import {
-  ref,
-  onMounted,
-  watchEffect,
-  nextTick,
-  computed,
-  onUnmounted,
-} from "vue";
+import { ref, onMounted, watchEffect, nextTick, onUnmounted } from "vue";
 import "../../_style/index.less";
 export default {
   name: "Popover",
@@ -151,18 +144,43 @@ export default {
     onUnmounted(() => {
       removePopoverListeners();
     });
-    var onClick = () => {
-      modalOpen.value = !modalOpen.value;
+
+    var onClickDocument = (e) => {
+      if (
+        contentWrapper.value &&
+        (contentWrapper.value === e.target ||
+          contentWrapper.value.contains(e.target))
+      ) {
+        return;
+      }
+      if (
+        host.value &&
+        (host.value === e.target || host.value.contains(e.target))
+      ) {
+        return;
+      }
+      close();
+    };
+    var onClick = (event) => {
+      if (contentWrapper.value.contains(event.target)) {
+        if (modalOpen.value === true) {
+          close();
+        } else {
+          open();
+        }
+      }
     };
     var open = () => {
       modalOpen.value = true;
+      document.addEventListener("click", onClickDocument);
     };
     var close = () => {
       modalOpen.value = false;
+      document.removeEventListener("click", onClickDocument);
     };
+
     function addPopoverListeners() {
       if (props.trigger === "click") {
-        window.el = contentWrapper.value;
         contentWrapper.value.addEventListener("click", onClick);
       } else {
         contentWrapper.value.addEventListener("mouseenter", open);
