@@ -2,19 +2,19 @@
   <div class="host" ref="host">
     <input
       type="text"
-      @input="handleInpt"
+      @input="$emit('update:modelValue', $event.target.value)"
       @blur="handleBlur"
       @focus="handleFocus"
       @change="handleChange"
       @keydown="handleKeydown"
-      v-model="text"
+      v-model="modelValue"
     />
   </div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
 import "../../_style/index.less";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 export default {
   name: "Input",
   emits: ["update:modelValue", "change", "focus", "blur", "keydown"],
@@ -27,16 +27,12 @@ export default {
   setup(props, ctx) {
     const host = ref(null);
     let hostMap = null;
-    var text = ref(props.modelValue);
     onMounted(() => {
       hostMap = new render(host.value);
       hostMap.setSvgStyle({
         bowing: 2,
       });
     });
-    function handleInpt() {
-      ctx.emit("update:modelValue", text.value);
-    }
     const handleBlur = (event) => {
       ctx.emit("blur", event);
     };
@@ -53,8 +49,6 @@ export default {
 
     return {
       host,
-      text,
-      handleInpt,
       handleBlur,
       handleFocus,
       handleChange,

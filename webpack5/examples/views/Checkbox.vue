@@ -6,6 +6,7 @@
     </div>
     <Checkbox v-model="flag">x</Checkbox>
     <Checkbox v-model="flag">x</Checkbox>
+    <Checkbox v-model="flase">x</Checkbox>
   </div>
 </template>
 <script>
