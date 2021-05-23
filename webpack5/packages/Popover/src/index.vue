@@ -6,24 +6,24 @@
       ref="host"
       v-if="modalOpen"
     >
-      <slot name="content">
-        I'm a teleported modal! (My parent is "body")
-        <button @click="modalOpen = false">Close</button>
-      </slot>
+      <slot name="content"></slot>
     </div>
   </teleport>
 
-  <div
-    class="popover_contentWrapper"
-    ref="contentWrapper"
-    @click="modalOpen = true"
-  >
+  <div class="popover_contentWrapper" ref="contentWrapper">
     <slot></slot>
   </div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted, watchEffect, nextTick, computed } from "vue";
+import {
+  ref,
+  onMounted,
+  watchEffect,
+  nextTick,
+  computed,
+  onUnmounted,
+} from "vue";
 import "../../_style/index.less";
 export default {
   name: "Popover",
@@ -35,12 +35,19 @@ export default {
         return ["top", "bottom", "left", "right"].indexOf(value) >= 0;
       },
     },
+    trigger: {
+      type: String,
+      default: "click",
+      validator(value) {
+        return ["click", "hover"].indexOf(value) >= 0;
+      },
+    },
   },
   setup(props, ctx) {
     const host = ref(null);
     const contentWrapper = ref(null);
     let hostMap = null;
-    let modalOpen = ref(true);
+    let modalOpen = ref(false);
 
     watchEffect(() => {
       if (modalOpen.value) {
@@ -56,7 +63,6 @@ export default {
             const { width } = contentWrapper.value.getBoundingClientRect();
             var offset = 0;
             let val = "";
-            console.log(contentWrapper.value.getBoundingClientRect());
             switch (props.position) {
               case "top":
                 val = [
@@ -139,7 +145,39 @@ export default {
         });
       }
     });
-    onMounted(() => {});
+    onMounted(() => {
+      addPopoverListeners();
+    });
+    onUnmounted(() => {
+      removePopoverListeners();
+    });
+    var onClick = () => {
+      modalOpen.value = !modalOpen.value;
+    };
+    var open = () => {
+      modalOpen.value = true;
+    };
+    var close = () => {
+      modalOpen.value = false;
+    };
+    function addPopoverListeners() {
+      if (props.trigger === "click") {
+        window.el = contentWrapper.value;
+        contentWrapper.value.addEventListener("click", onClick);
+      } else {
+        contentWrapper.value.addEventListener("mouseenter", open);
+        contentWrapper.value.addEventListener("mouseleave", close);
+      }
+    }
+    function removePopoverListeners() {
+      if (props.trigger === "click") {
+        contentWrapper.value.removeEventListener("click", onClick);
+      } else {
+        contentWrapper.value.removeEventListener("mouseenter", open);
+        contentWrapper.value.removeEventListener("mouseleave", close);
+      }
+    }
+
     return { host, modalOpen, contentWrapper };
   },
 };
