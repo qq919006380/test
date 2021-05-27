@@ -1,20 +1,18 @@
 import ToastConstructor from './index.vue';
 import { createVNode, render } from 'vue'
 
-export default function (opts) {
-    if (typeof opts === 'string') {
-        opts = {
-            message: opts,
-        }
-    }
-    let options = opts
-    options = {
-        ...options,
+export default function (message,opts) {
+    
+    
+    let options = {
+        message:message,
         onClose: () => {
             close(id, userOnClose)
         },
 
     }
+    Object.assign(options,opts)
+    console.log(options);
     var vm = createVNode(
         ToastConstructor,
         options,
