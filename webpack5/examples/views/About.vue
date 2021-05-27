@@ -1,34 +1,40 @@
-<template>
-  <div ref="host">说</div>
-  <input type="text" v-model="position" />
-  points：{{ points }}
+<template  >
+  <div v-if="flag" class="wrapper position-top">
+    <div class="toast">盒子</div>
+  </div>
+  <Button @click="on">出来</Button>
 </template>
 <script>
-import { computed, onMounted, ref } from "vue";
+import { nextTick, ref } from "vue";
 export default {
   setup(props) {
-    var host = ref(null);
-    let position = ref(null);
-    let points = ref(null);
-    onMounted(() => {
-      host = host;
-      console.log(host.value.getBoundingClientRect());
-    });
-    points = computed(() => {
-      var a = "";
-      switch (position.value) {
-        case "top":
-          a = "top_2231";
-          break;
-        case "left":
-          a = "left_222";
-          break;
-        default:
-          a = "default";
-      }
-      return a;
-    });
-    return { host, points, position };
+    let flag = ref(false);
+    function on() {
+      flag.value = true;
+    }
+    return { on, flag };
   },
 };
 </script>
+<style lang='less'>
+@keyframes down {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+.wrapper {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  border: solid 1px;
+  .toast {
+    animation: down 300ms;
+  }
+}
+</style>

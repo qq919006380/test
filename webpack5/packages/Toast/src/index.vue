@@ -3,10 +3,11 @@
     v-show="visible"
     class="pencil_host pencil_Toast"
     :class="'pencil_' + position"
-    ref="host"
   >
-    <div>内容：{{ message }}</div>
-    <div @click.stop="close">关闭</div>
+    <div ref="host" class="pencil_content">
+      <div>内容：{{ message }}</div>
+      <div @click.stop="close">关闭</div>
+    </div>
   </div>
 </template>
 <script>
@@ -94,16 +95,22 @@ export default {
   transform: translateX(-50%);
   &.pencil_top {
     top: 0;
-    animation: slide-down 300ms;
+    .pencil_content {
+      animation: slide-down 300ms;
+    }
   }
   &.pencil_bottom {
     bottom: 0;
-    animation: slide-up 300ms;
+    .pencil_content {
+      animation: slide-up 300ms;
+    }
   }
   &.pencil_middle {
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
-    animation: fade-in 300ms;
+    .pencil_content {
+      animation: fade-in 300ms;
+    }
   }
 }
 </style>

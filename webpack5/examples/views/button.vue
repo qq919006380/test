@@ -19,7 +19,9 @@
     <Button disabled>disabled</Button>
   </div>
   <div><Button @click="$toast('点击弹出提示', { position: 'top' })">toast</Button></div>
-  <div><Button @click="$toast('点击弹出提示', { position: 'middle' })">middle</Button></div>
+  <div><Button @click="$toast('点击弹出提示', { position: 'middle'})">middle</Button></div>
+  <div><Button @click="$toast('点击弹出提示', { position: 'bottom'})">bottom</Button></div>
+  
 
 </template>
 
