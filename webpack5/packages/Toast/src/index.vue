@@ -5,7 +5,7 @@
     :class="'pencil_' + position"
   >
     <div ref="host" class="pencil_content pencil_flex">
-      <div v-if="!enableHtml">{{message}}</div>
+      <div v-if="!enableHtml">{{ message }}</div>
       <div v-else v-html="message"></div>
       <div v-if="showClose" class="pencil_close" @click.stop="close">关闭</div>
     </div>
@@ -53,8 +53,27 @@ export default {
     onMounted(() => {
       startTimer();
       hostMap = new render(host.value);
+      hostMap.on("watchHost", (rough) => {
+        props.showClose && line(rough);
+      });
     });
+    function line(rough) {
+      const rc = rough.svg(hostMap.svg);
+      let host = hostMap.host.getBoundingClientRect();
+      let l = hostMap.$(".pencil_close").getBoundingClientRect();
 
+      var line = rc.line(
+        l.left - host.left - 5,
+        10,
+        l.left - host.left - 5,
+        host.height - 10,
+        {
+          stroke: "#999",
+          bowing:1
+        }
+      );
+      hostMap.svg.appendChild(line);
+    }
     watchEffect(() => {
       if (typeof props.onClose == "function" && visible.value == false) {
         props.onClose();
@@ -116,6 +135,7 @@ export default {
     padding: 8px 10px;
     .pencil_close {
       margin-left: 10px;
+      cursor: pointer;
     }
   }
   &.pencil_top {

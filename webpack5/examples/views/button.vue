@@ -15,32 +15,31 @@
     <Button elevation="4">elevation4</Button>
     <Button elevation="5">elevation5</Button>
   </div>
-  <br>
+  <br />
   <div>
     <Button disabled>disabled</Button>
   </div>
-  <br>
+  <br />
   <div>
     <Button
       @click="$toast('点击弹出提示', { position: 'top', autoClose: false })"
       >toast，不关闭</Button
     >
   </div>
-  <br>
+  <br />
   <div>
-    <Button @click="$toast('点击弹出提示', { position: 'middle' ,autoClose:20})"
+    <Button
+      @click="$toast('点击弹出提示', { position: 'middle', autoClose: 20 })"
       >middle,20秒关闭</Button
     >
   </div>
-  <br>
+  <br />
   <div>
-    <Button @click="$toast('aa', { position: 'bottom' })">bottom</Button>
+    <Button @click="$toast('aa', { position: 'bottom',showClose: true })">bottom</Button>
   </div>
-  <br>
+  <br />
   <div>
-    <Button @click="$toast('<h1>我是带事件的,带html</h1> <div>s</div>', { autoClose: false ,showClose:true,enableHtml:true,onClose: closeEvent })"
-      >关闭事件</Button
-    >
+    <Button @click="on">关闭事件</Button>
   </div>
 </template>
 
@@ -48,12 +47,26 @@
 export default {
   name: "Home",
   methods: {
+    on() {
+      this.$toast(
+        "<h1 class='x'>我是带事件的,带html</h1> <div>s</div> <div style='color:pink'>s</div>",
+        {
+          autoClose: false,
+          showClose: true,
+          enableHtml: true,
+          onClose: this.closeEvent,
+        }
+      );
+    },
     closeEvent() {
-      console.log(2);
+      console.log("关闭了");
     },
   },
 };
 </script>
 <style scoped lang='less'>
+.x {
+  color: aqua;
+}
 </style>
 
