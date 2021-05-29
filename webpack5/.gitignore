@@ -3,6 +3,7 @@ node_modules
 /dist
 /lib
 Incomplete.md
+/docs/.vitepress/dist
 
 
 # local env files
