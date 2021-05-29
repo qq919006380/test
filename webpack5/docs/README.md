@@ -1,6 +1,6 @@
 ---
-home: true
-heroImage: /logo.jpg
+# home: true
+# heroImage: /logo.jpg
 
 # navbar: false
 # sidebar: auto
