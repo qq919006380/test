@@ -10,7 +10,6 @@ export default function (message = '', opts) {
         ...opts
     }
     Object.assign(options, opts)
-    console.log(options);
     var vm = createVNode(
         ToastConstructor,
         options,

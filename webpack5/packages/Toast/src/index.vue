@@ -24,7 +24,7 @@ export default {
     },
     autoClose: {
       type: [Boolean, Number],
-      default: 2,
+      default: 2.5,
       validator(value) {
         return value === false || typeof value === "number";
       },
@@ -69,7 +69,7 @@ export default {
         host.height - 10,
         {
           stroke: "#999",
-          bowing:1
+          bowing: 1,
         }
       );
       hostMap.svg.appendChild(line);
@@ -79,14 +79,15 @@ export default {
         props.onClose();
       }
     });
-
+    var timer = null;
     function close() {
       visible.value = false;
+      clearTimeout(timer);
       document.body.removeChild(document.getElementById(props.id));
     }
     function startTimer() {
       if (props.autoClose) {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           close();
         }, props.autoClose * 1000);
       }

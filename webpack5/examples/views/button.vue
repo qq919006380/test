@@ -51,7 +51,6 @@ export default {
       this.$toast(
         "<h1 class='x'>我是带事件的,带html</h1> <div>s</div> <div style='color:pink'>s</div>",
         {
-          autoClose: false,
           showClose: true,
           enableHtml: true,
           onClose: this.closeEvent,
