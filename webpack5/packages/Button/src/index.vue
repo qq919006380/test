@@ -39,18 +39,23 @@ export default {
     var assignObj = {
       default: {},
       primary: {
+        fillStyle:"hachure",
         fill: "#2d8cf0",
       },
       info: {
+        fillStyle:"hachure",
         fill: "#2db7f5",
       },
       success: {
+        fillStyle:"hachure",
         fill: "#19be6b",
       },
       warning: {
+        fillStyle:"hachure",
         fill: "#ff9900",
       },
       error: {
+        fillStyle:"hachure",
         fill: "#ed4014",
       },
     };

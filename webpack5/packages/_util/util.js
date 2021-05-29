@@ -13,11 +13,11 @@ let d = {
   fillWeight: 1.3,//填充的粗细
   hachureAngle: -60, // 填充的角度,
   hachureGap: 2,//填充率
-  fillStyle: "hachure",//填充样式
+  fillStyle: "solid",//填充样式
   seed: 0,//填充超出边框线
-  fill:"pink",
+  fill:"#fff",
   // 外边框线
-  stroke: "#333",//线的颜色
+  stroke: "#555",//线的颜色
   strokeWidth: 1,//线的粗细
   bowing: 4,//线条扭曲程度
   roughness: 1,//线条凌乱程度  
@@ -51,8 +51,8 @@ export class render {
 
   initSvg() {
     // 拦截背景颜色换成svg填充
-    this.decoration.fill = getComputedStyle(this.host, null).backgroundColor
-    this.host.style.background = "transparent"
+    // this.decoration.fill = getComputedStyle(this.host, null).backgroundColor
+    // this.host.style.background = "transparent"
     // 插入svg-dom
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     var overlay = document.createElement("div")
@@ -80,7 +80,6 @@ export class render {
     let node = rc.rectangle(0.5, 0.5, this.s.width - 1, this.s.height - 1,
       this.decoration
     );
-    node.style.opacity = 0.8;
     this.svg.appendChild(node);
   }
   // 渲染不规则图案

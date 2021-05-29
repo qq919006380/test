@@ -15,19 +15,43 @@
     <Button elevation="4">elevation4</Button>
     <Button elevation="5">elevation5</Button>
   </div>
+  <br>
   <div>
     <Button disabled>disabled</Button>
   </div>
-  <div><Button @click="$toast('点击弹出提示', { position: 'top' })">toast</Button></div>
-  <div><Button @click="$toast('点击弹出提示', { position: 'middle'})">middle</Button></div>
-  <div><Button @click="$toast('点击弹出提示', { position: 'bottom'})">bottom</Button></div>
-  
-
+  <br>
+  <div>
+    <Button
+      @click="$toast('点击弹出提示', { position: 'top', autoClose: false })"
+      >toast，不关闭</Button
+    >
+  </div>
+  <br>
+  <div>
+    <Button @click="$toast('点击弹出提示', { position: 'middle' ,autoClose:20})"
+      >middle,20秒关闭</Button
+    >
+  </div>
+  <br>
+  <div>
+    <Button @click="$toast('aa', { position: 'bottom' })">bottom</Button>
+  </div>
+  <br>
+  <div>
+    <Button @click="$toast('<h1>我是带事件的,带html</h1> <div>s</div>', { autoClose: false ,showClose:true,enableHtml:true,onClose: closeEvent })"
+      >关闭事件</Button
+    >
+  </div>
 </template>
 
 <script>
 export default {
   name: "Home",
+  methods: {
+    closeEvent() {
+      console.log(2);
+    },
+  },
 };
 </script>
 <style scoped lang='less'>

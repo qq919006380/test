@@ -4,18 +4,20 @@
     class="pencil_host pencil_Toast"
     :class="'pencil_' + position"
   >
-    <div ref="host" class="pencil_content">
-      <div>内容：{{ message }}</div>
-      <div @click.stop="close">关闭</div>
+    <div ref="host" class="pencil_content pencil_flex">
+      <div v-if="!enableHtml">{{message}}</div>
+      <div v-else v-html="message"></div>
+      <div v-if="showClose" class="pencil_close" @click.stop="close">关闭</div>
     </div>
   </div>
 </template>
 <script>
 import { render } from "../../_util/util.js";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineComponent, watchEffect } from "vue";
 import "../../_style/index.less";
 export default {
   props: {
+    id: String,
     message: {
       type: [String, Object],
       default: "",
@@ -29,7 +31,6 @@ export default {
     },
     onClose: {
       type: Function,
-      required: true,
     },
     showClose: { type: Boolean, default: false },
     position: {
@@ -47,14 +48,29 @@ export default {
   name: "Toast",
   setup(props) {
     const host = ref(null);
-    let visible = ref(false);
+    let visible = ref(true);
     let hostMap = null;
     onMounted(() => {
-      visible.value = true;
+      startTimer();
       hostMap = new render(host.value);
     });
+
+    watchEffect(() => {
+      if (typeof props.onClose == "function" && visible.value == false) {
+        props.onClose();
+      }
+    });
+
     function close() {
       visible.value = false;
+      document.body.removeChild(document.getElementById(props.id));
+    }
+    function startTimer() {
+      if (props.autoClose) {
+        setTimeout(() => {
+          close();
+        }, props.autoClose * 1000);
+      }
     }
     return { host, visible, close };
   },
@@ -93,6 +109,15 @@ export default {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
+  .pencil_flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    .pencil_close {
+      margin-left: 10px;
+    }
+  }
   &.pencil_top {
     top: 0;
     .pencil_content {
