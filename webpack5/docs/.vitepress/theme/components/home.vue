@@ -1,9 +1,6 @@
 <template>
   <div class="container">
     <Button elevation="5" class="btn" @click="go"> 快速上手 → </Button>
-    <p>
-      <hr />
-    </p>
    <div class="card-container">
       <Card class="card">
       <template #header>
@@ -25,28 +22,17 @@
       <p>源码简单通俗，容易理解看懂</p>
     </Card>
    </div>
-    <div class="footer">MIT Licensed | Copyright © 2018-present Mrlgm</div>
+    <!-- <div class="footer">MIT Licensed | Copyright © 2018-present Mrlgm</div> -->
   </div>
 </template>
 
 <script>
 export default {
-  mounted() {
-    // console.log(this.$page.frontmatter);
-  },
-  data() {
-    return {
-      link: "/install/",
-    };
-  },
-  methods: {
-    go({ link = "" }) {
-      if (/^http/.test(this.link)) {
-        window.open(this.link);
-      } else {
-        this.$router.push(this.link);
-      }
-    },
+  setup(props) {
+    function go({ link = "" }) {
+      location.href = "/install/index.html";
+    }
+    return { go };
   },
 };
 </script>
@@ -56,7 +42,7 @@ export default {
   text-align: center;
 }
 .btn {
-  margin: 25px 0;
+  margin-bottom: 55px ;
   padding: 20px 35px;
   font-weight: bold;
   color: #4e6e8e;
@@ -66,15 +52,12 @@ export default {
 .btn:hover {
   background: rgba(197, 236, 190, 0.2);
 }
-.card-container{
+.card-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .card {
-  display: inline-block;
-  padding: 13px;
-  line-height: 1.7px;
   color: #4e6e8e;
   width: 30%;
 }
@@ -83,13 +66,19 @@ export default {
   font-size: 26px;
   font-weight: bold;
 }
-.card p{
+.card p {
   text-align: left;
   font-size: 18px;
 }
 @media (max-width: 970px) {
-  .card {
+  .card-container {
     display: block;
+    text-align: center;
+  }
+  .card {
+    color: #4e6e8e;
+    width: 80%;
+    margin: 50px auto;
   }
 }
 .footer {

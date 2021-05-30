@@ -40,10 +40,15 @@ export default {
       const rc = rough.svg(hostMap.svg);
       let headerDom = hostMap.$(".pencil_card_header").getBoundingClientRect();
       var line = rc.line(
-        0,
+        10,
         headerDom.height,
-        headerDom.width,
-        headerDom.height
+        headerDom.width-10,
+        headerDom.height,{
+          stroke: "#C0C0C0",
+          bowing:1,
+          roughness:1,
+          strokeWidth:1
+        }
       );
       hostMap.svg.appendChild(line);
     }
