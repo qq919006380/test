@@ -7,10 +7,3 @@
     <div v-for="item in 3">列表内容{{ item }}</div>
   </Card>
 </template>
-<script>
-export default {
-    setup(props) {
-        
-    }
-}
-</script>

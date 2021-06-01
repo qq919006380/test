@@ -64,16 +64,19 @@ export default {
         () => {
           // 移动
           let {
+            right,
             left,
             width,
             height,
           } = selectedItem.value.getBoundingClientRect();
 
+          let hostleft = host.value.getBoundingClientRect().left;
           indicator.value.setAttributeNS(null, "width", width);
           indicator.value.setAttributeNS(null, "height", height);
           // indicator.value.setAttributeNS(null, "overflow", "overlay");
           indicator.value.style.top = top + "px";
-          indicator.value.style.left = left - 8 + "px";
+          indicator.value.style.left = left - hostleft   + "px";
+          console.log(selectedItem.value.getBoundingClientRect());
         },
         {
           flush: "post",
