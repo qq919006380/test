@@ -126,6 +126,7 @@ export default {
   }
 }
 .pencil_Toast {
+  z-index: 20;
   position: fixed;
   left: 50%;
   transform: translateX(-50%);

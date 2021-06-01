@@ -43,7 +43,7 @@ module.exports = {
 
         // config: (md) => {
         //   // use more markdown-it plugins!
-        //   md.use(require('markdown-it-xxx'))
+        //   md.use()
         // }
     }
 }
