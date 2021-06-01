@@ -9,7 +9,7 @@
 </Card>
 ```
 
-## 标题可配置标题
+## 配置模板标题
 <cardDemo></cardDemo>
 
 <script setup>

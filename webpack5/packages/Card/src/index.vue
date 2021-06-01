@@ -30,6 +30,7 @@ export default {
       hostMap = reactive(new render(data.host));
       hostMap.setSvgStyle({
         hachureGap: 1,
+        fill:"rgba(0,0,0,0)"
       });
       hostMap.on("watchHost", (rough) => {
         elevation(rough);

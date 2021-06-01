@@ -17,13 +17,13 @@ module.exports = {
             {
                 text: "组件",
                 children: [
-                    { link: "/components/button", text: "button" },
-                    { link: "/components/input", text: "input" },
-                    { link: "/components/card", text: "card" },
-                    { link: "/components/checkbox", text: "checkbox" },
-                    { link: "/components/tabs", text: "tabs" },
-                    { link: "/components/popover", text: "popover" },
-                    { link: "/components/toast", text: "toast" }
+                    { link: "/components/button", text: "按钮" },
+                    { link: "/components/input", text: "输入框" },
+                    { link: "/components/card", text: "卡片" },
+                    { link: "/components/checkbox", text: "多选框" },
+                    { link: "/components/tabs", text: "标签页" },
+                    { link: "/components/popover", text: "弹出框" },
+                    { link: "/components/toast", text: "消息提示" }
                 ]
             },
             {
