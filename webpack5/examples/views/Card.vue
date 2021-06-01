@@ -3,7 +3,6 @@
     <template #header>
       <div>标题一</div>
       <div>
-        asd
         <Button>按钮</Button>
       </div>
     </template>
