@@ -76,7 +76,6 @@ export default {
           // indicator.value.setAttributeNS(null, "overflow", "overlay");
           indicator.value.style.top = top + "px";
           indicator.value.style.left = left - hostleft   + "px";
-          console.log(selectedItem.value.getBoundingClientRect());
         },
         {
           flush: "post",

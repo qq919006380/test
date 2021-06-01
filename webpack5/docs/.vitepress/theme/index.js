@@ -1,6 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import pencil from '../../../packages';
-import home from '../components/home.vue';
+import home from './home.vue';
 
 export default {
     ...DefaultTheme,

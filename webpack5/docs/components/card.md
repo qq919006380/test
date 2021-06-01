@@ -13,7 +13,7 @@
 <cardDemo></cardDemo>
 
 <script setup>
-  import cardDemo from '../.vitepress/components/card-demo.vue'
+  import cardDemo from './demo/card-demo.vue'
 </script>
 
-<<< @\.vitepress/components/card-demo.vue
+<<< @/components/demo/card-demo.vue
