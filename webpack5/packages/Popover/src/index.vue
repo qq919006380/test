@@ -74,6 +74,7 @@ export default {
 </script>
 <style lang="less">
 .pencil_popover {
+  z-index: 20;
   min-width: 1px;
   padding: 8px 13px;
   position: absolute;
