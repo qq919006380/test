@@ -55,6 +55,9 @@ export default {
     });
     onMounted(() => {
       hostMap = new render(host.value);
+      hostMap.setSvgStyle({
+        fill:"rgba(0,0,0,0)"
+      });
       hostMap.on("watchHost", (rough) => {
         line(rough);
         activeLine(rough);

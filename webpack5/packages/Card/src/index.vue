@@ -86,7 +86,7 @@ export default {
 
 <style lang="less" scoped>
 .pencil_card {
-  width: 480px;
+  max-width: 480px;
   .pencil_card_header {
     padding: 20px;
     display: flex;

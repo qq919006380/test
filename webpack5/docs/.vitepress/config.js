@@ -29,7 +29,7 @@ module.exports = {
             {
                 text: "例子",
                 children: [
-                    { link: "/demo/", text: "Demo" }
+                    { link: "/demo/", text: "例子" }
                 ]
             }
         ]
