@@ -1,5 +1,6 @@
 <template>
   <div class="box" ref="div">xxx</div>
+  <Button>232123</Button>
 </template>
 
 <script>
