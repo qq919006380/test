@@ -24,6 +24,9 @@ export default {
 
     return { div };
   },
+  beforeCreate(){
+    console.log(document.querySelector('.box'))
+  }
 };
 </script>
 

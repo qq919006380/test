@@ -8,6 +8,8 @@ const routes = [
   {path: '/v-model',name: 'v-model',component: () => import('../views/vModel/index.vue')},
   {path: '/promise',name: 'promise',component: () => import('../views/promise.vue')},
   {path: '/slot',name: 'slot',component: () => import('../views/slot/index.vue')},
+  {path: '/scroll',name: 'scroll',component: () => import('../views/scroll.vue')},
+  
 ]
 
 const router = createRouter({
