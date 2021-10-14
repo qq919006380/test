@@ -17,6 +17,7 @@ export default {
       area: []
     };
   },
+  mounted(){},
   methods: {
     update() {
       this.refresh = false;

@@ -9,7 +9,6 @@ import 'babel-polyfill'
 import {plugin} from './api/index.js'
 
 
-
 import 'element-ui/lib/theme-chalk/index.css';
 
 import iView from 'iview';

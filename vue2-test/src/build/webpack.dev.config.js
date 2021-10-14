@@ -16,7 +16,7 @@ module.exports = merge(webpackBaseConfig, {
         contentBase: path.resolve(__dirname, './dist'),
         compress: true,
         port: 8080,
-        before: require('./src/build/api.js.js')
+        before: require('./src/build/api.js')
     },
 
     plugins: [

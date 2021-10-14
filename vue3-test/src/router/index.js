@@ -9,7 +9,7 @@ const routes = [
   {path: '/promise',name: 'promise',component: () => import('../views/promise.vue')},
   {path: '/slot',name: 'slot',component: () => import('../views/slot/index.vue')},
   {path: '/scroll',name: 'scroll',component: () => import('../views/scroll.vue')},
-  
+  {path: '/dom',name: '一次性加载10W条数据',component: () => import('../views/dom.vue')},
 ]
 
 const router = createRouter({
@@ -18,3 +18,4 @@ const router = createRouter({
 })
 
 export  {router,routes}
+
