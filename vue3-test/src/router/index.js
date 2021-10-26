@@ -10,6 +10,7 @@ const routes = [
   {path: '/slot',name: 'slot',component: () => import('../views/slot/index.vue')},
   {path: '/scroll',name: 'scroll',component: () => import('../views/scroll.vue')},
   {path: '/dom',name: '一次性加载10W条数据',component: () => import('../views/dom.vue')},
+  {path: '/draggable',name: 'draggable',component: () => import('../views/draggable.vue')},
 ]
 
 const router = createRouter({
