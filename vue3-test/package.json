@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@antv/x6": "^1.28.1",
     "core-js": "^3.11.2",
     "echarts": "^5.2.1",
     "pencil-vue": "^0.2.2",

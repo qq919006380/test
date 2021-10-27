@@ -11,6 +11,7 @@ const routes = [
   {path: '/scroll',name: 'scroll',component: () => import('../views/scroll.vue')},
   {path: '/dom',name: '一次性加载10W条数据',component: () => import('../views/dom.vue')},
   {path: '/draggable',name: 'draggable',component: () => import('../views/draggable.vue')},
+  {path: '/er',name: 'er',component: () => import('../views/er.vue')},
 ]
 
 const router = createRouter({
