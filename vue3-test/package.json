@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@antv/x6": "^1.28.1",
+    "@antv/x6-vue-shape": "^1.2.10",
+    "@vue/composition-api": "^1.2.4",
     "core-js": "^3.11.2",
     "echarts": "^5.2.1",
     "pencil-vue": "^0.2.2",
