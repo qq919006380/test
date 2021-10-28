@@ -1,12 +1,14 @@
 <template>
   <div>
+    asd
     <div>{{ num }}</div>
-    <button @click="click()">add</button>
+    <button @click="click">add</button>
   </div>
 </template>
 
 <script>
-export default ({
+import {defineComponent} from 'vue';
+export default defineComponent ({
   name: 'Count',
   props: {
     num: Number
