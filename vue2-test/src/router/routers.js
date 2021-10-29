@@ -24,7 +24,8 @@ export default [
     { path: '/vue的render函数', name: 'render', component: () => import('@/view/render.vue') },
     { path: '/input', name: 'input', component: () => import('@/view/input/index.vue') },
     { path: '/er', name: 'er', component: () => import('@/view/er.vue') },
-    
+    { path: '/er2', name: 'er2', component: () => import('@/view/er2.vue') },
+    { path: '/er-vue-demo', name: 'er-vue-demo', component: () => import('@/view/er-vue-demo/index.vue') },
 ]
 // 高级通讯
 // $attrs 和 $listeners
