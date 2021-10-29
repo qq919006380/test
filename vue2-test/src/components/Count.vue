@@ -1,22 +1,32 @@
 <template>
   <div>
-    <div>{{ num }}</div>
-    <button @click="click()">add</button>
+    <div class="er-template">
+      <p class="title">
+        <span class="table_chnname" :title="data.chnname">{{data.chnname}}</span
+        >(<span class="table_name">{{data.name}}</span>)
+      </p>
+
+      <div class="fileds_area">
+        <div class="PK_field"></div>
+        <div class="normal_field"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default ({
-  name: 'Count',
+export default {
+  name: "Count",
   props: {
-    num: Number
+    data: Object,
   },
-  inject: ['getGraph', 'getNode'],
+  inject: ["getGraph", "getNode"],
   methods: {
     click() {
-      this.$emit('add')
-      this.getNode().attr('body/strokeWidth', this.num + 1)
-    }
-  }
-});
+    },
+  },
+};
 </script>
+<style scoped>
+
+</style>
