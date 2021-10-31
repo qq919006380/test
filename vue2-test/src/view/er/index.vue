@@ -4,18 +4,14 @@
       <el-aside width="200px">
         <el-tabs v-model="activeName">
           <el-tab-pane label="字段" name="col">
-            <treeCol></treeCol>
+            <treeField @mousedown="moveField"></treeField>
           </el-tab-pane>
           <el-tab-pane label="表" name="table">
-            <treeTable></treeTable>
+            <treeTable @mousedown="moveTable"></treeTable>
           </el-tab-pane>
         </el-tabs>
       </el-aside>
       <el-main>
-        <dl @mousedown="startDragToGraph('startNode', $event)">
-          <dt class="circle start"></dt>
-          <dd>开始节点</dd>
-        </dl>
         <div id="container" ref="containerRef"></div>
       </el-main>
     </el-container>
@@ -28,13 +24,11 @@ import { ports } from './graph/methods'
 
 import Count from "@/components/Count.vue";
 import treeTable from './tree-table.vue';
-import treeCol from './tree-col.vue';
-import addCol from "@/components/addCol.vue";
-import addTable from "@/components/addTable.vue";
+import treeField from './tree-field.vue';
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
 
 export default {
-  components: { treeTable ,treeCol},
+  components: { treeTable, treeField },
   mounted() {
     const containerRef = this.$refs.containerRef
     // 注册vue组件 
@@ -46,6 +40,7 @@ export default {
       components: { Count }
     }, true)
 
+    // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
       width: 600,
@@ -86,6 +81,22 @@ export default {
           })
         }
       },
+      // 嵌套节点
+      // embedding: {
+      //   enabled: true,
+      //   findParent({ node: childNode }) {
+      //     const child = childNode.getBBox()
+      //     const childData = childNode.getData()
+      //     return this.getNodes().filter((node) => {
+      //       const data = node.getData()
+      //       if (data && data.parent && childData && childData.child) {
+      //         const targetBBox = node.getBBox()
+      //         return child.isIntersectWithRect(targetBBox)
+      //       }
+      //       return false
+      //     })
+      //   },
+      // },
       // 高亮
       highlighting: {
         magnetAvailable: {
@@ -97,7 +108,7 @@ export default {
               stroke: '#6a6c8a'
             }
           }
-        }
+        },
       }
     });
 
@@ -136,11 +147,34 @@ export default {
       edge.removeTools()
     })
 
+    // cell 节点时才触发
+    this.graph.on('node:added', ({ node }) => {
+      const data = node.store.data
 
-    for (var i = 0; i < 2; i++) {
-      this.addNode();
-    }
-    this.graph.fromJSON(this.data);
+      if (data.type === 'taskNode') {
+        const obj = {
+          node
+        }
+        this.nodeData.push(obj)
+      }
+    })
+
+
+    // this.graph.on('node:embedded', (e, x, y, node, view, currentParent) => {
+    //   console.log(e)
+    // })
+    // this.graph.on('node:embedding', (e, x, y, node, view, currentParent) => {
+    //   console.log(e)
+    // })
+    // this.graph.on('node:embedded', (e, x, y, node, view, currentParent) => {
+    //   console.log(e)
+    // })
+
+
+    this.addNode();
+    setTimeout(() => {
+      this.graph.fromJSON(this.data);
+    }, 0);
   },
   data() {
     return {
@@ -149,31 +183,42 @@ export default {
       data: {
         nodes: [],
       },
+      nodeData: []
     };
   },
   methods: {
-    // 拖拽节点新增
-    startDragToGraph(type, e) {
-      const graph = this.graph
-      let node = null
-      this.showRight = false
-      this.nodeId = ''
+    // 拖拽字段进表
+    moveField(data, e) {
+      let node = this.graph.createNode({
+        width: 80,
+        height: 25,
+        attrs: {
+          body: {
+            fill: 'white',
+            color: 'pink'
+          },
+          label: {
+            text: 'Hello',
+          },
+        },
+        data: { child: true }
+      })
 
-      // 验证 startNode endNode 是否已存在，只能添加一个
-      if (['startNode', 'endNode'].includes(type)) {
-        const graphData = this.graph.toJSON()
-        const posIndex = graphData.cells.findIndex((item) => item.type === type)
+      const dnd = new Addon.Dnd({
+        target: this.graph,
 
-        if (posIndex >= 0) return
-      }
+      })
+      dnd.start(node, e)
 
-      node = graph.createNode({
-        type: 'taskNode',
+    },
+    // 拖拽表进画布
+    moveTable(data, e) {
+      let node = this.graph.createNode({
+        width: 200,
+        height: 100,
+        label: 'Parent',
+        zIndex: 1,
         shape: 'vue-shape',
-        x: 300,
-        y: 300,
-        width: 150,
-        height: 200,
         attrs: {
           body: {
             stroke: "#2d8cf0",
@@ -181,12 +226,13 @@ export default {
         },
         ports,
         data: {
-          data: { chnname: "新增的", name: "sda" }
+          parent: true,
+          nodeInfo: { chnname: data.label, name: "xxx" }
         },
         component: 'table-node-component'
       })
 
-      const dnd = new Addon.Dnd({ target: graph })
+      const dnd = new Addon.Dnd({ target: this.graph })
       dnd.start(node, e)
     },
     // 显示连线节点
@@ -196,24 +242,29 @@ export default {
       }
     },
     addNode() {
-      this.data.nodes.push({
-        shape: "vue-shape",
-        width: 150,
-        height: 200,
-        x: 100,
-        y: 100,
-        attrs: {
-          body: {
-            stroke: "#2d8cf0",
+      for (var i = 0; i < 2; i++) {
+        this.data.nodes.push({
+          label: 'Parent',
+          zIndex: 1,
+          shape: "vue-shape",
+          attrs: {
+            body: {
+              stroke: "#2d8cf0",
+            },
           },
-        },
-        ports,
-        component: `table-node-component`,
-      });
+          ports,
+          data: {
+            parent: true,
+            nodeInfo: { chnname: "可以通过两种方法进行树节点内容的自定义：render-content和 scoped slot", name: "sda" }
+          },
+          component: `table-node-component`,
+        });
+      }
+
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 </style>

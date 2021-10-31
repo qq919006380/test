@@ -23,7 +23,7 @@ export default [
     { path: '/api', name: 'api', component: () => import('@/view/api.vue') },
     { path: '/vue的render函数', name: 'render', component: () => import('@/view/render.vue') },
     { path: '/input', name: 'input', component: () => import('@/view/input/index.vue') },
-    { path: '/er', name: 'er', component: () => import('@/view/er/er.vue') },
+    { path: '/er', name: 'er', component: () => import('@/view/er/index.vue') },
     { path: '/er2', name: 'er2', component: () => import('@/view/er2.vue') }
 ]
 // 高级通讯

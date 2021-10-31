@@ -1,6 +1,13 @@
 <template>
     <div>
-        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+        <el-tree default-expand-all :data="data" :props="defaultProps">
+            <span slot-scope="{ node, data }">
+                <span
+                    :class="{ move: node.isLeaf }"
+                    @mousedown="node.isLeaf ? handleNodeMove(data, node, $event) : null"
+                >{{ node.label }}</span>
+            </span>
+        </el-tree>
     </div>
 </template>
 
@@ -9,37 +16,37 @@ export default {
     data() {
         return {
             data: [{
-                label: '一级 1',
+                label: '表分类一',
                 children: [{
-                    label: '二级 1-1',
+                    label: '表分类',
                     children: [{
-                        label: '三级 1-1-1'
+                        label: '表1241223'
                     }]
                 }]
             }, {
-                label: '一级 2',
+                label: '表分类二',
                 children: [{
-                    label: '二级 2-1',
+                    label: '表分类',
                     children: [{
-                        label: '三级 2-1-1'
+                        label: '表16233'
                     }]
                 }, {
                     label: '二级 2-2',
                     children: [{
-                        label: '三级 2-2-1'
+                        label: '表53435'
                     }]
                 }]
             }, {
-                label: '一级 3',
+                label: '表分类三',
                 children: [{
-                    label: '二级 3-1',
+                    label: '表分类',
                     children: [{
-                        label: '三级 3-1-1'
+                        label: '表312'
                     }]
                 }, {
-                    label: '二级 3-2',
+                    label: '表分类',
                     children: [{
-                        label: '三级 3-2-1'
+                        label: '表123'
                     }]
                 }]
             }],
@@ -50,12 +57,15 @@ export default {
         };
     },
     methods: {
-        handleNodeClick(data) {
-            console.log(data);
+        handleNodeMove(data, node, e) {
+            this.$emit('mousedown', data, e)
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
+.move {
+  cursor: move;
+}
 </style>

@@ -1,105 +1,72 @@
 <template>
   <div>
-    <div>
-      <canvas class="canvas" ref="canvas" width="500" height="500"></canvas>
-    </div>
+    <el-table
+      style="width: 90%"
+      :data="tableData"
+      class="width-test"
+      size="mini"
+      :show-header="false"
+    >
+      <el-table-column class-name="asd" prop="date" label="日期" min-width="50"></el-table-column>
+      <el-table-column prop="name" label="姓名" min-width="50"></el-table-column>
+      <el-table-column prop="address" label="地址" min-width="50"></el-table-column>
+    </el-table>
   </div>
 </template>
 
-<script>
+  <script>
 export default {
   data() {
     return {
-      ctx: null,
-    };
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }]
+    }
   },
   mounted() {
-    this.ctx = this.$refs.canvas.getContext("2d");
-    this.draw();
+    console.log(this.getMaxLength(this.tableData))
   },
-  methods: {
-    draw() {
-      this.line(
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500)
-      );
-    },
-    _line(x1, y1, x2, y2) {
-      let result = [];
-      // 起始点
-      result[0] = x1 + this.random(-this.offset, this.offset);
-      result[1] = y1 + this.random(-this.offset, this.offset);
-      // 终点
-      result[2] = x2 + this.random(-this.offset, this.offset);
-      result[3] = y2 + this.random(-this.offset, this.offset);
+  methods:{
+    getMaxLength(arr) {
+      return arr.reduce((acc, item) => {
+        if (item) {
+          const str = item.toString()
+          const char = str.match(/[\u2E80-\u9FFF]/g)
+          const charLen = char ? char.length : 0
+          const num = str.match(/\d|\./g)
+          const numLen = num ? num.length : 0
+          const otherLen = str.length - charLength - numLength
+          let calcLen = charLen * 1.1 + numLen * 0.65 + otherLen * 0.5
 
-      // 两个控制点
-      let c1 = this.getNearRandomPoint(x1, y1, x2, y2);
-      let c2 = this.getNearRandomPoint(x1, y1, x2, y2);
-      result[4] = c1[0];
-      result[5] = c1[1];
-      result[6] = c2[0];
-      result[7] = c2[1];
-      return result;
-    },
-    getNearRandomPoint(x1, y1, x2, y2) {
-      let xo, yo, rx, ry;
-      // 垂直x轴的线段特殊处理
-      if (x1 === x2) {
-        yo = y2 - y1;
-        rx = x1 + this.random(-2, 2);
-        ry = y1 + yo * this.random(0, 1);
-        return [rx, ry];
-      }
-      xo = x2 - x1;
-      rx = x1 + xo * this.random(0, 1);
-      ry = ((rx - x1) * (y2 - y1)) / (x2 - x1) + y1;
-      ry += this.random(-2, 2);
-      return [rx, ry];
-    },
-    random(min, max) {
-      return Math.random() * (max - min) + min;
-    },
-    // 绘制手绘线段
-    line(x1, y1, x2, y2) {
-      this.drawDoubleLine(x1, y1, x2, y2);
-    },
+          if (acc < calcLen) {
+            acc = calcLen
+          }
+        }
+        return acc
+      }, 0)
+    }
+  }
 
-    // 绘制两条曲线
-    drawDoubleLine(x1, y1, x2, y2) {
-      // 绘制生成的两条曲线
-      let line1 = this._line(x1, y1, x2, y2);
-      let line2 = this._line(x1, y1, x2, y2);
-      this.drawLine(line1);
-      this.drawLine(line2);
-    },
-
-    // 绘制单条曲线
-    drawLine(line) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(line[0], line[1]);
-      // bezierCurveTo方法前两个点为控制点，第三个点为结束点
-      this.ctx.bezierCurveTo(
-        line[4],
-        line[5],
-        line[6],
-        line[7],
-        line[2],
-        line[3]
-      );
-      this.ctx.strokeStyle = "#000";
-      this.ctx.stroke();
-    },
-  },
-};
+}
 </script>
-
 <style>
-.canvas {
-  width: auto;
-  height: auto;
-  border: 1px solid #999;
+.width-test {
+  display: inline-block;
+}
+.asd {
 }
 </style>
