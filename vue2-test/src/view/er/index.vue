@@ -4,7 +4,7 @@
       <el-aside width="200px">
         <el-tabs v-model="activeName">
           <el-tab-pane label="字段" name="col">
-            <treeField @mousedown="moveField"></treeField>
+            <treeField></treeField>
           </el-tab-pane>
           <el-tab-pane label="表" name="table">
             <treeTable @mousedown="moveTable"></treeTable>
@@ -158,19 +158,6 @@ export default {
         this.nodeData.push(obj)
       }
     })
-
-
-    // this.graph.on('node:embedded', (e, x, y, node, view, currentParent) => {
-    //   console.log(e)
-    // })
-    // this.graph.on('node:embedding', (e, x, y, node, view, currentParent) => {
-    //   console.log(e)
-    // })
-    // this.graph.on('node:embedded', (e, x, y, node, view, currentParent) => {
-    //   console.log(e)
-    // })
-
-
     this.addNode();
     setTimeout(() => {
       this.graph.fromJSON(this.data);
@@ -187,36 +174,11 @@ export default {
     };
   },
   methods: {
-    // 拖拽字段进表
-    moveField(data, e) {
-      let node = this.graph.createNode({
-        width: 80,
-        height: 25,
-        attrs: {
-          body: {
-            fill: 'white',
-            color: 'pink'
-          },
-          label: {
-            text: 'Hello',
-          },
-        },
-        data: { child: true }
-      })
-
-      const dnd = new Addon.Dnd({
-        target: this.graph,
-
-      })
-      dnd.start(node, e)
-
-    },
     // 拖拽表进画布
     moveTable(data, e) {
       let node = this.graph.createNode({
         width: 200,
         height: 100,
-        label: 'Parent',
         zIndex: 1,
         shape: 'vue-shape',
         attrs: {
@@ -226,7 +188,6 @@ export default {
         },
         ports,
         data: {
-          parent: true,
           nodeInfo: { chnname: data.label, name: "xxx" }
         },
         component: 'table-node-component'
@@ -244,7 +205,6 @@ export default {
     addNode() {
       for (var i = 0; i < 2; i++) {
         this.data.nodes.push({
-          label: 'Parent',
           zIndex: 1,
           shape: "vue-shape",
           attrs: {
@@ -254,7 +214,6 @@ export default {
           },
           ports,
           data: {
-            parent: true,
             nodeInfo: { chnname: "可以通过两种方法进行树节点内容的自定义：render-content和 scoped slot", name: "sda" }
           },
           component: `table-node-component`,
