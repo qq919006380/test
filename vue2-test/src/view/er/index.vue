@@ -22,7 +22,7 @@
 import "@antv/x6-vue-shape";
 import { ports } from "./graph/methods";
 
-import Count from "@/components/Count.vue";
+import Tablea from "@/components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
@@ -35,11 +35,11 @@ export default {
     Graph.registerVueComponent(
       "table-node-component",
       {
-        template: `<count :data="data" ></count>`,
+        template: `<Tablea :data="data" ></Tablea>`,
         data() {
           return { data: { chnname: "xx", name: "sda" } };
         },
-        components: { Count },
+        components: { Tablea },
       },
       true
     );
@@ -209,7 +209,7 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 2; i++) {
+      for (var i = 0; i < 5; i++) {
         this.data.nodes.push({
           zIndex: 1,
           shape: "vue-shape",
