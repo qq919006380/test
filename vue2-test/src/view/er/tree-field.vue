@@ -2,7 +2,6 @@
   <div>
     <el-tree default-expand-all :data="data" :props="defaultProps">
       <span slot-scope="{ node, data }">
-        <!-- @mousedown="node.isLeaf ? handleNodeMove(data, node, $event) : null" -->
         <span
           draggable="true"
           @dragstart="onDragstart($event, data)"

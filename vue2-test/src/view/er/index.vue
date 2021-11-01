@@ -47,9 +47,9 @@ export default {
     // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
+      grid: 10,
       width: 600,
       height: 600,
-      grid: true,
       // 节点连接
       connecting: {
         anchor: "center",
@@ -85,22 +85,6 @@ export default {
           });
         },
       },
-      // 嵌套节点
-      // embedding: {
-      //   enabled: true,
-      //   findParent({ node: childNode }) {
-      //     const child = childNode.getBBox()
-      //     const childData = childNode.getData()
-      //     return this.getNodes().filter((node) => {
-      //       const data = node.getData()
-      //       if (data && data.parent && childData && childData.child) {
-      //         const targetBBox = node.getBBox()
-      //         return child.isIntersectWithRect(targetBBox)
-      //       }
-      //       return false
-      //     })
-      //   },
-      // },
       // 高亮
       highlighting: {
         magnetAvailable: {
@@ -135,7 +119,6 @@ export default {
 
     // 连接线鼠标移入
     this.graph.on("edge:mouseenter", ({ edge }) => {
-      console.log(3);
       edge.addTools([
         "source-arrowhead",
         "target-arrowhead",
@@ -209,7 +192,7 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < 100; i++) {
         this.data.nodes.push({
           zIndex: 1,
           shape: "vue-shape",
