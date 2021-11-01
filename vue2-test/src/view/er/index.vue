@@ -20,25 +20,29 @@
 
 <script>
 import "@antv/x6-vue-shape";
-import { ports } from './graph/methods'
+import { ports } from "./graph/methods";
 
 import Count from "@/components/Count.vue";
-import treeTable from './tree-table.vue';
-import treeField from './tree-field.vue';
+import treeTable from "./tree-table.vue";
+import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
 
 export default {
   components: { treeTable, treeField },
   mounted() {
-    const containerRef = this.$refs.containerRef
-    // 注册vue组件 
-    Graph.registerVueComponent('table-node-component', {
-      template: `<count :data="data" ></count>`,
-      data() {
-        return { data: { chnname: "xx", name: "sda" } };
+    const containerRef = this.$refs.containerRef;
+    // 注册vue组件
+    Graph.registerVueComponent(
+      "table-node-component",
+      {
+        template: `<count :data="data" ></count>`,
+        data() {
+          return { data: { chnname: "xx", name: "sda" } };
+        },
+        components: { Count },
       },
-      components: { Count }
-    }, true)
+      true
+    );
 
     // 生成画布
     this.graph = new Graph({
@@ -48,8 +52,8 @@ export default {
       grid: true,
       // 节点连接
       connecting: {
-        anchor: 'center',
-        connectionPoint: 'anchor',
+        anchor: "center",
+        connectionPoint: "anchor",
         snap: true, // 自动吸附
         allowBlank: false, // 是否允许连接到画布空白位置的点
         allowLoop: false, // 是否允许创建循环连线，即边的起始节点和终止节点为同一节点
@@ -58,28 +62,28 @@ export default {
           return new Shape.Edge({
             attrs: {
               line: {
-                stroke: '#1890ff',
+                stroke: "#1890ff",
                 strokeWidth: 1,
                 targetMarker: {
-                  name: 'classic',
-                  size: 8
+                  name: "classic",
+                  size: 8,
                 },
                 strokeDasharray: 0, //虚线
                 style: {
-                  animation: 'ant-line 30s infinite linear'
-                }
-              }
+                  animation: "ant-line 30s infinite linear",
+                },
+              },
             },
             label: {
-              text: ''
+              text: "",
             },
-            connector: 'normal',
+            connector: "normal",
             router: {
-              name: 'manhattan'
+              name: "manhattan",
             },
-            zIndex: 0
-          })
-        }
+            zIndex: 0,
+          });
+        },
       },
       // 嵌套节点
       // embedding: {
@@ -100,64 +104,66 @@ export default {
       // 高亮
       highlighting: {
         magnetAvailable: {
-          name: 'stroke',
+          name: "stroke",
           args: {
             padding: 4,
             attrs: {
               strokeWidth: 4,
-              stroke: '#6a6c8a'
-            }
-          }
+              stroke: "#6a6c8a",
+            },
+          },
         },
-      }
+      },
     });
 
     // 节点鼠标移入
-    this.graph.on('node:mouseenter', FunctionExt.debounce(({ node }) => {
-      // 添加连接点
-      const ports = containerRef.querySelectorAll('.x6-port-body')
-      this.showPorts(ports, true)
-    }),
+    this.graph.on(
+      "node:mouseenter",
+      FunctionExt.debounce(({ node }) => {
+        // 添加连接点
+        const ports = containerRef.querySelectorAll(".x6-port-body");
+        this.showPorts(ports, true);
+      }),
       500
-    )
+    );
     // 节点鼠标移出
-    this.graph.on('node:mouseleave', ({ node }) => {
+    this.graph.on("node:mouseleave", ({ node }) => {
       // 添加连接点
-      const ports = containerRef.querySelectorAll('.x6-port-body')
-      this.showPorts(ports, false)
-    })
+      const ports = containerRef.querySelectorAll(".x6-port-body");
+      this.showPorts(ports, false);
+    });
 
     // 连接线鼠标移入
-    this.graph.on('edge:mouseenter', ({ edge }) => {
-      console.log(3)
+    this.graph.on("edge:mouseenter", ({ edge }) => {
+      console.log(3);
       edge.addTools([
-        'source-arrowhead',
-        'target-arrowhead',
+        "source-arrowhead",
+        "target-arrowhead",
         {
-          name: 'button-remove',
+          name: "button-remove",
           args: {
             distance: -30,
-          }
-        }
-      ])
-    })
+          },
+        },
+      ]);
+    });
     // 连接线鼠标移出
-    this.graph.on('edge:mouseleave', ({ edge }) => {
-      console.log(4)
-      edge.removeTools()
-    })
+    this.graph.on("edge:mouseleave", ({ edge }) => {
+      console.log(4);
+      edge.removeTools();
+    });
 
     // cell 节点时才触发
-    this.graph.on('node:added', ({ node }) => {
-      const data = node.store.data
+    this.graph.on("node:added", ({ node }) => {
+      const data = node.store.data;
 
-      if (data.type === 'taskNode') {
+      if (data.type === "taskNode") {
         const obj = {
-          node
-        }
-        this.nodeData.push(obj)
+          node,
+        };
+        this.nodeData.push(obj);
       }
-    })
+    });
     this.addNode();
     setTimeout(() => {
       this.graph.fromJSON(this.data);
@@ -165,22 +171,22 @@ export default {
   },
   data() {
     return {
-      activeName: 'table',
+      activeName: "table",
       graph: null,
       data: {
         nodes: [],
       },
-      nodeData: []
+      nodeData: [],
     };
   },
   methods: {
     // 拖拽表进画布
     moveTable(data, e) {
       let node = this.graph.createNode({
-        width: 200,
+        width: 150,
         height: 100,
         zIndex: 1,
-        shape: 'vue-shape',
+        shape: "vue-shape",
         attrs: {
           body: {
             stroke: "#2d8cf0",
@@ -188,18 +194,18 @@ export default {
         },
         ports,
         data: {
-          nodeInfo: { chnname: data.label, name: "xxx" }
+          nodeInfo: { chnname: data.label, name: "xxx" },
         },
-        component: 'table-node-component'
-      })
+        component: "table-node-component",
+      });
 
-      const dnd = new Addon.Dnd({ target: this.graph })
-      dnd.start(node, e)
+      const dnd = new Addon.Dnd({ target: this.graph });
+      dnd.start(node, e);
     },
     // 显示连线节点
     showPorts(ports, show) {
       for (let i = 0, len = ports.length; i < len; i = i + 1) {
-        ports[i].style.visibility = show ? 'visible' : 'hidden'
+        ports[i].style.visibility = show ? "visible" : "hidden";
       }
     },
     addNode() {
@@ -214,12 +220,25 @@ export default {
           },
           ports,
           data: {
-            nodeInfo: { chnname: "可以通过两种方法进行树节点内容的自定义：render-content和 scoped slot", name: "sda" }
+            nodeInfo: {
+              chnname: "SIMS_TEACHER",
+              name: "教师",
+            },
+            fieldTable: [
+              { PK_field: "INSTRUCT_ID", normal_field: "授课号" },
+              { PK_field: "CLASS_ID", normal_field: "班级ID" },
+              { PK_field: "LESSON_ID", normal_field: "课程号" },
+              { PK_field: "TEACHER_ID", normal_field: "教师ID" },
+              { PK_field: "TENANT_ID", normal_field: "租户号" },
+              { PK_field: "REVISION", normal_field: "乐观锁" },
+              { PK_field: "CREATED_BY", normal_field: "创建人" },
+              { PK_field: "CREATED_TIME", normal_field: "创建时间" },
+              { PK_field: "UPDATED_BY", normal_field: "更新人" },
+            ],
           },
           component: `table-node-component`,
         });
       }
-
     },
   },
 };

@@ -23,18 +23,11 @@ export default {
   name: "Count",
   data() {
     return {
-      nodeInfo: { chnname: "", name: "" },
-      fieldTable: [
-        { PK_field: "INSTRUCT_ID", normal_field: "授课号" },
-        { PK_field: "CLASS_ID", normal_field: "班级ID" },
-        { PK_field: "LESSON_ID", normal_field: "课程号" },
-        { PK_field: "TEACHER_ID", normal_field: "教师ID" },
-        { PK_field: "TENANT_ID", normal_field: "租户号" },
-        { PK_field: "REVISION", normal_field: "乐观锁" },
-        { PK_field: "CREATED_BY", normal_field: "创建人" },
-        { PK_field: "CREATED_TIME", normal_field: "创建时间" },
-        { PK_field: "UPDATED_BY", normal_field: "更新人" },
-      ],
+      nodeInfo: {
+        chnname: "",
+        name: "",
+      },
+      fieldTable: [],
       maxWidth: {
         totalWidth: 0,
       },
@@ -44,29 +37,32 @@ export default {
     const node = this.getNode();
     const data = node.store.data.data;
     if (data) {
-      this.nodeInfo = data.nodeInfo;
+      this.nodeInfo = data.nodeInfo || {};
+      this.fieldTable = data.fieldTable || [];
     }
 
-    for (var k in this.fieldTable[0]) {
-      let w = Math.max(
-        ...this.fieldTable.map((item) => this.getTextWidth(item[k]))
-      );
-      this.maxWidth[k] = w;
-    }
-    
+    this.getFieldKey();
     this.$nextTick(() => {
       this.updateTableSize();
     });
   },
   methods: {
-    updateTableSize() {
-      for (var k in this.fieldTable[0]) {
-        let w = Math.max(
-          ...this.fieldTable.map((item) => this.getTextWidth(item[k]))
-        );
-        this.maxWidth[k] = w;
+    // 获取字段长度计算css宽度
+    getFieldKey() {
+      if (this.fieldTable && this.fieldTable[0]) {
+        for (var k in this.fieldTable[0]) {
+          let w = Math.max(
+            ...this.fieldTable.map((item) => this.getTextWidth(item[k]))
+          );
+          this.maxWidth[k] = w;
+        }
       }
-
+    },
+    /**
+     * 更新svg宽度
+     */
+    updateTableSize() {
+      this.getFieldKey();
       this.$nextTick(() => {
         let height = this.$refs.tp.clientHeight;
         let width = this.$refs.tp.clientWidth;
@@ -88,7 +84,6 @@ export default {
     },
     onDragenter(e) {
       let data = JSON.parse(e.dataTransfer.getData("data-info"));
-      console.log(data);
       this.fieldTable.push(data);
       this.updateTableSize();
     },
