@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Button @click="layout">一键布局</Button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -22,24 +23,23 @@
 import "@antv/x6-vue-shape";
 import { ports } from "./graph/methods";
 
-import Tablea from "@/components/table.vue";
+import tableNode from "@/components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
+import { GridLayout } from "@antv/layout";
 
 export default {
   components: { treeTable, treeField },
   mounted() {
     const containerRef = this.$refs.containerRef;
+
     // 注册vue组件
     Graph.registerVueComponent(
       "table-node-component",
       {
-        template: `<Tablea :data="data" ></Tablea>`,
-        data() {
-          return { data: { chnname: "xx", name: "sda" } };
-        },
-        components: { Tablea },
+        template: `<table-node></table-node>`,
+        components: { tableNode },
       },
       true
     );
@@ -148,9 +148,7 @@ export default {
       }
     });
     this.addNode();
-    setTimeout(() => {
-      this.graph.fromJSON(this.data);
-    }, 0);
+    this.graph.fromJSON(this.data);
   },
   data() {
     return {
@@ -163,11 +161,26 @@ export default {
     };
   },
   methods: {
+    /**
+     * 一键智能布局----待完善
+     */
+    layout() {
+      const gridLayout = new GridLayout({
+        type: "grid",
+        width: 600,
+        height: 400,
+        center: [300, 200],
+        rows: 4,
+        cols: 4,
+      });
+      gridLayout.layout(this.graph);
+      this.graph.fromJSON(this.data);
+    },
     // 拖拽表进画布
     moveTable(data, e) {
       let node = this.graph.createNode({
         width: 150,
-        height: 100,
+        height: 50,
         zIndex: 1,
         shape: "vue-shape",
         attrs: {
@@ -192,7 +205,7 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 5; i++) {
         this.data.nodes.push({
           zIndex: 1,
           shape: "vue-shape",
