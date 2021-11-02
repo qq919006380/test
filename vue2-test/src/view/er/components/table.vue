@@ -94,7 +94,7 @@ export default {
 <style lang="scss" scoped>
 .er-template {
   display: inline-block;
-  min-width: 100%;
+  min-width: 150px;
   min-height: 50px;
   background: #fff;
   .title {

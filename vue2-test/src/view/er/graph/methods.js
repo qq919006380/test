@@ -55,6 +55,7 @@ export const ports = {
     {
       id: 'port1',
       group: 'top',
+      args: { x: 100, y: 1220 }
     },
     {
       id: 'port2',
@@ -68,7 +69,7 @@ export const ports = {
       id: 'port33',
       group: 'left',
     },
-    
+
     {
       id: 'port4',
       group: 'right',
