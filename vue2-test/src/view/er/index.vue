@@ -1,6 +1,7 @@
 <template>
   <div>
     <Button @click="layout">一键布局</Button>
+    <Button @click="getData">获取画布数据</Button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -23,7 +24,7 @@
 import "@antv/x6-vue-shape";
 import { ports } from "./graph/methods";
 
-import tableNode from "@/components/table.vue";
+import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
@@ -175,6 +176,10 @@ export default {
       });
       gridLayout.layout(this.graph);
       this.graph.fromJSON(this.data);
+    },
+
+    getData(){
+      console.log(this.graph.toJSON())
     },
     // 拖拽表进画布
     moveTable(data, e) {

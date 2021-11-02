@@ -5,7 +5,7 @@
 <script>
 import { Graph, Edge, Shape, NodeView } from "@antv/x6";
 import "@antv/x6-vue-shape";
-import Count from "../components/table.vue";
+import Count from "./er/components/table.vue";
 export default {
   mounted() {
     console.log(111,Shape);
