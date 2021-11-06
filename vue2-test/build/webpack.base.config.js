@@ -44,6 +44,7 @@ module.exports = {
                 test: /\.(gif|jpg|png)\??.*$/,
                 loader: 'url-loader',
                 options: {
+                    esModule: false,
                     limit: 1000,
                     name: 'resourse/[name].[hash:7].[ext]'
                 }
@@ -52,6 +53,7 @@ module.exports = {
                 test: /\.(ttf|woff|svg|eot|ttf)\??.*$/,
                 loader: 'file-loader',
                 options: {
+                    esModule: false,
                     limit: 1000,
                     name: 'resourse/[name].[hash:7].[ext]'
                 }

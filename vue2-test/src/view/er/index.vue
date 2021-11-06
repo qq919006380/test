@@ -28,7 +28,7 @@ import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
-import { GridLayout } from "@antv/layout";
+import { DagreLayout } from "@antv/layout";
 
 export default {
   components: { treeTable, treeField },
@@ -157,6 +157,7 @@ export default {
       graph: null,
       data: {
         nodes: [],
+        edges: [],
       },
       nodeData: [],
     };
@@ -166,19 +167,22 @@ export default {
      * 一键智能布局----待完善
      */
     layout() {
-      const gridLayout = new GridLayout({
-        type: "grid",
-        width: 600,
-        height: 400,
-        center: [300, 200],
-        rows: 4,
-        cols: 4,
-      });
-      gridLayout.layout(this.graph);
-      this.graph.fromJSON(this.data);
+      const dagreLayout = new DagreLayout({
+        type: 'dagre',
+        rankdir: 'LR',
+        align: 'UR',
+        ranksep: 30,
+        nodesep: 15,
+        controlPoints: true,
+      })
+      const model = dagreLayout.layout(this.data)
+      console.log(model)
+      this.graph.fromJSON(model)
+      // gridLayout.layout(this.data);
+      // this.graph.fromJSON(gridLayout);
     },
 
-    getData(){
+    getData() {
       console.log(this.graph.toJSON())
     },
     // 拖拽表进画布
@@ -210,8 +214,9 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < 18; i++) {
         this.data.nodes.push({
+          id: i,
           zIndex: 1,
           shape: "vue-shape",
           attrs: {
@@ -219,6 +224,8 @@ export default {
               stroke: "#2d8cf0",
             },
           },
+          width:100,
+          height:100,
           ports,
           data: {
             nodeInfo: {
@@ -240,6 +247,123 @@ export default {
           component: `table-node-component`,
         });
       }
+
+
+
+      this.data.edges.push(
+        ...[
+          {
+            source: '1',
+            target: '2',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '2',
+            target: '3',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '2',
+            target: '4',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '4',
+            target: '5',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '4',
+            target: '6',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '4',
+            target: '7',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '4',
+            target: '8',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '5',
+            target: '9',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '6',
+            target: '10',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '7',
+            target: '11',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+          {
+            source: '8',
+            target: '12',
+            attrs: {
+              line: {
+                stroke: '#fd6d6f',
+                strokeWidth: 1,
+              },
+            },
+          },
+        ],
+      )
     },
   },
 };

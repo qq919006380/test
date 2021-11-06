@@ -1,5 +1,6 @@
 export default [
     { path: '/', name: "默认", redirect: 'list' },
+    { path: '/demo', name: 'demo', component: () => import('@/view/demo/index.vue') },
     { path: '/list', name: '列表', component: () => import('@/view/list.vue') },
     { path: '/week', name: '选择周', component: () => import('@/view/week.vue') },
     { path: '/props', name: 'props', component: () => import('@/view/pop.vue') },
@@ -17,14 +18,14 @@ export default [
     { path: '/uploadPic', name: '图片上传组件（未完善）', component: () => import('@/view/uploadPic/index.vue') },
     { path: '/modalProps', name: '弹窗组件之间的数据传输', component: () => import('@/view/modalProps/index.vue') },
     { path: '/pencil', name: '手绘', component: () => import('@/view/pencil.vue') },
-    { path: '/pencil2', name: '手绘2', component: () => import('@/view/pencil2.vue') },
     { path: '/promise', name: 'promise', component: () => import('@/view/promise.vue') },
     { path: '/父子组件异步请求watch不触发问题', name: 'watch', component: () => import('@/view/watch/index.vue') },
     { path: '/api', name: 'api', component: () => import('@/view/api.vue') },
     { path: '/vue的render函数', name: 'render', component: () => import('@/view/render.vue') },
     { path: '/input', name: 'input', component: () => import('@/view/input/index.vue') },
     { path: '/er', name: 'er', component: () => import('@/view/er/index.vue') },
-    { path: '/er2', name: 'er2', component: () => import('@/view/er2.vue') }
+    { path: '/er2', name: 'er2', component: () => import('@/view/er2.vue') },
+    { path: '/x6-checkview', name: 'x6-checkview', component: () => import('@/view/x6-checkview') }
 ]
 // 高级通讯
 // $attrs 和 $listeners
