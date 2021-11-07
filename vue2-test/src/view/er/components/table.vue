@@ -1,12 +1,12 @@
 <template>
   <div class="er-template" ref="tp" @drop="onDragenter" @dragover.prevent>
-    <p class="title">
+    <div class="title">
       <span class="table_chnname" :title="nodeInfo.chnname">{{
         nodeInfo.chnname
       }}</span
       >( <span class="table_name">{{ nodeInfo.name }}</span
       >)
-    </p>
+    </div>
     <div class="fileds_area" v-for="item in fieldTable">
       <div :style="{ width: maxWidth.PK_field + 'px' }">
         {{ item.PK_field }}
@@ -20,7 +20,6 @@
 
 <script>
 export default {
-  name: "Count",
   data() {
     return {
       nodeInfo: {
@@ -28,26 +27,27 @@ export default {
         name: "",
       },
       fieldTable: [],
-      maxWidth: {
-        totalWidth: 0,
-      },
+      maxWidth: {},
+      height: 0,
+      width: 0,
     };
   },
   mounted() {
-    const node = this.getNode();
-    const data = node.store.data.data;
+    const data = this.getNode().store.data.data;
+
+    //组件外部的data数据传进来
     if (data) {
-      this.nodeInfo = data.nodeInfo || {};
-      this.fieldTable = data.fieldTable || [];
+      this.nodeInfo = data.nodeInfo || {}; //表头信息
+      this.fieldTable = data.fieldTable || []; //字段信息
     }
 
-    this.getFieldKey();
-    this.$nextTick(() => {
-      this.updateTableSize();
-    });
+    // 计算矩形的宽高
+    this.updateTableSize();
+    // 根据字段渲染连接桩
+    this.initPorts();
   },
   methods: {
-    // 获取字段长度计算css宽度
+    // 获取每个字段长度计算css宽度
     getFieldKey() {
       if (this.fieldTable && this.fieldTable[0]) {
         for (var k in this.fieldTable[0]) {
@@ -58,15 +58,33 @@ export default {
         }
       }
     },
-    /**
-     * 更新svg宽度
-     */
+    // 计算矩形的宽高
     updateTableSize() {
       this.getFieldKey();
       this.$nextTick(() => {
-        let height = this.$refs.tp.clientHeight;
-        let width = this.$refs.tp.clientWidth;
-        this.getNode().resize(width, height);
+        this.height = this.$refs.tp.clientHeight;
+        this.width = this.$refs.tp.clientWidth;
+        this.getNode().resize(this.width, this.height);
+      });
+    },
+    // 计算ports连接桩
+    initPorts() {
+      this.$nextTick(() => {
+        this.fieldTable.map((val, i) => {
+          const y = 37 + i * 19;
+          this.getNode().addPorts([
+            {
+              id: `${this.getNode().id}-${val.PK_field}-in`,
+              group: "in",
+              args: { x: 0, y: y },
+            },
+            {
+              id: `${this.getNode().id}-${val.PK_field}-out`,
+              group: "out",
+              args: { x: this.width, y: y },
+            },
+          ]);
+        });
       });
     },
     /**
@@ -80,21 +98,44 @@ export default {
       document.documentElement.append(ele);
       result = ele.offsetWidth;
       document.documentElement.removeChild(ele);
-      return result;
+      return result + 2;
     },
     onDragenter(e) {
       let data = JSON.parse(e.dataTransfer.getData("data-info"));
+      // 更新组件外部data数据
+      this.$emit("update-data", {
+        nodeId: this.getNode().id,
+        fieldTable: data,
+      });
+      // this.getNode().store.data.data.fieldTable.push(data);
+
       this.fieldTable.push(data);
       this.updateTableSize();
+      this.$nextTick(() => {
+        const y = 37 + (this.fieldTable.length - 1) * 19;
+        this.getNode().addPorts([
+          {
+            id: `${this.getNode().id}-${data.PK_field}-in`,
+            group: "in",
+            args: { x: 0, y: y },
+          },
+          {
+            id: `${this.getNode().id}-${data.PK_field}-out`,
+            group: "out",
+            args: { x: this.width, y: y },
+          },
+        ]);
+      });
     },
   },
   inject: ["getGraph", "getNode"],
 };
 </script>
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .er-template {
   display: inline-block;
-  min-width: 150px;
+  font-size: 12px;
+  min-width: 150px !important;
   min-height: 50px;
   background: #fff;
   .title {

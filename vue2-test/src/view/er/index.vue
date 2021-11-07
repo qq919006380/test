@@ -1,7 +1,8 @@
 <template>
   <div>
-    <Button @click="layout">一键布局</Button>
-    <Button @click="getData">获取画布数据</Button>
+    <el-button @click="layout">一键布局</el-button>
+    <el-button @click="getData">获取画布数据</el-button>
+    <el-button @click="downloadImg">导出图片</el-button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -27,20 +28,29 @@ import { ports } from "./graph/methods";
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
-import { Graph, FunctionExt, Shape, Addon } from "@antv/x6";
-import { DagreLayout } from "@antv/layout";
+import { Graph, FunctionExt, Shape, Addon, DataUri } from "@antv/x6";
+import { DagreLayout, GridLayout } from "@antv/layout";
 
 export default {
   components: { treeTable, treeField },
   mounted() {
     const containerRef = this.$refs.containerRef;
-
+    let _this = this;
     // 注册vue组件
     Graph.registerVueComponent(
       "table-node-component",
       {
-        template: `<table-node></table-node>`,
+        template: `<table-node @update-data='updateData'></table-node>`,
         components: { tableNode },
+        methods: {
+          updateData({ nodeId, fieldTable }) {
+            _this.data.nodes.forEach((item) => {
+              if (item.id == nodeId) {
+                item.data.fieldTable.push(fieldTable);
+              }
+            });
+          },
+        },
       },
       true
     );
@@ -48,9 +58,19 @@ export default {
     // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
-      grid: 10,
       width: 600,
       height: 600,
+
+      panning: {
+        enabled: true,
+      },
+      background: {
+        color: "#fffbe6", // 设置画布背景颜色
+      },
+      grid: {
+        size: 10, // 网格大小 10px
+        visible: true, // 渲染网格背景
+      },
       // 节点连接
       connecting: {
         anchor: "center",
@@ -61,28 +81,9 @@ export default {
         allowNode: false, // 是否允许边链接到节点（非节点上的链接桩）
         createEdge() {
           return new Shape.Edge({
-            attrs: {
-              line: {
-                stroke: "#1890ff",
-                strokeWidth: 1,
-                targetMarker: {
-                  name: "classic",
-                  size: 8,
-                },
-                strokeDasharray: 0, //虚线
-                style: {
-                  animation: "ant-line 30s infinite linear",
-                },
-              },
-            },
-            label: {
-              text: "",
-            },
+            ...this.edgeAtr,
             connector: "normal",
-            router: {
-              name: "manhattan",
-            },
-            zIndex: 0,
+            zIndex: 1,
           });
         },
       },
@@ -99,8 +100,10 @@ export default {
           },
         },
       },
-    });
 
+
+    });
+    this.graph.enableMouseWheel(); //启用鼠标滚轮缩放画布。
     // 节点鼠标移入
     this.graph.on(
       "node:mouseenter",
@@ -133,12 +136,12 @@ export default {
     });
     // 连接线鼠标移出
     this.graph.on("edge:mouseleave", ({ edge }) => {
-      console.log(4);
       edge.removeTools();
     });
 
     // cell 节点时才触发
     this.graph.on("node:added", ({ node }) => {
+      console.log(2);
       const data = node.store.data;
 
       if (data.type === "taskNode") {
@@ -148,6 +151,28 @@ export default {
         this.nodeData.push(obj);
       }
     });
+
+    // 对新创建的边进行插入数据库等持久化操作
+    this.graph.on(
+      "edge:connected",
+      ({ isNew, edge, previousPort, currentPort }) => {
+        let { source, target } = edge.store.data;
+        if (isNew) {
+          // 添加线
+          this.data.edges.push({ source, target, ...this.edgeAtr });
+        } else {
+          // 修改线
+          console.log("修改线");
+          // console.log(edge);
+          // console.log(previousPort);
+          // console.log(currentPort);
+          // this.data.edges.map((item) => {
+
+          // });
+        }
+      }
+    );
+
     this.addNode();
     this.graph.fromJSON(this.data);
   },
@@ -156,34 +181,84 @@ export default {
       activeName: "table",
       graph: null,
       data: {
-        nodes: [],
-        edges: [],
+        nodes: [], //表节点
+        edges: [], //线
       },
       nodeData: [],
+      edgeAtr: {
+        attrs: {
+          line: {
+            targetMarker: "classic", // 实心箭头
+            strokeWidth: 1,
+            stroke: "#000", // 指定 path 元素的填充色
+          },
+        },
+        router: {
+          name: "manhattan",
+          args: {
+            startDirections: ["top"],
+            endDirections: ["bottom"],
+          },
+        },
+      },
     };
   },
   methods: {
+    downloadImg() {
+      this.graph.toPNG(
+        (dataUri) => {
+          DataUri.downloadDataUri(dataUri, "chart.png");
+        },
+        {
+          // copyStyles: false,
+          padding: {
+            top: 20,
+            right: 30,
+            bottom: 40,
+            left: 50,
+          },
+        }
+      );
+    },
     /**
      * 一键智能布局----待完善
      */
     layout() {
       const dagreLayout = new DagreLayout({
-        type: 'dagre',
-        rankdir: 'LR',
-        align: 'UR',
-        ranksep: 30,
+        type: "dagre",
+        rankdir: "LR",
+        align: "UL",
+        ranksep: 55,
         nodesep: 15,
         controlPoints: true,
+        workerEnabled: true
+      });
+      const gridLayout = new GridLayout({
+        type: 'grid',
+        width: 600,
+        height: 400,
+        rows: 4,
+        cols: 4,
       })
-      const model = dagreLayout.layout(this.data)
-      console.log(model)
-      this.graph.fromJSON(model)
-      // gridLayout.layout(this.data);
-      // this.graph.fromJSON(gridLayout);
+      let model
+
+      // 大于5条线就层次布局，小于5跳线就网格布局
+      if (this.data.edges.length > 5) {
+        model = dagreLayout.layout(this.data);
+      } else {
+        model = gridLayout.layout(this.data);
+      }
+
+
+      this.graph.fromJSON(model);
     },
 
     getData() {
-      console.log(this.graph.toJSON())
+      console.log("graph", this.graph.toJSON());
+
+      console.log("data", this.data);
+
+      console.log("nodeData", this.nodeData);
     },
     // 拖拽表进画布
     moveTable(data, e) {
@@ -201,6 +276,7 @@ export default {
         data: {
           nodeInfo: { chnname: data.label, name: "xxx" },
         },
+
         component: "table-node-component",
       });
 
@@ -214,9 +290,9 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 18; i++) {
+      for (var i = 0; i < 20; i++) {
         this.data.nodes.push({
-          id: i,
+          id: i + "",
           zIndex: 1,
           shape: "vue-shape",
           attrs: {
@@ -224,8 +300,6 @@ export default {
               stroke: "#2d8cf0",
             },
           },
-          width:100,
-          height:100,
           ports,
           data: {
             nodeInfo: {
@@ -235,135 +309,32 @@ export default {
             fieldTable: [
               { PK_field: "INSTRUCT_ID", normal_field: "授课号" },
               { PK_field: "CLASS_ID", normal_field: "班级ID" },
-              { PK_field: "LESSON_ID", normal_field: "课程号" },
-              { PK_field: "TEACHER_ID", normal_field: "教师ID" },
-              { PK_field: "TENANT_ID", normal_field: "租户号" },
-              { PK_field: "REVISION", normal_field: "乐观锁" },
-              { PK_field: "CREATED_BY", normal_field: "创建人" },
-              { PK_field: "CREATED_TIME", normal_field: "创建时间" },
-              { PK_field: "UPDATED_BY", normal_field: "更新人" },
             ],
           },
           component: `table-node-component`,
         });
       }
 
-
-
       this.data.edges.push(
         ...[
+          // 字段连接字段，cell是表id，port是字段id
           {
-            source: '1',
-            target: '2',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
+            source: { cell: "1", port: "1-INSTRUCT_ID-out" },
+            target: { cell: "2", port: "2-INSTRUCT_ID-in" },
+            ...this.edgeAtr,
           },
           {
-            source: '2',
-            target: '3',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
+            source: { cell: "1", port: "1-INSTRUCT_ID-out" },
+            target: { cell: "3", port: "3-INSTRUCT_ID-in" },
+            ...this.edgeAtr,
           },
+          // 表连接表
           {
-            source: '2',
-            target: '4',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
+            source: "1", //表id
+            target: "2", //表id
           },
-          {
-            source: '4',
-            target: '5',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '4',
-            target: '6',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '4',
-            target: '7',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '4',
-            target: '8',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '5',
-            target: '9',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '6',
-            target: '10',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '7',
-            target: '11',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-          {
-            source: '8',
-            target: '12',
-            attrs: {
-              line: {
-                stroke: '#fd6d6f',
-                strokeWidth: 1,
-              },
-            },
-          },
-        ],
-      )
+        ]
+      );
     },
   },
 };
