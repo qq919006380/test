@@ -16,6 +16,7 @@
       </el-aside>
       <el-main>
         <div id="container" ref="containerRef"></div>
+        <div class="mini-map-container" ref="miniMapContainerRef"></div>
       </el-main>
     </el-container>
   </div>
@@ -31,11 +32,29 @@ import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon, DataUri } from "@antv/x6";
 import { DagreLayout, GridLayout } from "@antv/layout";
 
+let edgeAtr = {
+  attrs: {
+    line: {
+      targetMarker: "classic", // 实心箭头
+      strokeWidth: 1,
+      stroke: "#000", // 指定 path 元素的填充色
+      targetMarker: {
+        name: 'classic',
+        size: 8
+      },
+    },
+  },
+  connector: 'normal',
+  router: {
+    name: "manhattan",
+  },
+}
 export default {
   components: { treeTable, treeField },
   mounted() {
     const containerRef = this.$refs.containerRef;
     let _this = this;
+
     // 注册vue组件
     Graph.registerVueComponent(
       "table-node-component",
@@ -67,6 +86,7 @@ export default {
       background: {
         color: "#fffbe6", // 设置画布背景颜色
       },
+
       grid: {
         size: 10, // 网格大小 10px
         visible: true, // 渲染网格背景
@@ -81,9 +101,9 @@ export default {
         allowNode: false, // 是否允许边链接到节点（非节点上的链接桩）
         createEdge() {
           return new Shape.Edge({
-            ...this.edgeAtr,
+            ...edgeAtr,
             connector: "normal",
-            zIndex: 1,
+            zIndex: 0,
           });
         },
       },
@@ -100,6 +120,23 @@ export default {
           },
         },
       },
+      // 开启小地图
+      // minimap: {
+      //   enabled: true,
+      //   container: this.$refs.miniMapContainerRef,
+      // }
+      // Scroller 使画布具备滚动、平移、居中、缩放等能力
+      // scroller: {
+      //   enabled: true,
+      //   pageVisible: true,
+      //   pageBreak: true,
+      //   pannable: true,
+      // },
+      // // 鼠标滚轮的默认行为是滚动页面
+      // mousewheel: {
+      //   enabled: true,
+      //   modifiers: ['ctrl', 'meta'],
+      // },
 
 
     });
@@ -141,7 +178,6 @@ export default {
 
     // cell 节点时才触发
     this.graph.on("node:added", ({ node }) => {
-      console.log(2);
       const data = node.store.data;
 
       if (data.type === "taskNode") {
@@ -159,22 +195,17 @@ export default {
         let { source, target } = edge.store.data;
         if (isNew) {
           // 添加线
-          this.data.edges.push({ source, target, ...this.edgeAtr });
+          this.data.edges.push({ source, target, ...edgeAtr });
         } else {
           // 修改线
           console.log("修改线");
-          // console.log(edge);
-          // console.log(previousPort);
-          // console.log(currentPort);
-          // this.data.edges.map((item) => {
-
-          // });
         }
       }
     );
 
     this.addNode();
-    this.graph.fromJSON(this.data);
+    this.layout()
+
   },
   data() {
     return {
@@ -185,22 +216,7 @@ export default {
         edges: [], //线
       },
       nodeData: [],
-      edgeAtr: {
-        attrs: {
-          line: {
-            targetMarker: "classic", // 实心箭头
-            strokeWidth: 1,
-            stroke: "#000", // 指定 path 元素的填充色
-          },
-        },
-        router: {
-          name: "manhattan",
-          args: {
-            startDirections: ["top"],
-            endDirections: ["bottom"],
-          },
-        },
-      },
+
     };
   },
   methods: {
@@ -221,9 +237,11 @@ export default {
       );
     },
     /**
-     * 一键智能布局----待完善
+     * 一键智能布局
      */
     layout() {
+      let nodeNum = this.data.nodes.length
+      let sqrt = Math.floor(Math.sqrt(nodeNum))//平方根
       const dagreLayout = new DagreLayout({
         type: "dagre",
         rankdir: "LR",
@@ -235,10 +253,10 @@ export default {
       });
       const gridLayout = new GridLayout({
         type: 'grid',
-        width: 600,
-        height: 400,
-        rows: 4,
-        cols: 4,
+        width: sqrt * 180,
+        height: sqrt * 120,
+        rows: sqrt,
+        cols: sqrt,
       })
       let model
 
@@ -248,10 +266,22 @@ export default {
       } else {
         model = gridLayout.layout(this.data);
       }
-
-
       this.graph.fromJSON(model);
+      this.observeRouter()
     },
+
+    // 监控节点移动使线主动避开
+    observeRouter() {
+      this.graph.getNodes().forEach(item => {
+        item.on('change:position', () => {
+          this.graph.getEdges().forEach(edge => {
+            this.graph.findViewByCell(edge).update()
+          })
+        })
+      })
+    },
+
+
 
     getData() {
       console.log("graph", this.graph.toJSON());
@@ -265,7 +295,7 @@ export default {
       let node = this.graph.createNode({
         width: 150,
         height: 50,
-        zIndex: 1,
+        zIndex: 0,
         shape: "vue-shape",
         attrs: {
           body: {
@@ -290,10 +320,10 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < 100; i++) {
         this.data.nodes.push({
           id: i + "",
-          zIndex: 1,
+          zIndex: 0,
           shape: "vue-shape",
           attrs: {
             body: {
@@ -321,18 +351,18 @@ export default {
           {
             source: { cell: "1", port: "1-INSTRUCT_ID-out" },
             target: { cell: "2", port: "2-INSTRUCT_ID-in" },
-            ...this.edgeAtr,
+            ...edgeAtr,
           },
           {
             source: { cell: "1", port: "1-INSTRUCT_ID-out" },
             target: { cell: "3", port: "3-INSTRUCT_ID-in" },
-            ...this.edgeAtr,
+            ...edgeAtr,
           },
           // 表连接表
-          {
-            source: "1", //表id
-            target: "2", //表id
-          },
+          // {
+          //   source: "1", //表id
+          //   target: "2", //表id
+          // },
         ]
       );
     },
@@ -341,4 +371,11 @@ export default {
 </script>
 
 <style scoped>
+.mini-map-container {
+  position: fixed;
+  z-index: 999;
+  bottom: 20px;
+  right: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 </style>

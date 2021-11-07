@@ -6,8 +6,7 @@
           draggable="true"
           @dragstart="onDragstart($event, data)"
           :class="{ move: node.isLeaf }"
-          >{{ node.label }}</span
-        >
+        >{{ node.label }}</span>
       </span>
     </el-tree>
   </div>
@@ -22,7 +21,7 @@ export default {
           normal_field: "一级 1",
           children: [
             { normal_field: "二级 1-1" },
-            { normal_field: "三级 1-1-1" },
+            { normal_field: "三级 1-1-1-2-3-1-4-a" },
             { normal_field: "三级 1-1-1" },
             { normal_field: "三级 1-1-1" },
           ],
@@ -57,7 +56,7 @@ export default {
       this.$emit("mousedown", data, e);
     },
     onDragstart(e, data) {
-      data.PK_field = "xxx";
+      data.PK_field = Math.floor(Math.random() * 900);
       let dataStr = JSON.stringify(data);
       e.dataTransfer.setData("data-info", dataStr);
     },

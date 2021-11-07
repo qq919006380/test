@@ -1,19 +1,16 @@
 <template>
   <div class="er-template" ref="tp" @drop="onDragenter" @dragover.prevent>
     <div class="title">
-      <span class="table_chnname" :title="nodeInfo.chnname">{{
-        nodeInfo.chnname
-      }}</span
-      >( <span class="table_name">{{ nodeInfo.name }}</span
-      >)
+      <span class="table_chnname" :title="nodeInfo.chnname">
+        {{
+          nodeInfo.chnname
+        }}
+      </span>(
+      <span class="table_name">{{ nodeInfo.name }}</span>)
     </div>
     <div class="fileds_area" v-for="item in fieldTable">
-      <div :style="{ width: maxWidth.PK_field + 'px' }">
-        {{ item.PK_field }}
-      </div>
-      <div :style="{ width: maxWidth.normal_field + 'px' }">
-        {{ item.normal_field }}
-      </div>
+      <div :style="{ width: maxWidth.PK_field + 'px' }">{{ item.PK_field }}</div>
+      <div :style="{ width: maxWidth.normal_field + 'px' }">{{ item.normal_field }}</div>
     </div>
   </div>
 </template>
@@ -107,8 +104,6 @@ export default {
         nodeId: this.getNode().id,
         fieldTable: data,
       });
-      // this.getNode().store.data.data.fieldTable.push(data);
-
       this.fieldTable.push(data);
       this.updateTableSize();
       this.$nextTick(() => {
@@ -125,8 +120,19 @@ export default {
             args: { x: this.width, y: y },
           },
         ]);
+        this.updatePortPosition()
       });
+
+
     },
+
+    updatePortPosition() {
+      this.fieldTable.forEach((item, i) => {
+        const y = 37 + i * 19;
+        this.getNode().setPortProp(`${this.getNode().id}-${item.PK_field}-in`, ['args'], { x: 0, y })
+        this.getNode().setPortProp(`${this.getNode().id}-${item.PK_field}-out`, ['args'], { x: this.width, y })
+      })
+    }
   },
   inject: ["getGraph", "getNode"],
 };
@@ -149,6 +155,7 @@ export default {
     hyphens: auto;
   }
   .fileds_area {
+    height: 16px;
     display: flex;
     margin: 3px 5px;
     & > div {
