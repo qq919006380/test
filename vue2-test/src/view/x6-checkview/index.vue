@@ -1,5 +1,6 @@
 <template>
     <div class="app-content">
+        this.draggedId{{ this.draggedId }}
         <div class="refContainer"></div>
     </div>
 </template>
@@ -10,6 +11,10 @@ export default {
     data() {
         return {
             graph: null,
+            padding: 60,
+            keepRendered: false,//保持渲染
+            keepDragged: false,//保持拖动
+            draggedId: [],
         }
     },
     mounted() {
@@ -25,9 +30,8 @@ export default {
             background: {
                 color: "#fffbe6", // 设置画布背景颜色
             },
-            //是否可拖动
             panning: {
-                enabled: true,
+                enabled: true,//是否可拖动
             },
             // 鼠标滚轮的默认行为是滚动页面
             mousewheel: {
@@ -61,14 +65,8 @@ export default {
         appContent.onresize = () => this.setWindowBBox()
 
         this.setWindowBBox()
-        this.onChanged({
-            count: 1000,//设置节点数量
-            columns: 40,
-            batch: 400,
-            padding: 60,
-            keepRendered: false,//保持渲染
-            keepDragged: false,//保持拖动
-        })
+        // 清空画布并添加用指定的节点/边。
+        this.resetCells()
     },
     methods: {
         // 渲染节点
@@ -106,22 +104,11 @@ export default {
             )
         },
 
-        onChanged(settgins) {
+        resetCells() {
             console.time('perf-all')
-            this.padding = settgins.padding
-            this.keepRendered = settgins.keepRendered
-            this.keepDragged = settgins.keepDragged
-            this.draggedId = []
-
-            if (this.count === settgins.count && this.columns === settgins.columns) {
-                return
-            }
-
-            this.count = settgins.count
-            this.columns = settgins.columns
-
-            const count = settgins.count
-            const columns = settgins.columns
+            const batch = 400 //每次异步进程中处理的节点和边视图的数量。
+            const count = 1000//设置节点数量
+            const columns = 40//一共多少列
             const rows = Math.ceil(count / columns)
 
             const baseColor = Color.randomHex()
@@ -158,15 +145,12 @@ export default {
             console.time('perf-reset')
             this.graph.freeze()
             this.graph.resize(columns * 50 + 30, rows * 50 + 30)
-            /**
-             *  清空画布并添加用指定的节点/边。
-             */
             this.graph.model.resetCells([...nodes, ...edges])
             console.timeEnd('perf-reset')
 
             console.time('perf-dump')
             this.graph.unfreeze({
-                batchSize: settgins.batch,
+                batchSize: batch,
                 progress: ({ done, current, total }) => {
                     const progress = current / total
                     console.log(`${Math.round(progress * 100)}%`)
