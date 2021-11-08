@@ -15,6 +15,10 @@ export default {
             keepRendered: false,//保持渲染
             keepDragged: false,//保持拖动
             draggedId: [],
+            data: {
+                nodes: [], //表节点
+                edges: [], //线
+            },
         }
     },
     mounted() {
@@ -108,13 +112,12 @@ export default {
             console.time('perf-all')
             const batch = 400 //每次异步进程中处理的节点和边视图的数量。
             const count = 1000//设置节点数量
-            const columns = 40//一共多少列
-            const rows = Math.ceil(count / columns)
+            const sqrt = Math.floor(Math.sqrt(count))//平方根 
 
             const baseColor = Color.randomHex()
             const nodes = Array.from({ length: count }, (_, index) => {
-                const row = Math.floor(index / columns)
-                const column = index % columns
+                const row = Math.floor(index / sqrt)
+                const column = index % sqrt
                 const fill = Color.lighten(baseColor, ((row + column) % 8) * 10)
                 return this.graph.createNode({
                     zIndex: 2,
@@ -144,7 +147,8 @@ export default {
             edges.shift()
             console.time('perf-reset')
             this.graph.freeze()
-            this.graph.resize(columns * 50 + 30, rows * 50 + 30)
+            // 暂时使用节点总数的平方根等于画布的长宽
+            this.graph.resize(sqrt * 60, sqrt * 60)
             this.graph.model.resetCells([...nodes, ...edges])
             console.timeEnd('perf-reset')
 
