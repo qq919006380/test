@@ -2,32 +2,38 @@
     <div class="app">
         <div class="app-content">
             <div class="refContainer"></div>
+            <div class="mini-map-container" ref="miniMapContainerRef"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { Graph, Cell, Node, Edge, Color, Rectangle } from '@antv/x6'
+import { Graph, Color } from '@antv/x6'
 import './app.css'
 export default {
     data() {
         return {
             graph: null,
-            container: null
+            viewport: null
         }
     },
     mounted() {
         let appContent = document.querySelector('.app-content')
-        appContent.onscroll = function () {
-            // 浏览器可见区域高度为：
-            var viewHeight = getViewHeight(),
-                // 窗口滚动条高度
-                scrollHeight = getScrollTop(),
-                // 文档内容实际高度：
-                contentHeight = getContentHeight(),
-                // 滚动条距离底部的高度
-                scrolllBtmHeight = contentHeight - scrollHeight - viewHeight;
-            console.log('浏览器可见区域高度为：' + viewHeight + ' 文档内容实际高度：' + contentHeight + ' 滚动条距离顶部的高度为：' + scrollHeight + ' 滚动条距离底部的高度为：' + scrolllBtmHeight);
+        function getScrollTop() {
+            return appContent.scrollTop;
+        }
+        function getScrollLeft() {
+            return appContent.scrollLeft;
+        }
+        // 滚动刷新viewport位置和大小
+        appContent.onscroll = () => {
+            var scrollWidth = getScrollLeft()
+            var scrollHeight = getScrollTop()
+            let height = appContent.clientHeight
+            let width = appContent.clientWidth
+            this.viewport.position(scrollWidth, scrollHeight)
+            this.viewport.size(width, height)
+
         }
 
         this.graph = new Graph({
@@ -36,8 +42,25 @@ export default {
             async: true,
             frozen: true,
             grid: {
-                size: 1,
-                visible: true,
+                size: 10, // 网格大小 10px
+                visible: true, // 渲染网格背景
+            },
+            background: {
+                color: "#fffbe6", // 设置画布背景颜色
+            },
+            //是否可拖动
+            panning: {
+                enabled: true,
+            },
+            // 鼠标滚轮的默认行为是滚动页面
+            mousewheel: {
+                enabled: true,
+                modifiers: ['ctrl', 'meta'],
+            },
+            // 开启小地图
+            minimap: {
+                enabled: true,
+                container: this.$refs.miniMapContainerRef,
             },
             checkView: ({ view, unmounted }) => {
                 const cell = view.cell
@@ -51,6 +74,7 @@ export default {
                 return false
             },
         })
+        // 画布节点渲染完成
         this.graph.on('render:done', ({ stats }) => {
             console.table(stats)
         })
@@ -64,16 +88,17 @@ export default {
 
         this.setWindowBBox()
         this.onChanged({
-            count: 1000,
+            count: 1000,//设置节点数量
             columns: 40,
             batch: 400,
             padding: 60,
-            customViewport: true,
-            keepRendered: false,
-            keepDragged: false,
+            customViewport: true,//当前视窗
+            keepRendered: false,//保持渲染
+            keepDragged: false,//保持拖动
         })
     },
     methods: {
+        // 渲染节点
         shouldRenderNode(node, unmounted) {
             if (this.keepDragged && this.draggedId.includes(node.id)) {
                 return true
@@ -95,9 +120,11 @@ export default {
             }
 
             return this.windowBBox.isIntersectWithRect(
+                // 返回容器渲染到画布后的包围盒
                 node.getBBox().inflate(this.padding),
             )
         },
+        // 渲染边
         shouldRenderEdge(edge) {
             const sourceNode = edge.getSourceNode()
             const targetNode = edge.getTargetNode()
@@ -115,12 +142,13 @@ export default {
                 window.innerWidth,
                 window.innerHeight,
             )
+            window.windowBBox = this.windowBBox
         },
 
         onChanged(settgins) {
             console.time('perf-all')
 
-            this.padding = settgins.padding
+            this.padding = settgins.padding//边距
             this.customViewport = settgins.customViewport
             this.keepRendered = settgins.keepRendered
             this.keepDragged = settgins.keepDragged
@@ -144,8 +172,8 @@ export default {
                 const fill = Color.lighten(baseColor, ((row + column) % 8) * 10)
                 return this.graph.createNode({
                     zIndex: 2,
-                    width: 30,
-                    height: 20,
+                    width: 100,
+                    height: 100,
                     x: column * 50 + 30,
                     y: row * 50 + 30,
                     attrs: {
@@ -168,14 +196,15 @@ export default {
             })
 
             edges.shift()
-
+            let appContent = document.querySelector('.app-content')
+            let height = appContent.clientHeight
+            let width = appContent.clientWidth
             this.viewport = this.graph.createNode({
-                zIndex: 3,
-                width: 200,
-                height: 200,
-                x: 100,
-                y: 100,
-                label: 'Drag me',
+                zIndex: -1,
+                width: width - 20,
+                height: height - 20,
+                x: 0,
+                y: 0,
                 attrs: {
                     body: {
                         fill: 'rgba(255,0,0,0.6)',
@@ -192,6 +221,9 @@ export default {
             console.time('perf-reset')
             this.graph.freeze()
             this.graph.resize(columns * 50 + 30, rows * 50 + 30)
+            /**
+             *  清空画布并添加用指定的节点/边。
+             */
             this.graph.model.resetCells([...nodes, ...edges, this.viewport])
             console.timeEnd('perf-reset')
 
@@ -213,5 +245,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.mini-map-container {
+    position: fixed;
+    z-index: 999;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 </style>

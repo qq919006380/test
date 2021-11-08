@@ -124,8 +124,8 @@ export default {
       // minimap: {
       //   enabled: true,
       //   container: this.$refs.miniMapContainerRef,
-      // }
-      // Scroller 使画布具备滚动、平移、居中、缩放等能力
+      // },
+      // // Scroller 使画布具备滚动、平移、居中、缩放等能力
       // scroller: {
       //   enabled: true,
       //   pageVisible: true,
@@ -253,7 +253,7 @@ export default {
       });
       const gridLayout = new GridLayout({
         type: 'grid',
-        width: sqrt * 180,
+        width: sqrt * 200,
         height: sqrt * 120,
         rows: sqrt,
         cols: sqrt,
@@ -261,7 +261,7 @@ export default {
       let model
 
       // 大于5条线就层次布局，小于5跳线就网格布局
-      if (this.data.edges.length > 5) {
+      if (this.data.edges.length > 50) {
         model = dagreLayout.layout(this.data);
       } else {
         model = gridLayout.layout(this.data);
@@ -320,7 +320,7 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 300; i++) {
         this.data.nodes.push({
           id: i + "",
           zIndex: 0,
@@ -356,6 +356,31 @@ export default {
           {
             source: { cell: "1", port: "1-INSTRUCT_ID-out" },
             target: { cell: "3", port: "3-INSTRUCT_ID-in" },
+            ...edgeAtr,
+          },
+          {
+            source: { cell: "2", port: "2-INSTRUCT_ID-out" },
+            target: { cell: "4", port: "4-INSTRUCT_ID-in" },
+            ...edgeAtr,
+          },
+          {
+            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
+            target: { cell: "4", port: "4-INSTRUCT_ID-in" },
+            ...edgeAtr,
+          },
+          {
+            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
+            target: { cell: "5", port: "5-INSTRUCT_ID-in" },
+            ...edgeAtr,
+          },
+          {
+            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
+            target: { cell: "20", port: "20-INSTRUCT_ID-in" },
+            ...edgeAtr,
+          },
+          {
+            source: { cell: "20", port: "20-INSTRUCT_ID-out" },
+            target: { cell: "30", port: "30-INSTRUCT_ID-in" },
             ...edgeAtr,
           },
           // 表连接表
