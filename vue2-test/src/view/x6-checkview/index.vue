@@ -114,11 +114,9 @@ export default {
             const count = 1000//设置节点数量
             const sqrt = Math.floor(Math.sqrt(count))//平方根 
 
-            const baseColor = Color.randomHex()
             const nodes = Array.from({ length: count }, (_, index) => {
                 const row = Math.floor(index / sqrt)
                 const column = index % sqrt
-                const fill = Color.lighten(baseColor, ((row + column) % 8) * 10)
                 return this.graph.createNode({
                     zIndex: 2,
                     width: 30,
@@ -126,8 +124,7 @@ export default {
                     x: column * 50 + 30,
                     y: row * 50 + 30,
                     attrs: {
-                        body: { fill },
-                        label: { text: index, fill: Color.invert(fill, true) },
+                        label: { text: index, },
                     },
                 })
             })
