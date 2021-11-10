@@ -3,6 +3,7 @@
     <el-button @click="layout">一键布局</el-button>
     <el-button @click="getData">获取画布数据</el-button>
     <el-button @click="downloadImg">导出图片</el-button>
+    <el-button @click="twolayout">twolayout</el-button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -112,6 +113,8 @@ export default {
       mousewheel: {
         enabled: true,
         modifiers: ['ctrl', 'meta'],
+        // minScale: 0.5,
+        // maxScale: 2
       },
       // 高亮
       highlighting: {
@@ -192,17 +195,7 @@ export default {
       edge.removeTools();
     });
 
-    // cell 节点时才触发
-    this.graph.on("node:added", ({ node }) => {
-      const data = node.store.data;
 
-      if (data.type === "taskNode") {
-        const obj = {
-          node,
-        };
-        this.nodeData.push(obj);
-      }
-    });
 
     // 滚动和缩放刷新视窗位置和大小
     let appContent = document.querySelector('.app-content')
@@ -210,6 +203,8 @@ export default {
     this.graph.on('scale', ({ sx, sy, ox, oy }) => { this.setWindowBBox() })
     this.graph.on('resize', ({ width, height }) => { this.setWindowBBox() })
     this.graph.on('translate', ({ tx, ty }) => { this.setWindowBBox() })
+
+
 
     this.setWindowBBox()
     this.addNode();
@@ -228,14 +223,15 @@ export default {
         nodes: [], //表节点
         edges: [], //线
       },
-      nodeData: [],
-
     };
   },
   methods: {
     //生成随机长度的字段
     randomField() {
-      let data = []
+      let data = [
+        { PK_field: random(6), normal_field: "授课号" },
+        { PK_field: random(6), normal_field: "授课号" },
+      ]
       let num = Math.random() * 10
       for (let i = 0; i < num; i++) {
         data.push(
@@ -270,16 +266,41 @@ export default {
       let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
 
       const gridLayout = new GridLayout({
+        begin:[0,0],
         type: 'grid',
         width: sqrt * 200,
         height: sqrt * 120,
         rows: sqrt,
         cols: sqrt,
+        preventOverlap: true
       })
       let model = gridLayout.layout(this.data);
+
       this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
       this.graph.fromJSON(model);
 
+      setTimeout(() => {
+        let xxx = gridLayout.layout(this.filterLayoutData(this.graph.toJSON()));
+      this.graph.fromJSON(xxx);
+      }, 0);
+    },
+
+    twolayout() {
+      let nodeNum = this.data.nodes.length
+      let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
+
+      const gridLayout = new GridLayout({
+        type: 'grid',
+        width: sqrt * 200,
+        height: sqrt * 120,
+        rows: sqrt,
+        cols: sqrt,
+        preventOverlap: true
+      })
+      let model = gridLayout.layout(this.filterLayoutData(this.graph.toJSON()));
+      console.log(model)
+      this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
+      this.graph.fromJSON(model);
     },
 
 
@@ -289,7 +310,7 @@ export default {
 
       console.log("data", this.data);
 
-      console.log("nodeData", this.nodeData);
+      console.log('filterLayoutData', this.filterLayoutData(this.graph.toJSON()))
     },
     // 拖拽表进画布
     moveTable(data, e) {
@@ -321,11 +342,12 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 42; i++) {
+      for (var i = 0; i < 40; i++) {
         this.data.nodes.push({
           id: i + "",
           zIndex: 0,
           shape: "vue-shape",
+          size: [0, 0],
           attrs: {
             body: {
               stroke: "#2d8cf0",
@@ -343,51 +365,22 @@ export default {
         });
       }
 
-      this.data.edges.push(
-        ...[
-          // 字段连接字段，cell是表id，port是字段id
-          {
-            source: { cell: "1", port: "1-INSTRUCT_ID-out" },
-            target: { cell: "2", port: "2-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "1", port: "1-INSTRUCT_ID-out" },
-            target: { cell: "3", port: "3-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "2", port: "2-INSTRUCT_ID-out" },
-            target: { cell: "4", port: "4-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
-            target: { cell: "4", port: "4-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
-            target: { cell: "5", port: "5-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "3", port: "3-INSTRUCT_ID-out" },
-            target: { cell: "20", port: "20-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          {
-            source: { cell: "20", port: "20-INSTRUCT_ID-out" },
-            target: { cell: "30", port: "30-INSTRUCT_ID-in" },
-            ...edgeAtr,
-          },
-          // 表连接表
-          // {
-          //   source: "1", //表id
-          //   target: "2", //表id
-          // },
-        ]
-      );
+      // this.data.edges.push(
+      //   ...[
+      //     // 字段连接字段，cell是表id，port是字段id
+      //     {
+      //       source: { cell: "1", port: "1-INSTRUCT_ID-out" },
+      //       target: { cell: "2", port: "2-INSTRUCT_ID-in" },
+      //       ...edgeAtr,
+      //     },
+      //     {
+      //       source: { cell: "1", port: "1-INSTRUCT_ID-out" },
+      //       target: { cell: "3", port: "3-INSTRUCT_ID-in" },
+      //       ...edgeAtr,
+      //     },
+
+      //   ]
+      // );
     },
 
     // 渲染节点
@@ -448,6 +441,36 @@ export default {
         },
       })
     },
+
+    filterLayoutData(data) {
+      const model = {
+        nodes: [],
+        edges: []
+      };
+      let tmp;
+      if (data.cells) {
+        tmp = data.cells;
+      } else if (data.nodes || data.edges) {
+        tmp = [].concat(data.nodes, data.edges);
+      }
+      if (tmp) {
+        tmp.forEach((item) => {
+          if (item.shape !== "edge") {
+            item.ports.items = []
+            model.nodes.push(item);
+          } else {
+            console.log(item)
+            let sourceId = item.source;
+            let targetId = item.target;
+            model.edges.push({
+              source: sourceId,
+              target: targetId
+            });
+          }
+        });
+      }
+      return model;
+    }
   },
 };
 </script>
