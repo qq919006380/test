@@ -15,7 +15,9 @@
         </el-tabs>
       </el-aside>
       <el-main>
-        <div id="container" ref="containerRef"></div>
+        <div class="app-content">
+          <div id="container" ref="containerRef"></div>
+        </div>
         <div class="mini-map-container" ref="miniMapContainerRef"></div>
       </el-main>
     </el-container>
@@ -77,16 +79,15 @@ export default {
     // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
-      width: 600,
-      height: 600,
-
+      sorting: 'approx',
+      async: true,
+      frozen: true,
       panning: {
         enabled: true,
       },
       background: {
         color: "#fffbe6", // 设置画布背景颜色
       },
-
       grid: {
         size: 10, // 网格大小 10px
         visible: true, // 渲染网格背景
@@ -107,6 +108,11 @@ export default {
           });
         },
       },
+      // 鼠标滚轮的默认行为是滚动页面
+      mousewheel: {
+        enabled: true,
+        modifiers: ['ctrl', 'meta'],
+      },
       // 高亮
       highlighting: {
         magnetAvailable: {
@@ -120,24 +126,22 @@ export default {
           },
         },
       },
+      checkView: ({ view, unmounted }) => {
+        const cell = view.cell
+        if (cell.isNode()) {
+          return this.shouldRenderNode(cell, unmounted)
+        }
+
+        if (cell.isEdge()) {
+          return this.shouldRenderEdge(cell)
+        }
+        return false
+      },
       // 开启小地图
       // minimap: {
       //   enabled: true,
       //   container: this.$refs.miniMapContainerRef,
       // },
-      // // Scroller 使画布具备滚动、平移、居中、缩放等能力
-      // scroller: {
-      //   enabled: true,
-      //   pageVisible: true,
-      //   pageBreak: true,
-      //   pannable: true,
-      // },
-      // // 鼠标滚轮的默认行为是滚动页面
-      // mousewheel: {
-      //   enabled: true,
-      //   modifiers: ['ctrl', 'meta'],
-      // },
-
 
     });
     this.graph.enableMouseWheel(); //启用鼠标滚轮缩放画布。
@@ -151,6 +155,14 @@ export default {
       }),
       500
     );
+    // 画布节点渲染完成
+    this.graph.on('render:done', ({ stats }) => {
+      console.table(stats)
+    })
+    // 移动node节点
+    this.graph.on('node:change:position', ({ node }) => {
+      this.draggedId.push(node.id)
+    })
     // 节点鼠标移出
     this.graph.on("node:mouseleave", ({ node }) => {
       // 添加连接点
@@ -188,29 +200,29 @@ export default {
       }
     });
 
-    // 对新创建的边进行插入数据库等持久化操作
-    this.graph.on(
-      "edge:connected",
-      ({ isNew, edge, previousPort, currentPort }) => {
-        let { source, target } = edge.store.data;
-        if (isNew) {
-          // 添加线
-          this.data.edges.push({ source, target, ...edgeAtr });
-        } else {
-          // 修改线
-          console.log("修改线");
-        }
-      }
-    );
+    // 滚动和缩放刷新视窗位置和大小
+    let appContent = document.querySelector('.app-content')
+    appContent.onscroll = () => this.setWindowBBox()
+    this.graph.on('scale', ({ sx, sy, ox, oy }) => { this.setWindowBBox() })
+    this.graph.on('resize', ({ width, height }) => { this.setWindowBBox() })
+    this.graph.on('translate', ({ tx, ty }) => { this.setWindowBBox() })
+
+
+    this.setWindowBBox()
+
 
     this.addNode();
-    this.layout()
+    this.resetCells()
 
   },
   data() {
     return {
       activeName: "table",
       graph: null,
+      padding: 60,
+      keepRendered: false,//保持渲染
+      keepDragged: false,//保持拖动
+      draggedId: [],
       data: {
         nodes: [], //表节点
         edges: [], //线
@@ -240,17 +252,10 @@ export default {
      * 一键智能布局
      */
     layout() {
+
       let nodeNum = this.data.nodes.length
-      let sqrt = Math.floor(Math.sqrt(nodeNum))//平方根
-      const dagreLayout = new DagreLayout({
-        type: "dagre",
-        rankdir: "LR",
-        align: "UL",
-        ranksep: 55,
-        nodesep: 15,
-        controlPoints: true,
-        workerEnabled: true
-      });
+      let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
+
       const gridLayout = new GridLayout({
         type: 'grid',
         width: sqrt * 200,
@@ -258,14 +263,8 @@ export default {
         rows: sqrt,
         cols: sqrt,
       })
-      let model
-
-      // 大于5条线就层次布局，小于5跳线就网格布局
-      if (this.data.edges.length > 50) {
-        model = dagreLayout.layout(this.data);
-      } else {
-        model = gridLayout.layout(this.data);
-      }
+      let model = gridLayout.layout(this.data);
+      this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
       this.graph.fromJSON(model);
       this.observeRouter()
     },
@@ -280,8 +279,6 @@ export default {
         })
       })
     },
-
-
 
     getData() {
       console.log("graph", this.graph.toJSON());
@@ -391,11 +388,78 @@ export default {
         ]
       );
     },
+
+    // 渲染节点
+    shouldRenderNode(node, unmounted) {
+      if (this.keepDragged && this.draggedId.includes(node.id)) {
+        return true
+      }
+
+      if (this.keepRendered && unmounted) {
+        return true
+      }
+
+      return this.windowBBox.isIntersectWithRect(
+        // 返回容器渲染到画布后的包围盒
+        node.getBBox().inflate(this.padding),
+      )
+    },
+    // 渲染边
+    shouldRenderEdge(edge) {
+      const sourceNode = edge.getSourceNode()
+      const targetNode = edge.getTargetNode()
+
+      return (
+        this.shouldRenderNode(sourceNode, false) ||
+        this.shouldRenderNode(targetNode, false)
+      )
+    },
+
+    setWindowBBox() {
+      this.windowBBox = this.graph.pageToLocal(
+        window.scrollX,
+        window.scrollY,
+        window.innerWidth,
+        window.innerHeight,
+      )
+    },
+
+    resetCells() {
+      console.time('perf-all')
+      const batch = 400 //每次异步进程中处理的节点和边视图的数量。
+      console.time('perf-reset')
+      this.graph.freeze()
+      // 暂时使用节点总数的平方根等于画布的长宽
+      this.layout()
+      console.timeEnd('perf-reset')
+
+      console.time('perf-dump')
+      this.graph.unfreeze({
+        batchSize: batch,
+        progress: ({ done, current, total }) => {
+          const progress = current / total
+          console.log(`${Math.round(progress * 100)}%`)
+          if (done) {
+            console.timeEnd('perf-dump')
+            console.timeEnd('perf-all')
+            this.graph.unfreeze()
+          }
+        },
+      })
+    },
   },
 };
 </script>
 
 <style scoped>
+.app-content {
+  flex: 1;
+  height: 500px;
+  margin-left: 8px;
+  margin-right: 8px;
+  box-shadow: 0 0 10px 1px #e9e9e9;
+  overflow: auto;
+}
 .mini-map-container {
   position: fixed;
   z-index: 999;

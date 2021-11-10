@@ -1,6 +1,5 @@
 <template>
     <div class="app-content">
-        this.draggedId{{ this.draggedId }}
         <div class="refContainer"></div>
     </div>
 </template>
@@ -66,7 +65,10 @@ export default {
         // 滚动和缩放刷新视窗位置和大小
         let appContent = document.querySelector('.app-content')
         appContent.onscroll = () => this.setWindowBBox()
-        appContent.onresize = () => this.setWindowBBox()
+        graph.on('scale', ({ sx, sy, ox, oy }) => { this.setWindowBBox() })
+        graph.on('resize', ({ width, height }) => { this.setWindowBBox() })
+        graph.on('translate', ({ tx, ty }) => { this.setWindowBBox() })
+
 
         this.setWindowBBox()
         // 清空画布并添加用指定的节点/边。
