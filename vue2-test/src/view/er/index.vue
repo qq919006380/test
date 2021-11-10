@@ -27,7 +27,7 @@
 <script>
 import "@antv/x6-vue-shape";
 import { ports } from "./graph/methods";
-
+const random = require('string-random');
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
@@ -157,12 +157,16 @@ export default {
     );
     // 画布节点渲染完成
     this.graph.on('render:done', ({ stats }) => {
-      console.table(stats)
     })
     // 移动node节点
-    this.graph.on('node:change:position', ({ node }) => {
+    this.graph.on('node:change:position', ({ node, edge }) => {
       this.draggedId.push(node.id)
+
+      this.graph.getEdges().forEach(edge => {
+        this.graph.findViewByCell(edge).update()
+      })
     })
+
     // 节点鼠标移出
     this.graph.on("node:mouseleave", ({ node }) => {
       // 添加连接点
@@ -207,10 +211,7 @@ export default {
     this.graph.on('resize', ({ width, height }) => { this.setWindowBBox() })
     this.graph.on('translate', ({ tx, ty }) => { this.setWindowBBox() })
 
-
     this.setWindowBBox()
-
-
     this.addNode();
     this.resetCells()
 
@@ -232,6 +233,18 @@ export default {
     };
   },
   methods: {
+    //生成随机长度的字段
+    randomField() {
+      let data = []
+      let num = Math.random() * 10
+      for (let i = 0; i < num; i++) {
+        data.push(
+          { PK_field: random(100), normal_field: "授课号" },
+        )
+      }
+
+      return data
+    },
     downloadImg() {
       this.graph.toPNG(
         (dataUri) => {
@@ -266,19 +279,10 @@ export default {
       let model = gridLayout.layout(this.data);
       this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
       this.graph.fromJSON(model);
-      this.observeRouter()
+
     },
 
-    // 监控节点移动使线主动避开
-    observeRouter() {
-      this.graph.getNodes().forEach(item => {
-        item.on('change:position', () => {
-          this.graph.getEdges().forEach(edge => {
-            this.graph.findViewByCell(edge).update()
-          })
-        })
-      })
-    },
+
 
     getData() {
       console.log("graph", this.graph.toJSON());
@@ -317,7 +321,7 @@ export default {
       }
     },
     addNode() {
-      for (var i = 0; i < 300; i++) {
+      for (var i = 0; i < 42; i++) {
         this.data.nodes.push({
           id: i + "",
           zIndex: 0,
@@ -330,13 +334,10 @@ export default {
           ports,
           data: {
             nodeInfo: {
-              chnname: "SIMS_TEACHER",
+              chnname: random(),
               name: "教师",
             },
-            fieldTable: [
-              { PK_field: "INSTRUCT_ID", normal_field: "授课号" },
-              { PK_field: "CLASS_ID", normal_field: "班级ID" },
-            ],
+            fieldTable: this.randomField(),
           },
           component: `table-node-component`,
         });
