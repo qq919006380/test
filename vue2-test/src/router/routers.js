@@ -25,7 +25,10 @@ export default [
     { path: '/input', name: 'input', component: () => import('@/view/input/index.vue') },
     { path: '/er', name: 'er', component: () => import('@/view/er/index.vue') },
     { path: '/er2', name: 'er2', component: () => import('@/view/er2.vue') },
-    { path: '/x6-checkview', name: 'x6-checkview', component: () => import('@/view/x6-checkview') }
+    { path: '/x6-checkview', name: 'x6-checkview', component: () => import('@/view/x6-checkview') },
+    { path: '/forceLayout', name: 'forceLayout', component: () => import('@/view/forceLayout.vue') },
+
+    
 ]
 // 高级通讯
 // $attrs 和 $listeners
