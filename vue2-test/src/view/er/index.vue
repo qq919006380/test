@@ -3,7 +3,6 @@
     <el-button @click="layout">一键布局</el-button>
     <el-button @click="getData">获取画布数据</el-button>
     <el-button @click="downloadImg">导出图片</el-button>
-    <el-button @click="twolayout">twolayout</el-button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -27,13 +26,13 @@
 
 <script>
 import "@antv/x6-vue-shape";
-import { ports } from "./graph/methods";
+import { ports, getFieldKey } from "./graph/methods";
 const random = require('string-random');
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon, DataUri } from "@antv/x6";
-import { DagreLayout, GridLayout } from "@antv/layout";
+import { ForceLayout, GridLayout } from "@antv/layout";
 
 let edgeAtr = {
   attrs: {
@@ -229,13 +228,13 @@ export default {
     //生成随机长度的字段
     randomField() {
       let data = [
-        { PK_field: random(6), normal_field: "授课号" },
-        { PK_field: random(6), normal_field: "授课号" },
+        { ename: random(6), cname: "授课号" },
+        { ename: random(6), cname: "授课号" },
       ]
       let num = Math.random() * 10
       for (let i = 0; i < num; i++) {
         data.push(
-          { PK_field: random(100), normal_field: "授课号" },
+          { ename: random(100), cname: "授课号" },
         )
       }
 
@@ -261,12 +260,11 @@ export default {
      * 一键智能布局
      */
     layout() {
-
       let nodeNum = this.data.nodes.length
       let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
 
       const gridLayout = new GridLayout({
-        begin:[0,0],
+        begin: [0, 0],
         type: 'grid',
         width: sqrt * 200,
         height: sqrt * 120,
@@ -276,33 +274,10 @@ export default {
       })
       let model = gridLayout.layout(this.data);
 
-      this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
+      this.graph.resize(2000, 2000)
       this.graph.fromJSON(model);
 
-      setTimeout(() => {
-        let xxx = gridLayout.layout(this.filterLayoutData(this.graph.toJSON()));
-      this.graph.fromJSON(xxx);
-      }, 0);
     },
-
-    twolayout() {
-      let nodeNum = this.data.nodes.length
-      let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
-
-      const gridLayout = new GridLayout({
-        type: 'grid',
-        width: sqrt * 200,
-        height: sqrt * 120,
-        rows: sqrt,
-        cols: sqrt,
-        preventOverlap: true
-      })
-      let model = gridLayout.layout(this.filterLayoutData(this.graph.toJSON()));
-      console.log(model)
-      this.graph.resize(sqrt * 200 + 100, sqrt * 120 + 100)
-      this.graph.fromJSON(model);
-    },
-
 
 
     getData() {
@@ -343,11 +318,14 @@ export default {
     },
     addNode() {
       for (var i = 0; i < 40; i++) {
+        let fields = this.randomField()
+        let { totalWidth } = getFieldKey(fields)
+        console.log(totalWidth)
         this.data.nodes.push({
+          size: { width: totalWidth+20, height: fields.length * 20 + 30 },
           id: i + "",
           zIndex: 0,
           shape: "vue-shape",
-          size: [0, 0],
           attrs: {
             body: {
               stroke: "#2d8cf0",
@@ -359,7 +337,7 @@ export default {
               chnname: random(),
               name: "教师",
             },
-            fieldTable: this.randomField(),
+            fieldTable: fields,
           },
           component: `table-node-component`,
         });

@@ -9,8 +9,8 @@
       <span class="table_name">{{ nodeInfo.name }}</span>)
     </div>
     <div class="fileds_area" v-for="item in fieldTable">
-      <div :style="{ width: maxWidth.PK_field + 'px' }">{{ item.PK_field }}</div>
-      <div :style="{ width: maxWidth.normal_field + 'px' }">{{ item.normal_field }}</div>
+      <div :style="{ width: maxWidth.ename + 'px' }">{{ item.ename }}</div>
+      <div :style="{ width: maxWidth.cname + 'px' }">{{ item.cname }}</div>
     </div>
   </div>
 </template>
@@ -44,25 +44,12 @@ export default {
     this.initPorts();
   },
   methods: {
-    // 获取每个字段长度计算css宽度
-    getFieldKey() {
-      if (this.fieldTable && this.fieldTable[0]) {
-        for (var k in this.fieldTable[0]) {
-          let w = Math.max(
-            ...this.fieldTable.map((item) => this.getTextWidth(item[k]))
-          );
-          this.maxWidth[k] = w;
-        }
-      }
-    },
-    // 计算矩形的宽高
+    // // 计算矩形的宽高
     updateTableSize() {
-      this.getFieldKey();
-      this.$nextTick(() => {
-        this.height = this.$refs.tp.clientHeight;
-        this.width = this.$refs.tp.clientWidth;
-        this.getNode().resize(this.width, this.height);
-      });
+      let { width, height } = this.getNode().size()
+      this.height = height
+      this.width = width
+      this.getNode().resize(this.width, this.height);
     },
     // 计算ports连接桩
     initPorts() {
@@ -71,12 +58,12 @@ export default {
           const y = 37 + i * 19;
           this.getNode().addPorts([
             {
-              id: `${this.getNode().id}-${val.PK_field}-in`,
+              id: `${this.getNode().id}-${val.ename}-in`,
               group: "in",
               args: { x: 0, y: y },
             },
             {
-              id: `${this.getNode().id}-${val.PK_field}-out`,
+              id: `${this.getNode().id}-${val.ename}-out`,
               group: "out",
               args: { x: this.width, y: y },
             },
@@ -110,12 +97,12 @@ export default {
         const y = 37 + (this.fieldTable.length - 1) * 19;
         this.getNode().addPorts([
           {
-            id: `${this.getNode().id}-${data.PK_field}-in`,
+            id: `${this.getNode().id}-${data.ename}-in`,
             group: "in",
             args: { x: 0, y: y },
           },
           {
-            id: `${this.getNode().id}-${data.PK_field}-out`,
+            id: `${this.getNode().id}-${data.ename}-out`,
             group: "out",
             args: { x: this.width, y: y },
           },
@@ -129,8 +116,8 @@ export default {
     updatePortPosition() {
       this.fieldTable.forEach((item, i) => {
         const y = 37 + i * 19;
-        this.getNode().setPortProp(`${this.getNode().id}-${item.PK_field}-in`, ['args'], { x: 0, y })
-        this.getNode().setPortProp(`${this.getNode().id}-${item.PK_field}-out`, ['args'], { x: this.width, y })
+        this.getNode().setPortProp(`${this.getNode().id}-${item.ename}-in`, ['args'], { x: 0, y })
+        this.getNode().setPortProp(`${this.getNode().id}-${item.ename}-out`, ['args'], { x: this.width, y })
       })
     }
   },
@@ -143,6 +130,8 @@ export default {
   font-size: 12px;
   min-width: 150px !important;
   min-height: 50px;
+  width: 100%;
+  height: 100%;
   background: #fff;
   .title {
     padding: 4px 0 4px 0;

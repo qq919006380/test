@@ -18,36 +18,36 @@ export default {
     return {
       data: [
         {
-          normal_field: "一级 1",
+          cname: "一级 1",
           children: [
-            { normal_field: "二级 1-1" },
-            { normal_field: "三级 1-1-1-2-3-1-4-a" },
-            { normal_field: "三级 1-1-1" },
-            { normal_field: "三级 1-1-1" },
+            { cname: "二级 1-1" },
+            { cname: "三级 1-1-1-2-3-1-4-a" },
+            { cname: "三级 1-1-1" },
+            { cname: "三级 1-1-1" },
           ],
         },
         {
-          normal_field: "一级 2",
+          cname: "一级 2",
           children: [
-            { normal_field: "二级 1-1" },
-            { normal_field: "三级 1-1-1" },
-            { normal_field: "三级 1-1-1" },
-            { normal_field: "三级 1-1-1" },
+            { cname: "二级 1-1" },
+            { cname: "三级 1-1-1" },
+            { cname: "三级 1-1-1" },
+            { cname: "三级 1-1-1" },
           ],
         },
         {
-          normal_field: "一级 3",
+          cname: "一级 3",
           children: [
-            { normal_field: "二级 1-1" },
-            { normal_field: "三级 1-1-1" },
-            { normal_field: "三级 1-1-1" },
-            { normal_field: "三级 1-1-1" },
+            { cname: "二级 1-1" },
+            { cname: "三级 1-1-1" },
+            { cname: "三级 1-1-1" },
+            { cname: "三级 1-1-1" },
           ],
         },
       ],
       defaultProps: {
         children: "children",
-        label: "normal_field",
+        label: "cname",
       },
     };
   },
@@ -56,7 +56,7 @@ export default {
       this.$emit("mousedown", data, e);
     },
     onDragstart(e, data) {
-      data.PK_field = Math.floor(Math.random() * 900);
+      data.ename = Math.floor(Math.random() * 900);
       let dataStr = JSON.stringify(data);
       e.dataTransfer.setData("data-info", dataStr);
     },
