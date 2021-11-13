@@ -128,8 +128,6 @@ export default {
 .er-template {
   display: inline-block;
   font-size: 12px;
-  min-width: 150px !important;
-  min-height: 50px;
   width: 100%;
   height: 100%;
   background: #fff;

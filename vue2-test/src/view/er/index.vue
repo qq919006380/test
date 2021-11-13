@@ -27,6 +27,7 @@
 <script>
 import "@antv/x6-vue-shape";
 import { ports, getFieldKey } from "./graph/methods";
+import data from './graph/api';
 const random = require('string-random');
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
@@ -82,6 +83,8 @@ export default {
       sorting: 'approx',
       async: true,
       frozen: true,
+      width: 2000,
+      height: 2000,
       panning: {
         enabled: true,
       },
@@ -206,7 +209,7 @@ export default {
 
 
     this.setWindowBBox()
-    this.addNode();
+    this.addNode(data);
     this.resetCells()
 
   },
@@ -260,22 +263,50 @@ export default {
      * 一键智能布局
      */
     layout() {
-      let nodeNum = this.data.nodes.length
-      let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
+      // let nodeNum = this.data.nodes.length
+      // let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
 
-      const gridLayout = new GridLayout({
-        begin: [0, 0],
-        type: 'grid',
-        width: sqrt * 200,
-        height: sqrt * 120,
-        rows: sqrt,
-        cols: sqrt,
-        preventOverlap: true
-      })
-      let model = gridLayout.layout(this.data);
+      // const gridLayout = new GridLayout({
+      //   begin: [0, 0],
+      //   type: 'grid',
+      //   rows: sqrt,
+      //   cols: sqrt,
+      //   preventOverlap: true
+      // })
+      // let model = gridLayout.layout(this.data);
+      // this.graph.fromJSON(model);
 
-      this.graph.resize(2000, 2000)
-      this.graph.fromJSON(model);
+
+      const forceLayout = new ForceLayout({
+        type: "force",
+        center: [369, 180],
+        preventOverlap: true,
+        // 默认边长度
+        linkDistance: (d) => {
+          if (d.source.id === "node0") {
+            return 100;
+          }
+          return 30;
+        },
+        // 节点作用力
+        nodeStrength: (d) => {
+          if (d.isLeaf) {
+            return -50;
+          }
+          return -10;
+        },
+        /** 边的作用力, 默认为根据节点的入度出度自适应 */
+        edgeStrength: (d) => {
+          if (["node1", "node2", "node3"].includes(d.source.id)) {
+            return 0.7;
+          }
+          return 0.1;
+        },
+        tick: () => {
+          this.graph.fromJSON(this.data);
+        },
+      });
+      forceLayout.layout(this.data);
 
     },
 
@@ -290,8 +321,8 @@ export default {
     // 拖拽表进画布
     moveTable(data, e) {
       let node = this.graph.createNode({
-        width: 150,
-        height: 50,
+        width: 200,
+        height: 150,
         zIndex: 0,
         shape: "vue-shape",
         attrs: {
@@ -316,15 +347,15 @@ export default {
         ports[i].style.visibility = show ? "visible" : "hidden";
       }
     },
-    addNode() {
-      for (var i = 0; i < 40; i++) {
-        let fields = this.randomField()
-        let { totalWidth } = getFieldKey(fields)
-        console.log(totalWidth)
+    addNode(data) {
+      data.nodes.forEach((item) => {
+        let { totalWidth } = getFieldKey(item.fields)
         this.data.nodes.push({
-          size: { width: totalWidth+20, height: fields.length * 20 + 30 },
-          id: i + "",
-          zIndex: 0,
+          size: { width: totalWidth + 80, height: item.fields.length * 20 + 30 },
+          id: item.id,
+           zIndex: 0,
+          x: item.x,
+          y: item.y,
           shape: "vue-shape",
           attrs: {
             body: {
@@ -334,31 +365,30 @@ export default {
           ports,
           data: {
             nodeInfo: {
-              chnname: random(),
+              chnname: item.id,
               name: "教师",
             },
-            fieldTable: fields,
+            fieldTable: item.fields,
           },
           component: `table-node-component`,
         });
-      }
+      });
 
-      // this.data.edges.push(
-      //   ...[
-      //     // 字段连接字段，cell是表id，port是字段id
-      //     {
-      //       source: { cell: "1", port: "1-INSTRUCT_ID-out" },
-      //       target: { cell: "2", port: "2-INSTRUCT_ID-in" },
-      //       ...edgeAtr,
-      //     },
-      //     {
-      //       source: { cell: "1", port: "1-INSTRUCT_ID-out" },
-      //       target: { cell: "3", port: "3-INSTRUCT_ID-in" },
-      //       ...edgeAtr,
-      //     },
 
-      //   ]
-      // );
+      data.edges.forEach((item) => {
+        this.data.edges.push({
+          source: item.source,
+          target: item.target,
+          attrs: {
+            line: {
+              stroke: "#ccc",
+              strokeWidth: 1,
+              targetMarker: null,
+            },
+          },
+        });
+      });
+      console.log(this.data)
     },
 
     // 渲染节点

@@ -210,22 +210,67 @@ let data = {
     },
   ],
   edges: [
-    // { source: "node0", target: "node17" },
-    // { source: "node0", target: "node2" },
-    // { source: "node0", target: "node3" },
-    // { source: "node0", target: "node4" },
-    // { source: "node0", target: "node5" },
-    // { source: "node1", target: "node6" },
-    // { source: "node1", target: "node7" },
-    // { source: "node2", target: "node8" },
-    // { source: "node2", target: "node9" },
-    // { source: "node2", target: "node10" },
-    // { source: "node2", target: "node11" },
-    // { source: "node2", target: "node12" },
-    // { source: "node2", target: "node13" },
-    // { source: "node3", target: "node14" },
-    // { source: "node3", target: "node15" },
-    // { source: "node3", target: "node16" },
+    {
+      source: { cell: "node0", port: "node0-123-out" },
+      target: { cell: "node1", port: "node1-1233-in" },
+    },
+    {
+      source: { cell: "node0", port: "node0-1233-out" },
+      target: { cell: "node3", port: "node3-1233-in" },
+    },
+    {
+      source: { cell: "node0", port: "node0-123-out" },
+      target: { cell: "node4", port: "node4-1233-in" },
+    },
+    {
+      source: { cell: "node0", port: "node0-123-out" },
+      target: { cell: "node5", port: "node5-1233-in" },
+    },
+    {
+      source: { cell: "node1", port: "node1-123-out" },
+      target: { cell: "node6", port: "node6-1233-in" },
+    },
+    {
+      source: { cell: "node1", port: "node1-123-out" },
+      target: { cell: "node7", port: "node7-1233-in" },
+    },
+
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node8", port: "node8-1233-in" },
+    },
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node9", port: "node9-1233-in" },
+    },
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node10", port: "node10-1233-in" },
+    },
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node11", port: "node11-1233-in" },
+    },
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node12", port: "node12-1233-in" },
+    },
+    {
+      source: { cell: "node2", port: "node2-123-out" },
+      target: { cell: "node13", port: "node13-1233-in" },
+    },
+    {
+      source: { cell: "node3", port: "node3-123-out" },
+      target: { cell: "node14", port: "node14-1233-in" },
+    },
+    {
+      source: { cell: "node3", port: "node3-123-out" },
+      target: { cell: "node15", port: "node15-1233-in" },
+    },
+    {
+      source: { cell: "node3", port: "node3-123-out" },
+      target: { cell: "node16", port: "node16-1233-in" },
+    },
   ],
 };
 export default data;
