@@ -6,7 +6,7 @@
 
 <script>
 import { Graph, Edge, Shape, NodeView } from "@antv/x6";
-import { ForceLayout } from "@antv/layout";
+import { ForceLayout ,ForceAtlas2Layout} from "@antv/layout";
 
 import "@antv/x6-vue-shape";
 export default {
@@ -61,14 +61,18 @@ export default {
       return model;
     },
     layout() {
+      // ForceAtlas2Layout ForceLayout
+
       const forceLayout = new ForceLayout({
         type: "force",
+        // type: 'forceAtlas2',
+
         center: [369, 180],
         preventOverlap: true,
         // 默认边长度
         linkDistance: (d) => {
           if (d.source.id === "node0") {
-            return 100;
+            return 200;
           }
           return 30;
         },
@@ -78,13 +82,6 @@ export default {
             return -50;
           }
           return -10;
-        },
-        /** 边的作用力, 默认为根据节点的入度出度自适应 */
-        edgeStrength: (d) => {
-          if (["node1","node2","node3"].includes(d.source.id)) {
-            return 0.7;
-          }
-          return 0.1;
         },
         tick: () => {
           const model = this.getModelFromOriginData(this.originData);

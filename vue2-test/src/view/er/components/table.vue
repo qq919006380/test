@@ -1,6 +1,6 @@
 <template>
   <div class="er-template" ref="tp" @drop="onDragenter" @dragover.prevent>
-    <div class="title">
+    <div class="title" :style="{ background:bgColor }">
       <span class="table_chnname" :title="nodeInfo.chnname">
         {{
           nodeInfo.chnname
@@ -27,6 +27,7 @@ export default {
       maxWidth: {},
       height: 0,
       width: 0,
+      bgColor:null
     };
   },
   mounted() {
@@ -50,6 +51,7 @@ export default {
       this.height = height
       this.width = width
       this.getNode().resize(this.width, this.height);
+      this.bgColor=this.getNode().attrs.body.stroke
     },
     // 计算ports连接桩
     initPorts() {

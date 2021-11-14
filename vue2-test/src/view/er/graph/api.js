@@ -1,40 +1,16 @@
 let data = {
   nodes: [
+    //   class0
     {
       id: "node0",
       x: 0,
       y: 0,
       fields: [
-        { ename: "123", cname: "授课号" },
+        { ename: "123", cname: "授课号123213333333333" },
         { ename: "1233", cname: "授课号" },
+        { ename: "121323", cname: "授课号123213333333333" },
       ],
-    },
-    {
-      id: "node1",
-      x: 0,
-      y: 0,
-      fields: [
-        { ename: "123", cname: "授课号" },
-        { ename: "1233", cname: "授课号" },
-      ],
-    },
-    {
-      id: "node2",
-      x: 0,
-      y: 0,
-      fields: [
-        { ename: "123", cname: "授课号" },
-        { ename: "1233", cname: "授课号" },
-      ],
-    },
-    {
-      id: "node3",
-      x: 0,
-      y: 0,
-      fields: [
-        { ename: "123", cname: "授课号" },
-        { ename: "1233", cname: "授课号" },
-      ],
+      cluster: "class0",
     },
     {
       id: "node4",
@@ -44,6 +20,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class0",
     },
     {
       id: "node5",
@@ -53,6 +30,19 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class0",
+    },
+    // class1
+
+    {
+      id: "node1",
+      x: 0,
+      y: 0,
+      fields: [
+        { ename: "123", cname: "授课号" },
+        { ename: "1233", cname: "授课号" },
+      ],
+      cluster: "class1",
     },
     {
       id: "node6",
@@ -62,6 +52,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class1",
     },
     {
       id: "node7",
@@ -71,6 +62,19 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class1",
+    },
+
+    // class2
+    {
+      id: "node2",
+      x: 0,
+      y: 0,
+      fields: [
+        { ename: "123", cname: "授课号" },
+        { ename: "1233", cname: "授课号" },
+      ],
+      cluster: "class2",
     },
     {
       id: "node8",
@@ -80,6 +84,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
     },
     {
       id: "node9",
@@ -89,6 +94,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
     },
     {
       id: "node10",
@@ -98,6 +104,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
     },
     {
       id: "node11",
@@ -107,6 +114,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
     },
     {
       id: "node12",
@@ -116,6 +124,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
     },
     {
       id: "node13",
@@ -125,6 +134,18 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class2",
+    },
+    // class3
+    {
+      id: "node3",
+      x: 0,
+      y: 0,
+      fields: [
+        { ename: "123", cname: "授课号" },
+        { ename: "1233", cname: "授课号" },
+      ],
+      cluster: "class3",
     },
     {
       id: "node14",
@@ -134,6 +155,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class3",
     },
     {
       id: "node15",
@@ -143,6 +165,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class3",
     },
     {
       id: "node16",
@@ -152,8 +175,9 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class3",
     },
-
+    // class4
     {
       id: "node17",
       x: 0,
@@ -162,6 +186,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class4",
     },
     {
       id: "node18",
@@ -171,6 +196,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class4",
     },
     {
       id: "node19",
@@ -208,16 +234,17 @@ let data = {
         { ename: "1233", cname: "授课号" },
       ],
     },
+    {
+      id: "node23",
+      x: 0,
+      y: 0,
+      fields: [
+        { ename: "123", cname: "授课号" },
+        { ename: "1233", cname: "授课号" },
+      ],
+    },
   ],
   edges: [
-    {
-      source: { cell: "node0", port: "node0-123-out" },
-      target: { cell: "node1", port: "node1-1233-in" },
-    },
-    {
-      source: { cell: "node0", port: "node0-1233-out" },
-      target: { cell: "node3", port: "node3-1233-in" },
-    },
     {
       source: { cell: "node0", port: "node0-123-out" },
       target: { cell: "node4", port: "node4-1233-in" },

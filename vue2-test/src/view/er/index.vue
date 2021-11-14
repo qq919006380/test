@@ -32,8 +32,8 @@ const random = require('string-random');
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
-import { Graph, FunctionExt, Shape, Addon, DataUri } from "@antv/x6";
-import { ForceLayout, GridLayout } from "@antv/layout";
+import { Graph, FunctionExt, Shape, Addon, DataUri, Path } from "@antv/x6";
+import { ComboForceLayout, ForceAtlas2Layout, ForceLayout, FruchtermanLayout, GridLayout } from "@antv/layout";
 
 let edgeAtr = {
   attrs: {
@@ -50,6 +50,9 @@ let edgeAtr = {
   connector: 'normal',
   router: {
     name: "manhattan",
+    args: {
+      offset: 'center',
+    },
   },
 }
 export default {
@@ -76,7 +79,6 @@ export default {
       },
       true
     );
-
     // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
@@ -106,7 +108,6 @@ export default {
         createEdge() {
           return new Shape.Edge({
             ...edgeAtr,
-            connector: "normal",
             zIndex: 0,
           });
         },
@@ -167,9 +168,9 @@ export default {
     this.graph.on('node:change:position', ({ node, edge }) => {
       this.draggedId.push(node.id)
 
-      this.graph.getEdges().forEach(edge => {
-        this.graph.findViewByCell(edge).update()
-      })
+      // this.graph.getEdges().forEach(edge => {
+      //   this.graph.findViewByCell(edge).update()
+      // })
     })
 
     // 节点鼠标移出
@@ -219,7 +220,7 @@ export default {
       graph: null,
       padding: 60,
       keepRendered: false,//保持渲染
-      keepDragged: false,//保持拖动
+      keepDragged: true,//保持拖动
       draggedId: [],
       data: {
         nodes: [], //表节点
@@ -276,38 +277,29 @@ export default {
       // let model = gridLayout.layout(this.data);
       // this.graph.fromJSON(model);
 
-
+      // ForceAtlas2Layout ForceLayout FruchtermanLayout ComboForceLayout
       const forceLayout = new ForceLayout({
         type: "force",
+        // type: 'forceAtlas2',
+        // type:"fruchterman",
+        // type:"comboForce",
+
+
         center: [369, 180],
         preventOverlap: true,
-        // 默认边长度
-        linkDistance: (d) => {
-          if (d.source.id === "node0") {
-            return 100;
-          }
-          return 30;
-        },
-        // 节点作用力
-        nodeStrength: (d) => {
-          if (d.isLeaf) {
-            return -50;
-          }
-          return -10;
-        },
-        /** 边的作用力, 默认为根据节点的入度出度自适应 */
-        edgeStrength: (d) => {
-          if (["node1", "node2", "node3"].includes(d.source.id)) {
-            return 0.7;
-          }
-          return 0.1;
-        },
+        workerEnabled: true,//是否启用 web-worker 以防布局计算时间过长阻塞页面交互
+        clustering: true,//是否按照聚类信息布局
+        clusterNodeStrength: -5,//聚类节点作用力。负数代表斥力
+        clusterEdgeDistance: 200,//聚类边长度
+        clusterNodeSize: 20,//聚类节点大小 / 直径，直径越大，越分散
+        clusterFociStrength: 1.2,//用于 foci 的力
+        nodeSpacing: 10,//preventOverlap 为 true 时生效，防止重叠时节点边缘间距的最小值。
+        // 每一次迭代的回调函数
         tick: () => {
           this.graph.fromJSON(this.data);
         },
       });
       forceLayout.layout(this.data);
-
     },
 
 
@@ -348,18 +340,29 @@ export default {
       }
     },
     addNode(data) {
-      data.nodes.forEach((item) => {
+
+      let colorMap = {
+        class1: '#BDD2FD',
+        class2: '#BDEFDB',
+        class3: '#F6C3B7',
+        class4: '#FFD8B8',
+        class5: '#D3C6EA',
+      };
+      data.nodes.forEach((item, num) => {
         let { totalWidth } = getFieldKey(item.fields)
         this.data.nodes.push({
           size: { width: totalWidth + 80, height: item.fields.length * 20 + 30 },
           id: item.id,
-           zIndex: 0,
+          zIndex: 0,
+          cluster: item.cluster,
           x: item.x,
           y: item.y,
           shape: "vue-shape",
           attrs: {
             body: {
-              stroke: "#2d8cf0",
+              stroke: colorMap[item.cluster] || "#dde5ff",//"#2d8cf0",
+              fill: colorMap[item.cluster]
+
             },
           },
           ports,
@@ -374,21 +377,13 @@ export default {
         });
       });
 
-
       data.edges.forEach((item) => {
         this.data.edges.push({
           source: item.source,
           target: item.target,
-          attrs: {
-            line: {
-              stroke: "#ccc",
-              strokeWidth: 1,
-              targetMarker: null,
-            },
-          },
+          ...edgeAtr
         });
       });
-      console.log(this.data)
     },
 
     // 渲染节点
@@ -486,7 +481,7 @@ export default {
 <style scoped>
 .app-content {
   flex: 1;
-  height: 500px;
+  height: 600px;
   margin-left: 8px;
   margin-right: 8px;
   box-shadow: 0 0 10px 1px #e9e9e9;
