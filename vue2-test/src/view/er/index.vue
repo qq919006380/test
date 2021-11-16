@@ -27,13 +27,19 @@
 <script>
 import "@antv/x6-vue-shape";
 import { ports, getFieldKey } from "./graph/methods";
-import data from './graph/api';
-const random = require('string-random');
+import data from "./graph/api";
+const random = require("string-random");
 import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon, DataUri, Path } from "@antv/x6";
-import { ComboForceLayout, ForceAtlas2Layout, ForceLayout, FruchtermanLayout, GridLayout } from "@antv/layout";
+import {
+  ComboForceLayout,
+  ForceAtlas2Layout,
+  ForceLayout,
+  FruchtermanLayout,
+  GridLayout,
+} from "@antv/layout";
 
 let edgeAtr = {
   attrs: {
@@ -42,19 +48,19 @@ let edgeAtr = {
       strokeWidth: 1,
       stroke: "#000", // 指定 path 元素的填充色
       targetMarker: {
-        name: 'classic',
-        size: 8
+        name: "classic",
+        size: 8,
       },
     },
   },
-  connector: 'normal',
+  connector: "normal",
   router: {
     name: "manhattan",
     args: {
-      offset: 'center',
+      offset: "center",
     },
   },
-}
+};
 export default {
   components: { treeTable, treeField },
   mounted() {
@@ -82,7 +88,7 @@ export default {
     // 生成画布
     this.graph = new Graph({
       container: document.getElementById("container"),
-      sorting: 'approx',
+      sorting: "approx",
       async: true,
       frozen: true,
       width: 2000,
@@ -115,7 +121,7 @@ export default {
       // 鼠标滚轮的默认行为是滚动页面
       mousewheel: {
         enabled: true,
-        modifiers: ['ctrl', 'meta'],
+        modifiers: ["ctrl", "meta"],
         // minScale: 0.5,
         // maxScale: 2
       },
@@ -133,22 +139,21 @@ export default {
         },
       },
       checkView: ({ view, unmounted }) => {
-        const cell = view.cell
+        const cell = view.cell;
         if (cell.isNode()) {
-          return this.shouldRenderNode(cell, unmounted)
+          return this.shouldRenderNode(cell, unmounted);
         }
 
         if (cell.isEdge()) {
-          return this.shouldRenderEdge(cell)
+          return this.shouldRenderEdge(cell);
         }
-        return false
+        return false;
       },
       // 开启小地图
       // minimap: {
       //   enabled: true,
       //   container: this.$refs.miniMapContainerRef,
       // },
-
     });
     this.graph.enableMouseWheel(); //启用鼠标滚轮缩放画布。
     // 节点鼠标移入
@@ -162,16 +167,15 @@ export default {
       500
     );
     // 画布节点渲染完成
-    this.graph.on('render:done', ({ stats }) => {
-    })
+    this.graph.on("render:done", ({ stats }) => {});
     // 移动node节点
-    this.graph.on('node:change:position', ({ node, edge }) => {
-      this.draggedId.push(node.id)
+    this.graph.on("node:change:position", ({ node, edge }) => {
+      this.draggedId.push(node.id);
 
       // this.graph.getEdges().forEach(edge => {
       //   this.graph.findViewByCell(edge).update()
       // })
-    })
+    });
 
     // 节点鼠标移出
     this.graph.on("node:mouseleave", ({ node }) => {
@@ -198,29 +202,43 @@ export default {
       edge.removeTools();
     });
 
-
-
     // 滚动和缩放刷新视窗位置和大小
-    let appContent = document.querySelector('.app-content')
-    appContent.onscroll = () => this.setWindowBBox()
-    this.graph.on('scale', ({ sx, sy, ox, oy }) => { this.setWindowBBox() })
-    this.graph.on('resize', ({ width, height }) => { this.setWindowBBox() })
-    this.graph.on('translate', ({ tx, ty }) => { this.setWindowBBox() })
+    let appContent = document.querySelector(".app-content");
+    appContent.onscroll = () => this.setWindowBBox();
+    this.graph.on("scale", ({ sx, sy, ox, oy }) => {
+      this.setWindowBBox();
+    });
+    this.graph.on("resize", ({ width, height }) => {
+      this.setWindowBBox();
+    });
+    this.graph.on("translate", ({ tx, ty }) => {
+      this.setWindowBBox();
+    });
 
-
-
-    this.setWindowBBox()
+    for (let i = 0; i < 100; i++) {
+      data.nodes.push({
+        id: "node-test" + i,
+        x: 0,
+        y: 0,
+        fields: [
+          { ename: "123", cname: "授课号123213333333333" },
+          { ename: "1233", cname: "授课号" },
+          { ename: "121323", cname: "授课号123213333333333" },
+        ],
+        cluster: "null",
+      });
+    }
+    this.setWindowBBox();
     this.addNode(data);
-    this.resetCells()
-
+    this.resetCells();
   },
   data() {
     return {
       activeName: "table",
       graph: null,
       padding: 60,
-      keepRendered: false,//保持渲染
-      keepDragged: true,//保持拖动
+      keepRendered: false, //保持渲染
+      keepDragged: true, //保持拖动
       draggedId: [],
       data: {
         nodes: [], //表节点
@@ -234,15 +252,13 @@ export default {
       let data = [
         { ename: random(6), cname: "授课号" },
         { ename: random(6), cname: "授课号" },
-      ]
-      let num = Math.random() * 10
+      ];
+      let num = Math.random() * 10;
       for (let i = 0; i < num; i++) {
-        data.push(
-          { ename: random(100), cname: "授课号" },
-        )
+        data.push({ ename: random(100), cname: "授课号" });
       }
 
-      return data
+      return data;
     },
     downloadImg() {
       this.graph.toPNG(
@@ -280,35 +296,39 @@ export default {
       // ForceAtlas2Layout ForceLayout FruchtermanLayout ComboForceLayout
       const forceLayout = new ForceLayout({
         type: "force",
-        // type: 'forceAtlas2',
-        // type:"fruchterman",
-        // type:"comboForce",
-
-
         center: [369, 180],
         preventOverlap: true,
-        workerEnabled: true,//是否启用 web-worker 以防布局计算时间过长阻塞页面交互
-        clustering: true,//是否按照聚类信息布局
-        clusterNodeStrength: -5,//聚类节点作用力。负数代表斥力
-        clusterEdgeDistance: 200,//聚类边长度
-        clusterNodeSize: 20,//聚类节点大小 / 直径，直径越大，越分散
-        clusterFociStrength: 1.2,//用于 foci 的力
-        nodeSpacing: 10,//preventOverlap 为 true 时生效，防止重叠时节点边缘间距的最小值。
+        workerEnabled: true, //是否启用 web-worker 以防布局计算时间过长阻塞页面交互
+        clustering: true, //是否按照聚类信息布局
+        clusterNodeStrength: -5, //聚类节点作用力。负数代表斥力
+        clusterEdgeDistance: 200, //聚类边长度
+        clusterNodeSize: 20, //聚类节点大小 / 直径，直径越大，越分散
+        clusterFociStrength: 1.2, //用于 foci 的力
+        nodeSpacing: 10, //preventOverlap 为 true 时生效，防止重叠时节点边缘间距的最小值。
         // 每一次迭代的回调函数
-        tick: () => {
-          this.graph.fromJSON(this.data);
-        },
+        // tick: () => {
+        //   this.graph.fromJSON(this.data);
+        // },
+        // onLayoutEnd:()=>{
+        //    this.graph.fromJSON(this.data);
+        // }
       });
-      forceLayout.layout(this.data);
-    },
 
+      forceLayout.layout(this.data);
+      setTimeout(() => {
+        this.graph.fromJSON(this.data);
+      }, 10);
+    },
 
     getData() {
       console.log("graph", this.graph.toJSON());
 
       console.log("data", this.data);
 
-      console.log('filterLayoutData', this.filterLayoutData(this.graph.toJSON()))
+      console.log(
+        "filterLayoutData",
+        this.filterLayoutData(this.graph.toJSON())
+      );
     },
     // 拖拽表进画布
     moveTable(data, e) {
@@ -340,18 +360,20 @@ export default {
       }
     },
     addNode(data) {
-
       let colorMap = {
-        class1: '#BDD2FD',
-        class2: '#BDEFDB',
-        class3: '#F6C3B7',
-        class4: '#FFD8B8',
-        class5: '#D3C6EA',
+        class1: "#BDD2FD",
+        class2: "#BDEFDB",
+        class3: "#F6C3B7",
+        class4: "#FFD8B8",
+        class5: "#D3C6EA",
       };
       data.nodes.forEach((item, num) => {
-        let { totalWidth } = getFieldKey(item.fields)
+        let { totalWidth } = getFieldKey(item.fields);
         this.data.nodes.push({
-          size: { width: totalWidth + 80, height: item.fields.length * 20 + 30 },
+          size: {
+            width: totalWidth + 80,
+            height: item.fields.length * 20 + 30,
+          },
           id: item.id,
           zIndex: 0,
           cluster: item.cluster,
@@ -360,9 +382,8 @@ export default {
           shape: "vue-shape",
           attrs: {
             body: {
-              stroke: colorMap[item.cluster] || "#dde5ff",//"#2d8cf0",
-              fill: colorMap[item.cluster]
-
+              stroke: colorMap[item.cluster] || "#dde5ff", //"#2d8cf0",
+              fill: colorMap[item.cluster],
             },
           },
           ports,
@@ -381,7 +402,7 @@ export default {
         this.data.edges.push({
           source: item.source,
           target: item.target,
-          ...edgeAtr
+          ...edgeAtr,
         });
       });
     },
@@ -389,27 +410,27 @@ export default {
     // 渲染节点
     shouldRenderNode(node, unmounted) {
       if (this.keepDragged && this.draggedId.includes(node.id)) {
-        return true
+        return true;
       }
 
       if (this.keepRendered && unmounted) {
-        return true
+        return true;
       }
 
       return this.windowBBox.isIntersectWithRect(
         // 返回容器渲染到画布后的包围盒
-        node.getBBox().inflate(this.padding),
-      )
+        node.getBBox().inflate(this.padding)
+      );
     },
     // 渲染边
     shouldRenderEdge(edge) {
-      const sourceNode = edge.getSourceNode()
-      const targetNode = edge.getTargetNode()
+      const sourceNode = edge.getSourceNode();
+      const targetNode = edge.getTargetNode();
 
       return (
         this.shouldRenderNode(sourceNode, false) ||
         this.shouldRenderNode(targetNode, false)
-      )
+      );
     },
 
     setWindowBBox() {
@@ -417,38 +438,38 @@ export default {
         window.scrollX,
         window.scrollY,
         window.innerWidth,
-        window.innerHeight,
-      )
+        window.innerHeight
+      );
     },
 
     resetCells() {
-      console.time('perf-all')
-      const batch = 400 //每次异步进程中处理的节点和边视图的数量。
-      console.time('perf-reset')
-      this.graph.freeze()
+      console.time("perf-all");
+      const batch = 400; //每次异步进程中处理的节点和边视图的数量。
+      console.time("perf-reset");
+      this.graph.freeze();
       // 暂时使用节点总数的平方根等于画布的长宽
-      this.layout()
-      console.timeEnd('perf-reset')
+      this.layout();
+      console.timeEnd("perf-reset");
 
-      console.time('perf-dump')
+      console.time("perf-dump");
       this.graph.unfreeze({
         batchSize: batch,
         progress: ({ done, current, total }) => {
-          const progress = current / total
-          console.log(`${Math.round(progress * 100)}%`)
+          const progress = current / total;
+          console.log(`${Math.round(progress * 100)}%`);
           if (done) {
-            console.timeEnd('perf-dump')
-            console.timeEnd('perf-all')
-            this.graph.unfreeze()
+            console.timeEnd("perf-dump");
+            console.timeEnd("perf-all");
+            this.graph.unfreeze();
           }
         },
-      })
+      });
     },
 
     filterLayoutData(data) {
       const model = {
         nodes: [],
-        edges: []
+        edges: [],
       };
       let tmp;
       if (data.cells) {
@@ -459,21 +480,21 @@ export default {
       if (tmp) {
         tmp.forEach((item) => {
           if (item.shape !== "edge") {
-            item.ports.items = []
+            item.ports.items = [];
             model.nodes.push(item);
           } else {
-            console.log(item)
+            console.log(item);
             let sourceId = item.source;
             let targetId = item.target;
             model.edges.push({
               source: sourceId,
-              target: targetId
+              target: targetId,
             });
           }
         });
       }
       return model;
-    }
+    },
   },
 };
 </script>
