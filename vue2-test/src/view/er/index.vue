@@ -1,8 +1,10 @@
 <template>
   <div>
-    <el-button @click="layout">一键布局</el-button>
     <el-button @click="getData">获取画布数据</el-button>
     <el-button @click="downloadImg">导出图片</el-button>
+    <el-button @click="layout">网格布局</el-button>
+    <el-button @click="forceLayout">力导向聚类布局</el-button>
+    <el-button @click="erLayout">er布局</el-button>
     <el-container>
       <el-aside width="200px">
         <el-tabs v-model="activeName">
@@ -33,13 +35,7 @@ import tableNode from "./components/table.vue";
 import treeTable from "./tree-table.vue";
 import treeField from "./tree-field.vue";
 import { Graph, FunctionExt, Shape, Addon, DataUri, Path } from "@antv/x6";
-import {
-  ComboForceLayout,
-  ForceAtlas2Layout,
-  ForceLayout,
-  FruchtermanLayout,
-  GridLayout,
-} from "@antv/layout";
+import layoutMixin from "./graph/layout-mixin";
 
 let edgeAtr = {
   attrs: {
@@ -62,6 +58,7 @@ let edgeAtr = {
   },
 };
 export default {
+  mixins: [layoutMixin],
   components: { treeTable, treeField },
   mounted() {
     const containerRef = this.$refs.containerRef;
@@ -223,7 +220,7 @@ export default {
         fields: [
           { ename: "123", cname: "授课号123213333333333" },
           { ename: "1233", cname: "授课号" },
-          { ename: "121323", cname: "授课号123213333333333" },
+          // { ename: "121323", cname: "授课号123213333333333" },
         ],
         cluster: "null",
       });
@@ -276,49 +273,6 @@ export default {
         }
       );
     },
-    /**
-     * 一键智能布局
-     */
-    layout() {
-      // let nodeNum = this.data.nodes.length
-      // let sqrt = Math.ceil(Math.sqrt(nodeNum))//平方根
-
-      // const gridLayout = new GridLayout({
-      //   begin: [0, 0],
-      //   type: 'grid',
-      //   rows: sqrt,
-      //   cols: sqrt,
-      //   preventOverlap: true
-      // })
-      // let model = gridLayout.layout(this.data);
-      // this.graph.fromJSON(model);
-
-      // ForceAtlas2Layout ForceLayout FruchtermanLayout ComboForceLayout
-      const forceLayout = new ForceLayout({
-        type: "force",
-        center: [369, 180],
-        preventOverlap: true,
-        workerEnabled: true, //是否启用 web-worker 以防布局计算时间过长阻塞页面交互
-        clustering: true, //是否按照聚类信息布局
-        clusterNodeStrength: -5, //聚类节点作用力。负数代表斥力
-        clusterEdgeDistance: 200, //聚类边长度
-        clusterNodeSize: 20, //聚类节点大小 / 直径，直径越大，越分散
-        clusterFociStrength: 1.2, //用于 foci 的力
-        nodeSpacing: 10, //preventOverlap 为 true 时生效，防止重叠时节点边缘间距的最小值。
-        // 每一次迭代的回调函数
-        // tick: () => {
-        //   this.graph.fromJSON(this.data);
-        // },
-        // onLayoutEnd:()=>{
-        //    this.graph.fromJSON(this.data);
-        // }
-      });
-
-      forceLayout.layout(this.data);
-      setTimeout(() => {
-        this.graph.fromJSON(this.data);
-      }, 10);
-    },
 
     getData() {
       console.log("graph", this.graph.toJSON());
@@ -370,10 +324,9 @@ export default {
       data.nodes.forEach((item, num) => {
         let { totalWidth } = getFieldKey(item.fields);
         this.data.nodes.push({
-          size: {
-            width: totalWidth + 80,
-            height: item.fields.length * 20 + 30,
-          },
+          size: [totalWidth + 80, item.fields.length * 20 + 30],
+          width: totalWidth + 80,
+          height: item.fields.length * 20 + 30,
           id: item.id,
           zIndex: 0,
           cluster: item.cluster,
