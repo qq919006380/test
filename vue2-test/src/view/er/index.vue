@@ -486,7 +486,7 @@ export default {
 
       console.log("data", this.data);
 
-      console.log("filterLayoutData", this.filterLayoutData(this.graph.toJSON());
+      console.log("filterLayoutData", this.filterLayoutData(this.graph.toJSON()));
     },
     // 拖拽表进画布
     moveTable(data, e) {
