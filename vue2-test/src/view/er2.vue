@@ -1,278 +1,464 @@
 <template>
-  <div id="container" style="height: 100vh"></div>
+  <div id="container" style="height: 500px"></div>
 </template>
 
-<script>
-import { Graph, Edge, Shape, NodeView } from "@antv/x6";
-import "@antv/x6-vue-shape";
-import Count from "./er/components/table.vue";
-export default {
-  mounted() {
-    console.log(111,Shape);
+<script >
+import { Graph,  Shape } from "@antv/x6";
 
-    // 定义节点
-    class MyShape extends Shape.Rect {
-      getInPorts() {
-        return this.getPortsByGroup("in");
-      }
+const LINE_HEIGHT = 24;
+const NODE_WIDTH = 150;
 
-      getOutPorts() {
-        return this.getPortsByGroup("out");
-      }
 
-      getUsedInPorts(graph) {
-        const incomingEdges = graph.getIncomingEdges(this) || [];
-        return incomingEdges.map((edge) => {
-          const portId = edge.getTargetPortId();
-          return this.getPort(portId);
-        });
-      }
-
-      getNewInPorts(length) {
-        return Array.from(
-          {
-            length,
-          },
-          () => {
-            return {
-              group: "in",
-            };
-          }
-        );
-      }
-
-      updateInPorts(graph) {
-        const minNumberOfPorts = 2;
-        const ports = this.getInPorts();
-        const usedPorts = this.getUsedInPorts(graph);
-        const newPorts = this.getNewInPorts(
-          Math.max(minNumberOfPorts - usedPorts.length, 1)
-        );
-
-        if (
-          ports.length === minNumberOfPorts &&
-          ports.length - usedPorts.length > 0
-        ) {
-          // noop
-        } else if (ports.length === usedPorts.length) {
-          this.addPorts(newPorts);
-        } else if (ports.length + 1 > usedPorts.length) {
-          this.prop(
-            ["ports", "items"],
-            this.getOutPorts().concat(usedPorts).concat(newPorts),
-            {
-              rewrite: true,
-            }
-          );
-        }
-
-        return this;
-      }
-    }
-
-    MyShape.config({
-      shape: "vue-shape",
-      component: {
-        template: `<count :data="data" ></count>`,
-        data() {
-          return { data: { chnname: "xx", name: "sda" } };
-        },
-        components: { Count },
-      },
-      width: 150,
-      height: 200,
-      attrs: {
-        root: {
-          magnet: false,
-        },
-        body: {
-          fill: "#f5f5f5",
-          stroke: "#d9d9d9",
-          strokeWidth: 1,
-        },
-      },
-      ports: {
-        items: [
-          {
-            group: "out",
-          },
-        ],
-        groups: {
-          in: {
-            position: {
-              name: "top",
-            },
-            attrs: {
-              portBody: {
-                magnet: "passive",
-                r: 6,
-                stroke: "#ffa940",
-                fill: "#fff",
-                strokeWidth: 2,
-              },
-            },
-          },
-          out: {
-            position: {
-              name: "bottom",
-            },
-            attrs: {
-              portBody: {
-                magnet: true,
-                r: 6,
-                fill: "#fff",
-                stroke: "#3199FF",
-                strokeWidth: 2,
-              },
-            },
-          },
-        },
-      },
-      portMarkup: [
-        {
-          tagName: "circle",
-          selector: "portBody",
-        },
-      ],
-    });
-
-    // 高亮
-    const magnetAvailabilityHighlighter = {
-      name: "stroke",
-      args: {
+const data1 = [
+  {
+    id: "1",
+    shape: "er-rect",
+    label: "学生",
+    width: 150,
+    height: 24,
+    position: {
+      x: 24,
+      y: 150,
+    },
+    ports: [
+      {
+        id: "1-1",
+        group: "list",
         attrs: {
-          fill: "#fff",
-          stroke: "#47C769",
+          portNameLabel: {
+            text: "ID",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
         },
       },
-    };
+      {
+        id: "1-2",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Name",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "1-3",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Class",
+          },
+          portTypeLabel: {
+            text: "NUMBER",
+          },
+        },
+      },
+      {
+        id: "1-4",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Gender",
+          },
+          portTypeLabel: {
+            text: "BOOLEAN",
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "2",
+    shape: "er-rect",
+    label: "课程",
+    width: 150,
+    height: 24,
+    position: {
+      x: 250,
+      y: 210,
+    },
+    ports: [
+      {
+        id: "2-1",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "ID",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "2-2",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Name",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "2-3",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "StudentID",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "2-4",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "TeacherID",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "2-5",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Description",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "3",
+    shape: "er-rect",
+    label: "老师",
+    width: 150,
+    height: 24,
+    position: {
+      x: 480,
+      y: 350,
+    },
+    ports: [
+      {
+        id: "3-1",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "ID",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "3-2",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Name",
+          },
+          portTypeLabel: {
+            text: "STRING",
+          },
+        },
+      },
+      {
+        id: "3-3",
+        group: "list",
+        attrs: {
+          portNameLabel: {
+            text: "Age",
+          },
+          portTypeLabel: {
+            text: "NUMBER",
+          },
+        },
+      },
+    ],
+  },
 
-    // 画布
-    const graph = new Graph({
-      grid: true,
-      container: document.getElementById("container"),
-      highlighting: {
-        magnetAvailable: magnetAvailabilityHighlighter,
-        magnetAdsorbed: {
-          name: "stroke",
-          args: {
-            attrs: {
-              fill: "#fff",
-              stroke: "#31d0c6",
+
+
+  {
+    id: "4-2",
+    shape: "edge",
+    source: {
+      cell: "1",
+      port: "1-3",
+    },
+    target: {
+      cell: "2",
+      port: "2-4",
+    },
+    attrs: {
+      line: {
+        stroke: "#A2B1C3",
+        strokeWidth: 2,
+      },
+    },
+    zIndex: 0,
+  },
+  {
+    id: "4",
+    shape: "edge",
+    source: {
+      cell: "1",
+      port: "1-1",
+    },
+    target: {
+      cell: "2",
+      port: "2-1",
+    },
+    attrs: {
+      line: {
+        stroke: "#A2B1C3",
+        strokeWidth: 2,
+      },
+    },
+    zIndex: 0,
+  },
+  {
+    id: "5",
+    shape: "edge",
+    source: {
+      cell: "1",
+      port: "1-1",
+    },
+    target: {
+      cell: "2",
+      port: "2-3",
+    },
+    attrs: {
+      line: {
+        stroke: "#A2B1C3",
+        strokeWidth: 2,
+      },
+    },
+    zIndex: 0,
+  },
+  {
+    id: "6",
+    shape: "edge",
+    source: {
+      cell: "2",
+      port: "2-3",
+    },
+    target: {
+      cell: "3",
+      port: "3-1",
+    },
+    attrs: {
+      line: {
+        stroke: "#A2B1C3",
+        strokeWidth: 2,
+      },
+    },
+    zIndex: 0,
+  },
+];
+
+export default {
+  components: {
+    // LabelTypeTree,
+    // DataModelLibrarySide,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    init() {
+      Graph.registerPortLayout(
+        "erPortPosition",
+        (portsPositionArgs) => {
+          return portsPositionArgs.map((_, index) => {
+            return {
+              position: {
+                x: 0,
+                y: (index + 1) * LINE_HEIGHT,
+              },
+              angle: 0,
+            };
+          });
+        },
+        true
+      );
+
+      Graph.registerNode(
+        "er-rect",
+        {
+          inherit: "rect",
+          markup: [
+            {
+              tagName: "rect",
+              selector: "body",
+            },
+            {
+              tagName: "text",
+              selector: "label",
+            },
+          ],
+          attrs: {
+            rect: {
+              strokeWidth: 1,
+              stroke: "#5F95FF",
+              fill: "#5F95FF",
+            },
+            label: {
+              fontWeight: "bold",
+              fill: "#ffffff",
+              fontSize: 12,
+            },
+          },
+          ports: {
+            groups: {
+              list: {
+                markup: [
+                  {
+                    tagName: "rect",
+                    selector: "portBody",
+                  },
+                  {
+                    tagName: "text",
+                    selector: "portNameLabel",
+                  },
+                  {
+                    tagName: "text",
+                    selector: "portTypeLabel",
+                  },
+                ],
+                attrs: {
+                  portBody: {
+                    width: NODE_WIDTH,
+                    height: LINE_HEIGHT,
+                    strokeWidth: 1,
+                    stroke: "#5F95FF",
+                    fill: "#EFF4FF",
+                    magnet: true,
+                    event: "port:click",
+                  },
+                  portNameLabel: {
+                    ref: "portBody",
+                    refX: 6,
+                    refY: 6,
+                    fontSize: 10,
+
+                  },
+                  portTypeLabel: {
+                    ref: "portBody",
+                    refX: 95,
+                    refY: 6,
+                    fontSize: 10,
+                  },
+                },
+                position: "erPortPosition",
+              },
             },
           },
         },
-      },
-      connecting: {
-        snap: true,
-        allowBlank: false,
-        allowLoop: false,
-        highlight: true,
-        connector: "rounded",
-        connectionPoint: "boundary",
-        router: {
-          name: "er",
-          args: {
-            direction: "V",
-          },
+        true
+      );
+
+      const graph = new Graph({
+        container: document.getElementById("container"),
+        interacting: function (cellView) {
+          return { magnetConnectable: false };
         },
-        createEdge() {
-          return new Shape.Edge({
-            attrs: {
-              line: {
-                stroke: "#a0a0a0",
-                strokeWidth: 1,
-                targetMarker: {
-                  name: "classic",
-                  size: 7,
+        connecting: {
+          router: {
+            name: "er",
+            args: {
+              offset: 25,
+              direction: "H",
+            },
+          },
+          createEdge() {
+            return new Shape.Edge({
+              attrs: {
+                line: {
+                  stroke: "#A2B1C3",
+                  strokeWidth: 2,
                 },
               },
-            },
-          });
-        },
-        validateConnection({ sourceView, targetView, targetMagnet }) {
-          if (!targetMagnet) {
-            return false;
-          }
-
-          if (targetMagnet.getAttribute("port-group") !== "in") {
-            return false;
-          }
-
-          if (targetView) {
-            const node = targetView.cell;
-            if (node instanceof MyShape) {
-              const portId = targetMagnet.getAttribute("port");
-              const usedInPorts = node.getUsedInPorts(graph);
-              if (usedInPorts.find((port) => port && port.id === portId)) {
-                return false;
-              }
-            }
-          }
-
-          return true;
-        },
-      },
-    });
-
-    graph.addNode(new MyShape().position(200, 50).updateInPorts(graph));
-
-    graph.addNode(new MyShape().position(400, 50).updateInPorts(graph));
-
-    graph.addNode(new MyShape().position(300, 250).updateInPorts(graph));
-
-    function update(view) {
-      const cell = view.cell;
-      if (cell instanceof MyShape) {
-        cell.getInPorts().forEach((port) => {
-          const portNode = view.findPortElem(port.id, "portBody");
-          view.unhighlight(portNode, {
-            highlighter: magnetAvailabilityHighlighter,
-          });
-        });
-        cell.updateInPorts(graph);
-      }
-    }
-
-    graph.on("edge:connected", ({ previousView, currentView }) => {
-      if (previousView) {
-        update(previousView);
-      }
-      if (currentView) {
-        update(currentView);
-      }
-    });
-
-    graph.on("edge:removed", ({ edge, options }) => {
-      if (!options.ui) {
-        return;
-      }
-
-      const target = edge.getTargetCell();
-      if (target instanceof MyShape) {
-        target.updateInPorts(graph);
-      }
-    });
-
-    graph.on("edge:mouseenter", ({ edge }) => {
-      edge.addTools([
-        "source-arrowhead",
-        "target-arrowhead",
-        {
-          name: "button-remove",
-          args: {
-            distance: -30,
+            });
           },
         },
-      ]);
-    });
+      });
 
-    graph.on("edge:mouseleave", ({ edge }) => {
-      edge.removeTools();
-    });
+
+      graph.on("port:click", ({ e }) => {
+        let newSelectId = e.target.parentElement.getAttribute('port')
+        window.e = graph.getEdges()
+        clearAllEdgesStyle()
+        function recursion(source) {
+          graph.getEdges().forEach(edge => {
+            if (edge.source.port == source) {
+              edge.attr(
+                'line', {
+                stroke: '#ff0000',
+                strokeWidth: 2,
+              });
+              recursion(edge.target.port)
+            }
+          })
+        }
+        recursion(newSelectId)
+      });
+
+      // 清空所有线的样式
+      function clearAllEdgesStyle() {
+        graph.getEdges().forEach(edge => {
+          edge.attr(
+            'line', {
+            stroke: '#A2B1C3',
+            strokeWidth: 2,
+          });
+        })
+      }
+
+
+
+      const cells = [];
+      data1.forEach((item) => {
+        if (item.shape === "edge") {
+          cells.push(graph.createEdge(item));
+        } else {
+          cells.push(graph.createNode(item));
+        }
+      });
+
+      graph.resetCells(cells);
+      graph.zoomToFit({ padding: 10, maxScale: 1 });
+
+    },
+
+
+
+
+
+
+  },
+  mounted() {
+    this.init();
   },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 </style>

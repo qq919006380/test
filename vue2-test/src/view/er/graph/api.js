@@ -215,6 +215,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class5",
     },
     {
       id: "node21",
@@ -224,6 +225,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class5",
     },
     {
       id: "node22",
@@ -233,6 +235,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class5",
     },
     {
       id: "node23",
@@ -242,6 +245,7 @@ let data = {
         { ename: "123", cname: "授课号" },
         { ename: "1233", cname: "授课号" },
       ],
+      cluster: "class5",
     },
   ],
   edges: [
