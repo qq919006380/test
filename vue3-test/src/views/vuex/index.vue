@@ -16,7 +16,6 @@ function add() {
         amount: 10
     })
 }
-
 const products = computed(() => store.getters.doneTodos)
 
 </script>

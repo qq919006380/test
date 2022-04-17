@@ -13,8 +13,8 @@ const store = createStore({
   },
   getters: {
     doneTodos: (state) => {
-      return state.todos.filter(todo => todo.done)
-    }
+      return state.todos.filter((todo) => todo.done);
+    },
   },
   mutations: {
     increment(state) {
